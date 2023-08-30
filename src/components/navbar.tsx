@@ -35,7 +35,7 @@ export default function Navbar() {
             <Link href="#">Login</Link>
           </Button>
           <Button className="rounded-full" asChild>
-            <Link href="#">Sign up</Link>
+            <Link href="/signup">Sign up</Link>
           </Button>
         </div>
       </div>
