@@ -27,7 +27,7 @@ export default function Navbar() {
             </Link>
           </Button>
           <Button variant={"outline"} className="rounded-full" asChild>
-            <Link href="#">
+            <Link href="/cart">
               <ShoppingCart className="w-5 h-5" />
             </Link>
           </Button>
