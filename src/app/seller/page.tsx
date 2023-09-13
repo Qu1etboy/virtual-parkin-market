@@ -45,7 +45,7 @@ export default function SelectStorePage() {
         </CardContent>
         <CardFooter>
           <Button asChild>
-            <Link href="#">สร้างร้านค้าใหม่</Link>
+            <Link href="/seller/create">สร้างร้านค้าใหม่</Link>
           </Button>
         </CardFooter>
       </Card>
