@@ -44,27 +44,47 @@ const handler = NextAuth({
 
         // Any object returned will be saved in `user` property of the JWT
         return user;
-
         // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
       },
     }),
   ],
-  // callbacks: {
-  //   async signIn({ user, account, profile, email, credentials }) {
-  //     const isAllowedToSignIn = true
-  //     if (isAllowedToSignIn) {
-  //       return true
-  //     } else {
-  //       // Return false to display a default error message
-  //       return false
-  //       // Or you can return a URL to redirect to:
-  //       // return '/unauthorized'
-  //     }
-  //   }
-  // },
+
+  session: {
+    strategy: "jwt",
+  },
+
+  callbacks: {
+    jwt: async ({ user, token }) => {
+      console.log("[jwt] user = ", user);
+      console.log("[jwt] token = ", token);
+
+      return token;
+    },
+
+    session: async ({ session, token }) => {
+      if (session.user) {
+        const user = await prisma.user.findUnique({
+          where: {
+            id: token.sub,
+          },
+        });
+
+        if (user) {
+          session.user = user;
+        }
+      }
+
+      console.log("[session] session = ", session);
+      console.log("[session] token = ", token);
+
+      return session;
+    },
+  },
+
   pages: {
     signIn: "/login",
   },
+
   adapter: PrismaAdapter(prisma),
   secret: process.env.SECRET,
 });

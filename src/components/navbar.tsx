@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Heart, ShoppingCart } from "lucide-react";
-import { signOut } from "next-auth/react";
 import { getServerSession } from "next-auth/next";
 import {
   DropdownMenu,
@@ -14,11 +13,10 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import LogOutButton from "./logout-button";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export default async function Navbar() {
   const session = await getServerSession();
-
-  console.log(session?.user);
 
   return (
     <header className="px-3 py-6 border-b">
@@ -58,9 +56,12 @@ export default async function Navbar() {
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <div>{session.user?.email}</div>
+                <Avatar>
+                  <AvatarImage src={session.user?.image ?? undefined} />
+                  <AvatarFallback>JD</AvatarFallback>
+                </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="mr-3">
                 <DropdownMenuLabel>{session.user?.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>My Store</DropdownMenuItem>
