@@ -28,7 +28,7 @@ export default function SelectStorePage() {
             {stores.map((store) => (
               <Link
                 key={store.id}
-                href="#"
+                href={`/seller/${store.id}`}
                 className="p-4 rounded-md border mb-4 flex items-start last:mb-0 hover:bg-gray-100"
               >
                 <div className="space-y-1">
