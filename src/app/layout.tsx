@@ -1,9 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Sarabun } from "next/font/google";
+import { Prompt } from "next/font/google";
 import Providers from "./providers";
 
-const sarabun = Sarabun({
+const prompt = Prompt({
   subsets: ["latin", "latin-ext", "thai"],
   weight: ["400", "500", "600", "700"],
 });
@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="th">
-      <body className={sarabun.className}>
+      <body className={prompt.className}>
         <Providers>{children}</Providers>
       </body>
     </html>

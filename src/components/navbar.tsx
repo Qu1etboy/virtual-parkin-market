@@ -15,6 +15,8 @@ import {
 import LogOutButton from "./logout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
+const cart = 5;
+
 export default async function Navbar() {
   const session = await getServerSession();
 
@@ -38,23 +40,28 @@ export default async function Navbar() {
         </form>
 
         <div className="flex items-center gap-3">
-          <Button variant={"outline"} className="rounded-full" asChild>
-            <Link href="#">
-              <Heart className="w-5 h-5" />
-            </Link>
-          </Button>
-          <Button variant={"outline"} className="rounded-full" asChild>
-            <Link href="/cart">
-              <ShoppingCart className="w-5 h-5" />
-            </Link>
-          </Button>
+          <div className="flex items-center">
+            <Button variant={"ghost"} className="rounded-full" asChild>
+              <Link href="#">
+                <Heart className="w-5 h-5" />
+              </Link>
+            </Button>
+            <Button variant={"ghost"} className="rounded-full relative" asChild>
+              <Link href="/cart">
+                <ShoppingCart className="w-5 h-5" />
+                <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900">
+                  {cart < 100 ? cart : cart + "+"}
+                </div>
+              </Link>
+            </Button>
+          </div>
           {!session ? (
             <>
               <Button variant={"outline"} className="rounded-full" asChild>
-                <Link href="/login">Login</Link>
+                <Link href="/login">เข้าสู่ระบบ</Link>
               </Button>
               <Button className="rounded-full" asChild>
-                <Link href="/signup">Sign up</Link>
+                <Link href="/signup">สมัครสมาชิก</Link>
               </Button>
             </>
           ) : (

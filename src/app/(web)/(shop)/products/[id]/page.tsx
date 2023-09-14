@@ -38,9 +38,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
           <Quantity />
 
-          <Button className="w-full rounded-full py-6 mt-3">Add to cart</Button>
+          <Button className="w-full rounded-full py-6 mt-3">
+            เพิ่มเข้าตะกร้า
+          </Button>
           <Button variant="outline" className="w-full rounded-full py-6 mt-3">
-            Add to wishlist
+            เพิ่มเข้ารายการโปรด
           </Button>
         </div>
       </section>
@@ -48,7 +50,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       <section className="my-12">
         <div className="container mx-auto">
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold my-3">
-            Product Description
+            รายละเอียดสินค้า
           </h2>
           <article className="prose max-w-none">
             <p>
@@ -76,7 +78,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       <section className="my-12">
         <div className="container mx-auto">
           <h2 className="flex items-center text-lg sm:text-xl md:text-2xl font-bold my-3">
-            4.6 Rating <Dot /> {product.reviews.length} Reviews
+            4.6 Rating <Dot /> {product.reviews.length} รีวิว
           </h2>
           <div className="my-6">
             {product.reviews.map((review) => (
