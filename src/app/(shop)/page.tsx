@@ -1,7 +1,7 @@
 import CategoryMenu from "@/components/category-menu";
 import ProductCard from "@/components/product-card";
 import React from "react";
-import { products } from "../__mock__/products";
+import { products } from "../../__mock__/products";
 
 export default function ShopHome() {
   return (

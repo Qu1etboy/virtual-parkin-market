@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import React from "react";
-import { stores } from "../__mock__/stores";
+import { stores } from "../../__mock__/stores";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Store } from "lucide-react";

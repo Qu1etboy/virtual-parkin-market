@@ -1,4 +1,4 @@
-import { products } from "@/app/__mock__/products";
+import { products } from "@/__mock__/products";
 import React from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
