@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import React from "react";
 import Image from "next/image";
+import Quantity from "@/components/quantity";
 
 export default function CartItem({ product }: { product: any }) {
   return (
@@ -32,6 +33,7 @@ export default function CartItem({ product }: { product: any }) {
             </p>
           </div> */}
           <p>{product.price}</p>
+          <Quantity />
           {/* <Currency value={data.price} /> */}
         </div>
       </div>

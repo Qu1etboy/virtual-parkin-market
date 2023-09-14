@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ReviewCard from "@/components/review-card";
 import { Dot } from "lucide-react";
+import Quantity from "@/components/quantity";
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   // Get product from product id
@@ -33,15 +34,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           </h1>
           <p>฿ {product.price}</p>
 
-          <div className="mt-6">
-            <Button variant={"outline"} className="rounded-full">
-              -
-            </Button>
-            <span className="px-3">1</span>
-            <Button variant={"outline"} className="rounded-full">
-              +
-            </Button>
-          </div>
+          <Quantity />
 
           <Button className="w-full rounded-full py-6 mt-3">Add to cart</Button>
           <Button variant="outline" className="w-full rounded-full py-6 mt-3">
