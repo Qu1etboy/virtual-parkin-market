@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ReviewCard from "@/components/review-card";
 import { Dot } from "lucide-react";
 import Quantity from "@/components/quantity";
+import Currency from "@/components/currency";
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   // Get product from product id
@@ -32,7 +33,8 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">
             {product.name}
           </h1>
-          <p>฿ {product.price}</p>
+          {/* <p>฿ {product.price}</p> */}
+          <Currency value={product.price} />
 
           <Quantity />
 

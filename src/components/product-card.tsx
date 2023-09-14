@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Currency from "./currency";
 
 export default function ProductCard({
   product,
@@ -20,7 +21,7 @@ export default function ProductCard({
       />
       <div>
         <h3 className="font-bold">{product.name}</h3>
-        <p className="text-sm">฿ {product.price}</p>
+        <Currency value={product.price} />
       </div>
     </Link>
   );

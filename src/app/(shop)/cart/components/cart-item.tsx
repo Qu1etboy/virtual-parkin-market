@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import React from "react";
 import Image from "next/image";
 import Quantity from "@/components/quantity";
+import Currency from "@/components/currency";
 
 export default function CartItem({ product }: { product: any }) {
   return (
@@ -32,9 +33,8 @@ export default function CartItem({ product }: { product: any }) {
               {data.size.name}
             </p>
           </div> */}
-          <p>{product.price}</p>
+          <Currency value={product.price} />
           <Quantity />
-          {/* <Currency value={data.price} /> */}
         </div>
       </div>
     </li>
