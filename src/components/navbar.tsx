@@ -14,6 +14,7 @@ import {
 } from "./ui/dropdown-menu";
 import LogOutButton from "./logout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import UserAvatar from "./user-avatar";
 
 const cart = 5;
 
@@ -65,24 +66,7 @@ export default async function Navbar() {
               </Button>
             </>
           ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Avatar>
-                  <AvatarImage src={session.user?.image ?? undefined} />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="mr-3">
-                <DropdownMenuLabel>{session.user?.email}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>My Store</DropdownMenuItem>
-                <DropdownMenuItem>Account Settings</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LogOutButton />
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <UserAvatar user={session?.user as any} />
           )}
         </div>
       </div>
