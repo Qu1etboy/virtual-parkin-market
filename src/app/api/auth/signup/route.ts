@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
 export async function POST(req: Request) {
-  const { email, password } = await req.json();
+  const { email, password, name } = await req.json();
 
   // Check if user exists
   const user = await prisma.user.findUnique({
@@ -23,6 +23,7 @@ export async function POST(req: Request) {
     data: {
       email,
       password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+      name: name.firstName + " " + name.lastName,
     },
   });
 

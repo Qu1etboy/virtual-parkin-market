@@ -23,6 +23,10 @@ export default function SignUpPage() {
     defaultValues: {
       email: "",
       password: "",
+      name: {
+        firstName: "",
+        lastName: "",
+      },
     },
   });
 
@@ -40,9 +44,9 @@ export default function SignUpPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl">
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">Create an account</CardTitle>
+            <CardTitle className="text-2xl">สร้างบัญชีผู้ใช้</CardTitle>
             <CardDescription>
-              Enter your email below to create your account
+              กรอกรายละเอียดด้านล่างเพื่อเริ่มต้นใช้งาน
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
@@ -62,26 +66,44 @@ export default function SignUpPage() {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
+                  หรือเริ่มต้นด้วย
                 </span>
               </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="firstName">ชื่อจริง</Label>
+              <Input
+                id="firstName"
+                type="text"
+                placeholder="John"
+                {...register("name.firstName")}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="lastName">นามสกุล</Label>
+              <Input
+                id="lastName"
+                type="text"
+                placeholder="Doe"
+                {...register("name.lastName")}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="email">ที่อยู่อีเมล</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="me@example.com"
                 {...register("email")}
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">รหัสผ่าน</Label>
               <Input id="password" type="password" {...register("password")} />
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">Create account</Button>
+            <Button className="w-full">สร้างบัญชี</Button>
           </CardFooter>
         </Card>
       </form>
