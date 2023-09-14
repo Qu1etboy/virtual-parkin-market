@@ -57,6 +57,37 @@ NEXT_PUBLIC_API_URL="your_api_url_here"
    pnpx prisma db push
    ```
 
+## Setup stripe on local development
+
+Install stripe cli
+
+[⚠️ Please look at the doc for instruction](https://stripe.com/docs/stripe-cli#install)
+
+Login to stripe (required stripe account)
+
+```sh
+stripe login
+```
+
+Forward event to a local webhook endpoint.
+
+```sh
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+```
+
+Trigger events to test your webhooks integration.
+
+```sh
+stripe trigger payment_intent.succeeded
+```
+
+Finally, setup your key in `.env` file.
+
+```env
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+```
+
 ### Usage
 
 To start the development server, run:
