@@ -4,21 +4,6 @@
 
 This is a Next.js project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). This project also uses Prisma for database interactions and is Dockerized for easy deployment and scalability.
 
-## Table of Contents
-
-- [Virtual ParkIn](#virtual-parkin)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Setting Environment Variables](#setting-environment-variables)
-    - [Installation](#installation)
-    - [Usage](#usage)
-  - [Learn More](#learn-more)
-  - [Contributing](#contributing)
-  - [Deploy](#deploy)
-  - [License](#license)
-  - [Acknowledgments](#acknowledgments)
-
 ## Getting Started
 
 ### Prerequisites
@@ -101,30 +86,3 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-## Learn More
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Learn Next.js](https://nextjs.org/learn)
-- [Prisma Documentation](https://www.prisma.io/docs/)
-- [Docker Documentation](https://docs.docker.com/)
-
-## Contributing
-
-Contributions are welcome! See the [Contributing Guide](CONTRIBUTING.md) for more details.
-
-## Deploy
-
-For easy deployment, use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
-
-- [Next.js Deployment Documentation](https://nextjs.org/docs/deployment)
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
-## Acknowledgments
-
-- [Next.js](https://github.com/vercel/next.js/)
-- [Prisma](https://github.com/prisma/prisma)
-- [Docker](https://github.com/docker)
