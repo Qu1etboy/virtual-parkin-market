@@ -8,6 +8,36 @@ import ReviewCard from "@/components/review-card";
 import { Dot } from "lucide-react";
 import Quantity from "@/components/quantity";
 import Currency from "@/components/currency";
+import Rating from "@mui/material/Rating";
+import { Progress } from "@/components/ui/progress";
+
+const ratings = [
+  {
+    id: "1",
+    star: 5,
+    count: 10,
+  },
+  {
+    id: "2",
+    star: 4,
+    count: 5,
+  },
+  {
+    id: "3",
+    star: 3,
+    count: 2,
+  },
+  {
+    id: "4",
+    star: 2,
+    count: 1,
+  },
+  {
+    id: "5",
+    star: 1,
+    count: 0,
+  },
+];
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   // Get product from product id
@@ -80,6 +110,25 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           <h2 className="flex items-center text-lg sm:text-xl md:text-2xl font-bold my-3">
             4.6 Rating <Dot /> {product.reviews.length} รีวิว
           </h2>
+          <div className="flex gap-6">
+            <Rating name="read-only" value={4.6} precision={0.5} readOnly />
+
+            <div className="w-full max-w-xl">
+              {ratings.map((rating) => (
+                <div className="flex items-center gap-3" key={rating.id}>
+                  <Rating
+                    name="read-only"
+                    value={rating.star}
+                    size="small"
+                    readOnly
+                  />
+                  <Progress value={(rating.count / 18) * 100} className="h-2" />
+                  <span>{rating.count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="my-6">
             {product.reviews.map((review) => (
               <ReviewCard key={review.id} review={review} />
