@@ -35,7 +35,7 @@ export default async function Navbar() {
           <Input
             type="search"
             id="search"
-            placeholder="Search"
+            placeholder="ค้นหาสินค้า"
             className="rounded-full pl-10 w-full md:w-[300px] max-w-6xl"
           />
         </form>

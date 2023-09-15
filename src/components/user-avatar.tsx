@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import logout from "next-auth/next";
 import LogOutButton from "./logout-button";
+import Link from "next/link";
 
 export default function UserAvatar({ user }: { user: Prisma.User }) {
   return (
@@ -31,7 +32,9 @@ export default function UserAvatar({ user }: { user: Prisma.User }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>หน้าร้านค้า</DropdownMenuItem>
-          <DropdownMenuItem>ตั้งค่าบัญชี</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/settings">การตั้งค่า</Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
