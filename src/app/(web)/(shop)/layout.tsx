@@ -1,3 +1,4 @@
+import Banner from "@/components/banner";
 import Navbar from "@/components/navbar";
 import React from "react";
 
@@ -8,6 +9,7 @@ export default function ShopLayout({
 }) {
   return (
     <>
+      <Banner />
       <Navbar />
       {children}
     </>
