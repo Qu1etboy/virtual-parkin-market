@@ -28,13 +28,14 @@ export default async function Navbar() {
           Virtual ParkIn
         </Link>
 
-        <form className="relative">
+        <form action="/products" className="relative">
           <label htmlFor="search">
             <Search className="absolute left-0 top-0 bottom-0 m-2 text-gray-400" />
           </label>
           <Input
             type="search"
             id="search"
+            name="q"
             placeholder="ค้นหาสินค้า"
             className="rounded-full pl-10 w-full md:w-[300px] max-w-6xl"
           />
