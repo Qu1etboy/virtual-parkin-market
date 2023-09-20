@@ -33,6 +33,9 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Label } from "@/components/ui/label";
 // import { toast } from "@/components/ui/toast";
 
 const profileFormSchema = z.object({
@@ -82,6 +85,8 @@ export function ProfileForm() {
     mode: "onChange",
   });
 
+  const { data: session } = useSession();
+
   // const { fields, append } = useFieldArray({
   //   name: "urls",
   //   control: form.control,
@@ -102,6 +107,22 @@ export function ProfileForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="w-full flex items-center gap-3">
+          <Avatar className="ml-auto w-20 h-20">
+            <AvatarImage
+              src={session?.user.image ?? ""}
+              alt={session?.user.name ?? ""}
+            />
+            <AvatarFallback>
+              {session?.user.name ? session?.user.name[0] : null}
+            </AvatarFallback>
+          </Avatar>
+
+          <div className="w-full">
+            <Label htmlFor="avatar">เปลี่ยนรูปโปรไฟล์</Label>
+            <Input type="file" placeholder="เปลี่ยนรูปโปรไฟล์" />
+          </div>
+        </div>
         <FormField
           control={form.control}
           name="name.first_name"
