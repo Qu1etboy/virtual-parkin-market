@@ -12,7 +12,7 @@ export default async function SellerNavbar() {
       <div className="container flex items-center">
         {/* <StoreSwitcher /> */}
         <SellerNavLinks />
-        <UserAvatar user={session?.user as any} />
+        {session && <UserAvatar user={session?.user as any} />}
       </div>
     </header>
   );
