@@ -9,8 +9,10 @@ export default function SellerOrderPage() {
     <main>
       <section className="container py-8">
         <div className="border-b pb-4">
-          <h1 className="text-4xl font-semibold">ออเดอร์ทั้งหมด</h1>
-          <p>ออเดอร์ทั้งหมดของร้านคุณ</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+            ออเดอร์ทั้งหมด
+          </h1>
+          <p className="text-gray-600">ออเดอร์ทั้งหมดของร้านคุณ</p>
         </div>
         <div className="mt-5">
           <DataTable columns={columns} data={orders} />

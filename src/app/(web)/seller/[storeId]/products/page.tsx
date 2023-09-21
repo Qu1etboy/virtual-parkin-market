@@ -11,8 +11,10 @@ export default function SellerProductPage() {
     <main>
       <section className="container py-8">
         <div className="border-b pb-4">
-          <h1 className="text-4xl font-semibold">สินค้าทั้งหมด</h1>
-          <p>สินค้าทั้งหมดของร้านคุณ</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+            สินค้าทั้งหมด
+          </h1>
+          <p className="text-gray-600">สินค้าทั้งหมดของร้านคุณ</p>
         </div>
         <div className="mt-5">
           <Button className="mb-3" asChild>

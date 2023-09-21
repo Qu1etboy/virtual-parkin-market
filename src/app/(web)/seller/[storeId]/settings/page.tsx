@@ -37,8 +37,10 @@ export default function SellerSettingsPage() {
     <main>
       <section className="container py-8">
         <div className="border-b pb-4">
-          <h1 className="text-4xl font-semibold">ตั้งค่าร้านค้าของคุณ</h1>
-          <p>ตั้งค่าและปรับแต่งร้านค้าของคุณ</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+            ตั้งค่าร้านค้าของคุณ
+          </h1>
+          <p className="text-gray-600">ตั้งค่าและปรับแต่งร้านค้าของคุณ</p>
         </div>
         <div className="mt-5">
           <div className="relative h-auto">

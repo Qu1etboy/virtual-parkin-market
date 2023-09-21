@@ -23,8 +23,10 @@ export default function OrderItemPage({
     <main>
       <section className="container py-8">
         <div className="border-b pb-4">
-          <h1 className="text-4xl font-semibold">รายละเอียดออเดอร์</h1>
-          <p>ออเดอร์ไอดี {params.orderId}</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+            รายละเอียดออเดอร์
+          </h1>
+          <p className="text-gray-600">ออเดอร์ไอดี {params.orderId}</p>
         </div>
         <div className="mt-5">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3">

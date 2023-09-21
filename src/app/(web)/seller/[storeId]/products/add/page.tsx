@@ -165,8 +165,12 @@ export default function AddProductPage() {
     <main>
       <section className="container py-8">
         <div className="border-b pb-4">
-          <h1 className="text-4xl font-semibold">เพิ่มสินค้า</h1>
-          <p>กรอกรายละเอียดเพื่อเพิ่มสินค้าเข้าร้าน</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+            เพิ่มสินค้า
+          </h1>
+          <p className="text-gray-600">
+            กรอกรายละเอียดเพื่อเพิ่มสินค้าเข้าร้าน
+          </p>
         </div>
         <div className="mt-5">
           <Form {...form}>

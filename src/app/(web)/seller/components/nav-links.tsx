@@ -33,15 +33,17 @@ export default function SellerNavLinks() {
   ];
 
   return (
-    <nav className="ml-24">
-      <ul className="hidden items-center gap-3 md:flex">
+    <nav>
+      <ul className="hidden items-center md:flex mb-4">
         {navLinks.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
               className={cn(
-                link.active ? "text-black" : "text-neutral-500",
-                "duration-300 hover:text-black"
+                link.active
+                  ? "text-black border-b-2 border-b-black"
+                  : "text-neutral-500",
+                "text-sm duration-300 hover:text-black pb-4 px-8"
               )}
             >
               {link.label}

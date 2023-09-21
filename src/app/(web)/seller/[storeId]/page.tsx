@@ -23,8 +23,10 @@ export default function Page() {
     <main>
       <section className="container py-8">
         <div className="border-b pb-4">
-          <h1 className="text-4xl font-semibold">ภาพรวม</h1>
-          <p>ภาพรวมร้านค้าของคุณ</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+            ภาพรวม
+          </h1>
+          <p className="text-gray-600">ภาพรวมร้านค้าของคุณ</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-4">
           <Card>
