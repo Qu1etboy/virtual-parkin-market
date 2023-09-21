@@ -1,7 +1,18 @@
 "use client";
 
 import React from "react";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 const data = [
   {
@@ -57,7 +68,13 @@ const data = [
 export default function Overview() {
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data}>
+      <LineChart
+        width={730}
+        height={250}
+        data={data}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey="name"
           stroke="#888888"
@@ -70,10 +87,11 @@ export default function Overview() {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `$${value}`}
         />
-        <Bar dataKey="total" fill="#adfa1d" radius={[4, 4, 0, 0]} />
-      </BarChart>
+        <Tooltip />
+        {/* <Legend /> */}
+        <Line type="monotone" dataKey="total" stroke="#f97316" />
+      </LineChart>
     </ResponsiveContainer>
   );
 }
