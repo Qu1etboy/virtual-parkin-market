@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import {
   CaretSortIcon,
   CheckIcon,
@@ -37,9 +37,9 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<
 interface StoreSwitcherProps extends PopoverTriggerProps {}
 
 export default function StoreSwitcher({ className }: StoreSwitcherProps) {
-  const [open, setOpen] = React.useState(false);
-  const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
-  const [selectedStore, setSelectedStore] = React.useState(stores[0]);
+  const [open, setOpen] = useState(false);
+  const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
+  const [selectedStore, setSelectedStore] = useState(stores[0]);
 
   const router = useRouter();
 
@@ -54,11 +54,11 @@ export default function StoreSwitcher({ className }: StoreSwitcherProps) {
             aria-label="Select a team"
             className={cn("w-[200px] justify-between", className)}
           >
-            <Avatar className="mr-2 h-5 w-5">
+            <Avatar className="mr-4 h-10 w-10">
               <AvatarImage src="" alt={selectedStore?.name} />
               <AvatarFallback>{selectedStore?.name[0]}</AvatarFallback>
             </Avatar>
-            {selectedStore?.name}
+            <span className="text-base font-normal">{selectedStore?.name}</span>
             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
