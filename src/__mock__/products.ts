@@ -1,10 +1,10 @@
 export const products = [
   {
     id: 1,
-    name: "Product 1",
+    name: "Apple Watch Series 6",
     thumbnail:
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2798&q=80",
-    price: 100,
+    price: 9000,
     reviews: [
       {
         id: 1,
@@ -23,13 +23,14 @@ export const products = [
         createdAt: new Date(),
       },
     ],
+    category: "อิเล็กทรอนิกส์",
   },
   {
     id: 2,
-    name: "Product 2",
+    name: "Apple AirPods Pro",
     thumbnail:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80",
-    price: 200,
+    price: 12000,
     reviews: [
       {
         id: 3,
@@ -40,14 +41,16 @@ export const products = [
         createdAt: new Date(),
       },
     ],
+    category: "อิเล็กทรอนิกส์",
   },
   {
     id: 3,
-    name: "Product 3",
+    name: "Nike Air Max 270",
     thumbnail:
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80",
-    price: 300,
+    price: 6500,
     reviews: [],
+    category: "กีฬา",
   },
 ];
 

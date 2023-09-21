@@ -5,11 +5,12 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ReviewCard from "@/components/review-card";
-import { Dot } from "lucide-react";
+import { Dot, Heart } from "lucide-react";
 import Quantity from "@/components/quantity";
 import Currency from "@/components/currency";
 import Rating from "@mui/material/Rating";
 import { Progress } from "@/components/ui/progress";
+import Link from "next/link";
 
 const ratings = [
   {
@@ -60,26 +61,39 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           />
         </div>
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">
+          <span className="text-orange-500">{product.category}</span>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
             {product.name}
           </h1>
-          {/* <p>฿ {product.price}</p> */}
           <Currency value={product.price} />
-
-          <Quantity />
-
+          <div className="flex items-center gap-6 mt-6 mb-3">
+            <Quantity />
+            <span className="text-gray-600">สินค้าเหลืออยู่ 6 ชิ้น</span>
+          </div>
           <Button className="w-full rounded-full py-6 mt-3">
             เพิ่มเข้าตะกร้า
           </Button>
           <Button variant="outline" className="w-full rounded-full py-6 mt-3">
-            เพิ่มเข้ารายการโปรด
+            <Heart className="mr-3 w-5 h-5" />
+            <span>รายการโปรด</span>
           </Button>
+
+          <div className="mt-6">
+            <h2 className="text-sm text-gray-600">จําหน่ายโดย</h2>
+            <Link href="#" className="flex items-center gap-3 mt-3 group">
+              <Avatar>
+                <AvatarImage src="" alt="" />
+                <AvatarFallback>N</AvatarFallback>
+              </Avatar>
+              <span className="group-hover:text-orange-600">Nike Thailand</span>
+            </Link>
+          </div>
         </div>
       </section>
 
       <section className="my-12">
         <div className="container mx-auto">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold my-3">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold my-3">
             รายละเอียดสินค้า
           </h2>
           <article className="prose max-w-none">
@@ -107,7 +121,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
       <section className="my-12">
         <div className="container mx-auto">
-          <h2 className="flex items-center text-lg sm:text-xl md:text-2xl font-bold my-3">
+          <h2 className="flex items-center text-lg sm:text-xl md:text-2xl font-semibold my-3">
             4.6 Rating <Dot /> {product.reviews.length} รีวิว
           </h2>
           <div className="flex gap-6">

@@ -34,7 +34,7 @@ export default function CartItem({ product }: { product: any }) {
             </p>
           </div> */}
           <Currency value={product.price} />
-          <Quantity />
+          <Quantity className="mt-6" />
         </div>
       </div>
     </li>
