@@ -13,7 +13,7 @@ export const columns: ColumnDef<OrderItem>[] = [
   {
     accessorKey: "product",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Product" />
+      <DataTableColumnHeader column={column} title="สินค้า" />
     ),
     cell: ({ row }) => {
       const product: any = row.getValue("product");
@@ -36,7 +36,7 @@ export const columns: ColumnDef<OrderItem>[] = [
   {
     accessorKey: "price",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price" />
+      <DataTableColumnHeader column={column} title="ราคา" />
     ),
     cell: ({ row }) => {
       return <span>{row.getValue("price")}</span>;
@@ -48,7 +48,7 @@ export const columns: ColumnDef<OrderItem>[] = [
   {
     accessorKey: "quantity",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Quantity" />
+      <DataTableColumnHeader column={column} title="จํานวน" />
     ),
     cell: ({ row }) => {
       return <span>{row.getValue("quantity")}</span>;
