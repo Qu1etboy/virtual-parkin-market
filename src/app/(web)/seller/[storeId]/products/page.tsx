@@ -1,10 +1,10 @@
-import { columns } from "@/components/columns";
+import { columns } from "./components/columns";
 import { DataTable } from "@/components/data-table/data-table";
 import React from "react";
-import tasks from "@/__mock__/tasks/tasks.json";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { productsInStock } from "@/__mock__/products";
 
 export default function SellerProductPage() {
   return (
@@ -21,7 +21,7 @@ export default function SellerProductPage() {
               เพิ่มสินค้า
             </Link>
           </Button>
-          <DataTable columns={columns} data={tasks} />
+          <DataTable columns={columns} data={productsInStock} />
         </div>
       </section>
     </main>

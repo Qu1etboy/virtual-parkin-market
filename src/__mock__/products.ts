@@ -50,3 +50,45 @@ export const products = [
     reviews: [],
   },
 ];
+
+export const productsInStock = [
+  {
+    id: 1,
+    product: {
+      name: "Product 1",
+      thumbnail:
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2798&q=80",
+    },
+    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+    price: 100,
+    stockQuantity: 10,
+    forSell: true,
+  },
+  {
+    id: 2,
+    product: {
+      name: "Product 2",
+      thumbnail:
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80",
+    },
+    price: 200,
+    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+    stockQuantity: 5,
+    forSell: true,
+  },
+  {
+    id: 3,
+    product: {
+      name: "Product 3",
+      thumbnail:
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80",
+    },
+    price: 300,
+    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+    stockQuantity: 0,
+    forSell: false,
+  },
+];
+
+export type Product = (typeof products)[0];
+export type ProductInStock = (typeof productsInStock)[0];
