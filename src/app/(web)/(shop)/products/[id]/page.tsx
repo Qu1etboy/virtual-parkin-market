@@ -11,6 +11,7 @@ import Currency from "@/components/currency";
 import Rating from "@mui/material/Rating";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
+import { Gallery } from "@/components/gallery";
 
 const ratings = [
   {
@@ -50,17 +51,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
   return (
     <main className="my-12">
-      <section className="container mx-auto grid grid-cols-1 md:grid-cols-2">
+      <section className="container mx-auto grid grid-cols-1 lg:grid-cols-2">
         <div>
-          <Image
-            src={product.thumbnail}
-            alt={product.name}
-            width={600}
-            height={600}
-            className="rounded-lg"
-          />
+          <Gallery images={product.images} />
         </div>
-        <div>
+        <div className="py-4 px-8">
           <span className="text-orange-500">{product.category}</span>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
             {product.name}
