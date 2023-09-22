@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ReviewCard from "@/components/review-card";
-import { Dot, Heart } from "lucide-react";
+import { Dot, Heart, PenLine } from "lucide-react";
 import Quantity from "@/components/quantity";
 import Currency from "@/components/currency";
 import Rating from "@mui/material/Rating";
@@ -119,6 +119,12 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           <h2 className="flex items-center text-lg sm:text-xl md:text-2xl font-semibold my-3">
             4.6 Rating <Dot /> {product.reviews.length} รีวิว
           </h2>
+          <Button className="rounded-full" asChild>
+            <Link href={`/products/${params.id}/review#write-review`}>
+              <PenLine className="inline-block w-4 h-4 mr-3" />
+              รีวิวสินค้า
+            </Link>
+          </Button>
           <div className="flex gap-6">
             <Rating name="read-only" value={4.6} precision={0.5} readOnly />
 
