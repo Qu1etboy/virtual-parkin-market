@@ -18,10 +18,10 @@ const sidebarNavItems = [
     title: "บัญชีของฉัน",
     href: "/settings/account",
   },
-  // {
-  //   title: "Appearance",
-  //   href: "/examples/forms/appearance",
-  // },
+  {
+    title: "สมุดที่อยู่",
+    href: "/settings/address",
+  },
   // {
   //   title: "Notifications",
   //   href: "/examples/forms/notifications",
