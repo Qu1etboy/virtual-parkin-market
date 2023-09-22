@@ -75,7 +75,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
           <div className="mt-6">
             <h2 className="text-sm text-gray-600">จําหน่ายโดย</h2>
-            <Link href="#" className="flex items-center gap-3 mt-3 group">
+            <Link href="/shop/1" className="flex items-center gap-3 mt-3 group">
               <Avatar>
                 <AvatarImage src="" alt="" />
                 <AvatarFallback>N</AvatarFallback>
