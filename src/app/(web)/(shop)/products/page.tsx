@@ -2,114 +2,42 @@
 
 import { products } from "@/__mock__/products";
 import ProductCard from "@/components/product-card";
-import { Checkbox } from "@/components/ui/checkbox";
-import Link from "next/link";
 import React from "react";
-import { useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils";
-
-const prices = [
-  {
-    id: "1",
-    name: "น้อยกว่า 100 บาท",
-    min: 0,
-    max: 100,
-  },
-  {
-    id: "2",
-    name: "100 - 500 บาท",
-    min: 100,
-    max: 500,
-  },
-  {
-    id: "3",
-    name: "500 - 1000 บาท",
-    min: 500,
-    max: 1000,
-  },
-  {
-    id: "4",
-    name: "มากกว่า 1000 บาท",
-    min: 1000,
-    max: 999999,
-  },
-];
-
-const productCategories = [
-  { id: 1, name: "อิเล็กทรอนิกส์" },
-  { id: 2, name: "เสื้อผ้า" },
-  { id: 3, name: "เฟอร์นิเจอร์" },
-  { id: 4, name: "ความงาม" },
-  { id: 5, name: "หนังสือ" },
-  { id: 6, name: "กีฬา" },
-  { id: 7, name: "ของเล่น" },
-  { id: 8, name: "สุขภาพ" },
-  { id: 9, name: "ของชำร่วย" },
-  { id: 10, name: "ยานยนต์" },
-  { id: 11, name: "สัตว์เลี้ยง" },
-  { id: 12, name: "เครื่องประดับ" },
-  { id: 13, name: "ศิลปะ" },
-  { id: 14, name: "เครื่องมือ" },
-  { id: 15, name: "เด็ก" },
-];
+import { Button } from "@/components/ui/button";
+import { Drawer } from "vaul";
+import ProductFilter from "./components/filter";
 
 export default function ProductsPage() {
-  const searchParams = useSearchParams();
-  const categoryId = searchParams.get("category");
-
   return (
     <main className="container mx-auto">
-      <div className="flex px-6 py-6">
-        <aside className="w-full max-w-[150px] space-y-4">
-          <div>
-            <h2>ประเภท</h2>
-            <ul className="text-sm space-y-2 mt-2 ml-2">
-              {productCategories.map((category) => (
-                <li
-                  key={category.id}
-                  className={cn(
-                    "text-gray-600 hover:text-orange-600",
-                    categoryId && +categoryId === category.id
-                      ? "text-orange-600"
-                      : null
-                  )}
-                >
-                  <Link href={`/products?category=${category.id}`}>
-                    {category.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h2>ราคา</h2>
-            <ul className="text-sm space-y-2 mt-2 ml-2">
-              {prices.map((price) => (
-                <li
-                  key={price.id}
-                  className="flex items-top space-x-2 text-gray-600 hover:text-orange-600"
-                >
-                  <Checkbox
-                    id={price.id}
-                    className="data-[state=checked]:bg-orange-600"
-                  />
-                  <label
-                    htmlFor={price.id}
-                    className="text-sm text-gray-600 cursor-pointer"
-                  >
-                    {price.name}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
+      <div className="flex sm:px-6 py-6">
+        <ProductFilter className="hidden sm:block" />
 
-        <section className="pl-12 mr-6 w-full">
-          <h1 className="text-xl sm:text-2xl md:text-3xl mb-12">
+        <section className="sm:pl-12 pl-0 sm:mr-6 mr-0 w-full">
+          <h1 className="flex justify-between items-center text-xl sm:text-2xl md:text-3xl mb-12">
             สินค้าทั้งหมด
+            {/* On mobile */}
+            <Drawer.Root>
+              <Drawer.Trigger asChild>
+                <Button
+                  variant="outline"
+                  className="block sm:hidden rounded-full"
+                >
+                  ตัวกรอง
+                </Button>
+              </Drawer.Trigger>
+              <Drawer.Portal>
+                <Drawer.Overlay className="fixed inset-0 bg-black/40" />
+                <Drawer.Content className="bg-zinc-100 flex flex-col rounded-t-[10px] h-[96%] mt-24 fixed bottom-0 left-0 right-0">
+                  <div className="p-4 bg-white rounded-t-[10px] flex-1">
+                    <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300 mb-8" />
+                    <ProductFilter className="sm:hidden block" />
+                  </div>
+                </Drawer.Content>
+              </Drawer.Portal>
+            </Drawer.Root>
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
             {products.map((product) => (
               <ProductCard
                 key={product.id}
