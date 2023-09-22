@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
+import MainLayout from "@/components/layout/main-layout";
 
 const AddProductSchema = z.object({
   name: z
@@ -159,185 +160,177 @@ export default function AddProductPage() {
     return () => {
       productImages.forEach((file: any) => URL.revokeObjectURL(file.preview));
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <main>
-      <section className="container py-8">
-        <div className="border-b pb-4">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
-            เพิ่มสินค้า
-          </h1>
-          <p className="text-gray-600">
-            กรอกรายละเอียดเพื่อเพิ่มสินค้าเข้าร้าน
-          </p>
-        </div>
-        <div className="mt-5">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="grid grid-cols-1 md:grid-cols-2"
-            >
-              <div className="space-y-8 p-4">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>ชื่อสินค้า</FormLabel>
+    <MainLayout
+      title="เพิ่มสินค้า"
+      description="กรอกรายละเอียดเพื่อเพิ่มสินค้าเข้าร้าน"
+    >
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid grid-cols-1 md:grid-cols-2"
+        >
+          <div className="space-y-8 p-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ชื่อสินค้า</FormLabel>
+                  <FormControl>
+                    <Input placeholder="ชื่อสินค้า" {...field} />
+                  </FormControl>
+                  <FormDescription>ไม่เกิน 255 ตัวอักษร</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>ประเภทสินค้า</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
                       <FormControl>
-                        <Input placeholder="ชื่อสินค้า" {...field} />
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            "w-[200px] justify-between",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value
+                            ? productCategories.find(
+                                (category) => category.id === field.value
+                              )?.name
+                            : "เลือกประเภทสินค้า"}
+                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
                       </FormControl>
-                      <FormDescription>ไม่เกิน 255 ตัวอักษร</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>ประเภทสินค้า</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                "w-[200px] justify-between",
-                                !field.value && "text-muted-foreground"
-                              )}
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0" align="start">
+                      <Command>
+                        <CommandInput placeholder="ค้นหาประเภทสินค้า" />
+                        <CommandEmpty>ไม่พบประเภทสินค้า</CommandEmpty>
+                        <CommandGroup className="max-h-[200px] overflow-auto">
+                          {productCategories.map((category) => (
+                            <CommandItem
+                              value={`${category.id}`}
+                              key={category.id}
+                              onSelect={() => {
+                                form.setValue("category", category.id);
+                              }}
+                              className="cursor-pointer"
                             >
-                              {field.value
-                                ? productCategories.find(
-                                    (category) => category.id === field.value
-                                  )?.name
-                                : "เลือกประเภทสินค้า"}
-                              <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-full p-0" align="start">
-                          <Command>
-                            <CommandInput placeholder="ค้นหาประเภทสินค้า" />
-                            <CommandEmpty>ไม่พบประเภทสินค้า</CommandEmpty>
-                            <CommandGroup className="max-h-[200px] overflow-auto">
-                              {productCategories.map((category) => (
-                                <CommandItem
-                                  value={`${category.id}`}
-                                  key={category.id}
-                                  onSelect={() => {
-                                    form.setValue("category", category.id);
-                                  }}
-                                  className="cursor-pointer"
-                                >
-                                  <CheckIcon
-                                    className={cn(
-                                      "mr-2 h-4 w-4",
-                                      category.id === field.value
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    )}
-                                  />
-                                  {category.name}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                      <FormDescription>
-                        เลือกประเภทของสินค้าให้ตรงกับสินค้าที่จะขายเพื่อให้ลูกค้าค้นหาสินค้าได้ง่ายขึ้น
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="grid grid-cols-2 gap-3">
-                  <FormField
-                    control={form.control}
-                    name="originalPrice"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>ราคาต้น</FormLabel>
-                        <FormControl>
-                          <Input type="number" placeholder="100" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="price"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>ราคาขาย</FormLabel>
-                        <FormControl>
-                          <Input type="number" placeholder="100" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <FormField
-                  control={form.control}
-                  name="stockQuantity"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>จํานวนสินค้าในคลัง</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="จํานวนสินค้าในคลัง"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>คําอธิบายสินค้า</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="คําอธิบายสินค้า" {...field} />
-                      </FormControl>
-                      <FormDescription>ไม่เกิน 1000 ตัวอักษร</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="space-y-8 p-4">
-                <div>
-                  <FormLabel>รูปภาพสินค้า</FormLabel>
+                              <CheckIcon
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  category.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {category.name}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                   <FormDescription>
-                    ลงรูปภาพที่มีคุณภาพจะช่วยให้ลูกค้าสนใจในสินค้ามากขึ้น
+                    เลือกประเภทของสินค้าให้ตรงกับสินค้าที่จะขายเพื่อให้ลูกค้าค้นหาสินค้าได้ง่ายขึ้น
                   </FormDescription>
-                  <Dropzone
-                    options={{
-                      onDrop,
-                    }}
-                    preview={<Previews files={productImages} />}
-                    className="my-3"
-                  />
-                </div>
-              </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="grid grid-cols-2 gap-3">
+              <FormField
+                control={form.control}
+                name="originalPrice"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>ราคาต้น</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="100" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>ราคาขาย</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="100" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="stockQuantity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>จํานวนสินค้าในคลัง</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="จํานวนสินค้าในคลัง"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>คําอธิบายสินค้า</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="คําอธิบายสินค้า" {...field} />
+                  </FormControl>
+                  <FormDescription>ไม่เกิน 1000 ตัวอักษร</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="space-y-8 p-4">
+            <div>
+              <FormLabel>รูปภาพสินค้า</FormLabel>
+              <FormDescription>
+                ลงรูปภาพที่มีคุณภาพจะช่วยให้ลูกค้าสนใจในสินค้ามากขึ้น
+              </FormDescription>
+              <Dropzone
+                options={{
+                  onDrop,
+                }}
+                preview={<Previews files={productImages} />}
+                className="my-3"
+              />
+            </div>
+          </div>
 
-              <div className="col-span-2 p-4">
-                <Button>เพิ่มสินค้า</Button>
-              </div>
-            </form>
-          </Form>
-        </div>
-      </section>
-    </main>
+          <div className="col-span-2 p-4">
+            <Button>เพิ่มสินค้า</Button>
+          </div>
+        </form>
+      </Form>
+    </MainLayout>
   );
 }

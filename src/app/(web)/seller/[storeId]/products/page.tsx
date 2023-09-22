@@ -5,27 +5,18 @@ import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { productsInStock } from "@/__mock__/products";
+import MainLayout from "@/components/layout/main-layout";
 
 export default function SellerProductPage() {
   return (
-    <main>
-      <section className="container py-8">
-        <div className="border-b pb-4">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
-            สินค้าทั้งหมด
-          </h1>
-          <p className="text-gray-600">สินค้าทั้งหมดของร้านคุณ</p>
-        </div>
-        <div className="mt-5">
-          <Button className="mb-3" asChild>
-            <Link href="products/add">
-              <PlusCircle className="inline-block mr-3" />
-              เพิ่มสินค้า
-            </Link>
-          </Button>
-          <DataTable columns={columns} data={productsInStock} />
-        </div>
-      </section>
-    </main>
+    <MainLayout title="สินค้าทั้งหมด" description="สินค้าทั้งหมดของร้านคุณ">
+      <Button className="mb-3" asChild>
+        <Link href="products/add">
+          <PlusCircle className="inline-block mr-3" />
+          เพิ่มสินค้า
+        </Link>
+      </Button>
+      <DataTable columns={columns} data={productsInStock} />
+    </MainLayout>
   );
 }

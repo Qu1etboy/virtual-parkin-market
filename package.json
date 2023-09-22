@@ -11,7 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@hookform/resolvers": "^3.3.1",
+    "@hookform/resolvers": "^3.3.0",
     "@mui/material": "^5.14.9",
     "@next-auth/prisma-adapter": "0.4.4-canary.81",
     "@prisma/client": "^5.3.0",
@@ -60,7 +60,7 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.2.2",
     "vaul": "^0.6.5",
-    "zod": "^3.22.2"
+    "zod": "3.21.4"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",

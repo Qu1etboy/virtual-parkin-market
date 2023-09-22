@@ -8,7 +8,7 @@ dependencies:
     specifier: ^11.11.0
     version: 11.11.0(@emotion/react@11.11.1)(@types/react@18.2.21)(react@18.2.0)
   '@hookform/resolvers':
-    specifier: ^3.3.1
+    specifier: ^3.3.0
     version: 3.3.1(react-hook-form@7.46.1)
   '@mui/material':
     specifier: ^5.14.9
@@ -155,8 +155,8 @@ dependencies:
     specifier: ^0.6.5
     version: 0.6.5(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
   zod:
-    specifier: ^3.22.2
-    version: 3.22.2
+    specifier: 3.21.4
+    version: 3.21.4
 
 devDependencies:
   '@tailwindcss/typography':
@@ -5273,8 +5273,4 @@ packages:
 
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
-    dev: false
-
-  /zod@3.22.2:
-    resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
     dev: false
