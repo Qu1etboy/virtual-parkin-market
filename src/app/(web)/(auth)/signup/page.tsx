@@ -16,6 +16,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -50,12 +51,8 @@ export default function SignUpPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <div className="grid grid-cols-2 gap-6">
-              <Button variant="outline">
-                <Icons.gitHub className="mr-2 h-4 w-4" />
-                Github
-              </Button>
-              <Button variant="outline">
+            <div>
+              <Button variant="outline" className="w-full">
                 <Icons.google className="mr-2 h-4 w-4" />
                 Google
               </Button>
@@ -102,8 +99,14 @@ export default function SignUpPage() {
               <Input id="password" type="password" {...register("password")} />
             </div>
           </CardContent>
-          <CardFooter>
-            <Button className="w-full">สร้างบัญชี</Button>
+          <CardFooter className="block">
+            <Button className="w-full mb-3">สร้างบัญชี</Button>
+            <p className="text-sm">
+              มีบัญชีแล้ว?{" "}
+              <Link href="/login" className="hover:underline text-orange-600">
+                เข้าสู่ระบบ
+              </Link>
+            </p>
           </CardFooter>
         </Card>
       </form>

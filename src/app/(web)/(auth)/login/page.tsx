@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -38,18 +39,14 @@ export default function SignUpPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl">
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">Log in to your account</CardTitle>
-            <CardDescription>
-              Enter your credentials below to log in to your account
-            </CardDescription>
+            <CardTitle className="text-2xl">
+              เข้าสู่ระบบไปยังบัญชีของคุณ
+            </CardTitle>
+            <CardDescription>กรอกรายละเอียดเพื่อเข้าสู่ระบบ</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <div className="grid grid-cols-2 gap-6">
-              <Button variant="outline">
-                <Icons.gitHub className="mr-2 h-4 w-4" />
-                Github
-              </Button>
-              <Button variant="outline">
+            <div>
+              <Button variant="outline" className="w-full">
                 <Icons.google className="mr-2 h-4 w-4" />
                 Google
               </Button>
@@ -60,12 +57,12 @@ export default function SignUpPage() {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
+                  หรือเข้าสู่ระบบด้วย
                 </span>
               </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">ที่อยู่อีเมล</Label>
               <Input
                 id="email"
                 type="email"
@@ -74,12 +71,18 @@ export default function SignUpPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">รหัสผ่าน</Label>
               <Input id="password" type="password" {...register("password")} />
             </div>
           </CardContent>
-          <CardFooter>
-            <Button className="w-full">Log in</Button>
+          <CardFooter className="block">
+            <Button className="w-full mb-3">เข้าสู่ระบบ</Button>
+            <p className="text-sm">
+              ยังไม่มีบัญชี?{" "}
+              <Link href="/signup" className="hover:underline text-orange-600">
+                สมัครสมาชิกเลย
+              </Link>
+            </p>
           </CardFooter>
         </Card>
       </form>
