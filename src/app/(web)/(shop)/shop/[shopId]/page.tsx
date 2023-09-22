@@ -52,7 +52,7 @@ export default function ShopPage() {
           <h2 className="font-semibold text-xl sm:text-2xl mb-3">
             สินค้าในร้านทั้งหมด
           </h2>
-          <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:flex flex-wrap gap-6">
+          <section className="grid grid-cols-1 min-[568px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
             {products.map((product) => (
               <ProductCard
                 key={product.id}
