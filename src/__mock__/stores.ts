@@ -15,3 +15,16 @@ export const stores = [
     address: "Address 3",
   },
 ];
+
+export const requestStores = [
+  {
+    id: 1,
+    name: "Store 1",
+    address: "Address 1",
+  },
+  {
+    id: 2,
+    name: "Store 2",
+    address: "Address 2",
+  },
+];

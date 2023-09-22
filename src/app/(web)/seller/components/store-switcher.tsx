@@ -29,6 +29,7 @@ import {
 
 import Link from "next/link";
 import { stores } from "@/__mock__/stores";
+import { useParams } from "next/navigation";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -37,9 +38,11 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<
 interface StoreSwitcherProps extends PopoverTriggerProps {}
 
 export default function StoreSwitcher({ className }: StoreSwitcherProps) {
+  const params = useParams();
+  const storeId = params.storeId;
   const [open, setOpen] = useState(false);
   const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
-  const [selectedStore, setSelectedStore] = useState(stores[0]);
+  const [selectedStore, setSelectedStore] = useState(stores[+storeId - 1]);
 
   const router = useRouter();
 
