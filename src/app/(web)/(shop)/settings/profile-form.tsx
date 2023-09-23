@@ -116,7 +116,7 @@ export function ProfileForm() {
           name="name.firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ชื่อจริง</FormLabel>
+              <FormLabel asterisk>ชื่อจริง</FormLabel>
               <FormControl>
                 <Input placeholder="John" {...field} />
               </FormControl>
@@ -129,7 +129,7 @@ export function ProfileForm() {
           name="name.lastName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>นามสกุล</FormLabel>
+              <FormLabel asterisk>นามสกุล</FormLabel>
               <FormControl>
                 <Input placeholder="Doe" {...field} />
               </FormControl>

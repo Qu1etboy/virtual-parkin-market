@@ -30,7 +30,7 @@ export const customerProfileSchema = z.object({
 });
 
 export const addressSchema = z.object({
-  address: z.string(),
+  address: z.string().min(1),
   district: z.object({
     districtId: z.number(),
     districtName: z.string(),

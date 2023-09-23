@@ -179,7 +179,7 @@ export default function AddProductPage() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>ชื่อสินค้า</FormLabel>
+                  <FormLabel asterisk>ชื่อสินค้า</FormLabel>
                   <FormControl>
                     <Input placeholder="ชื่อสินค้า" {...field} />
                   </FormControl>
@@ -193,7 +193,7 @@ export default function AddProductPage() {
               name="category"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>ประเภทสินค้า</FormLabel>
+                  <FormLabel asterisk>ประเภทสินค้า</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -256,7 +256,7 @@ export default function AddProductPage() {
                 name="originalPrice"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>ราคาต้น</FormLabel>
+                    <FormLabel asterisk>ราคาต้น</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="100" {...field} />
                     </FormControl>
@@ -269,7 +269,7 @@ export default function AddProductPage() {
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>ราคาขาย</FormLabel>
+                    <FormLabel asterisk>ราคาขาย</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="100" {...field} />
                     </FormControl>
@@ -283,7 +283,7 @@ export default function AddProductPage() {
               name="stockQuantity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>จํานวนสินค้าในคลัง</FormLabel>
+                  <FormLabel asterisk>จํานวนสินค้าในคลัง</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -300,7 +300,7 @@ export default function AddProductPage() {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>คําอธิบายสินค้า</FormLabel>
+                  <FormLabel asterisk>คําอธิบายสินค้า</FormLabel>
                   <FormControl>
                     <Textarea placeholder="คําอธิบายสินค้า" {...field} />
                   </FormControl>
@@ -312,7 +312,7 @@ export default function AddProductPage() {
           </div>
           <div className="space-y-8 p-4">
             <div>
-              <FormLabel>รูปภาพสินค้า</FormLabel>
+              <FormLabel asterisk>รูปภาพสินค้า</FormLabel>
               <FormDescription>
                 ลงรูปภาพที่มีคุณภาพจะช่วยให้ลูกค้าสนใจในสินค้ามากขึ้น
               </FormDescription>

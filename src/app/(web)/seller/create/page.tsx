@@ -157,7 +157,7 @@ export default function CreateStorePage() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>ชื่อร้าน</FormLabel>
+                    <FormLabel asterisk>ชื่อร้าน</FormLabel>
                     <FormControl>
                       <Input placeholder="ชื่อร้านค้า" {...field} />
                     </FormControl>
@@ -170,7 +170,7 @@ export default function CreateStorePage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>รายละเอียดร้านค้า</FormLabel>
+                    <FormLabel asterisk>รายละเอียดร้านค้า</FormLabel>
                     <FormControl>
                       <Textarea placeholder="รายละเอียดร้านค้า" {...field} />
                     </FormControl>
@@ -196,7 +196,7 @@ export default function CreateStorePage() {
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>หมายเลขล็อต</FormLabel>
+                    <FormLabel asterisk>หมายเลขล็อต</FormLabel>
                     <FormControl>
                       <Input placeholder="A-01" {...field} />
                     </FormControl>
@@ -222,7 +222,7 @@ export default function CreateStorePage() {
                 name="id_card"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>เลขบัตรประชาชน</FormLabel>
+                    <FormLabel asterisk>เลขบัตรประชาชน</FormLabel>
                     <FormControl>
                       <Input placeholder="เลขบัตรประชาชน" {...field} />
                     </FormControl>
@@ -231,7 +231,7 @@ export default function CreateStorePage() {
                 )}
               />
               <div>
-                <FormLabel>ภาพถ่ายบัตรประชาชน</FormLabel>
+                <FormLabel asterisk>ภาพถ่ายบัตรประชาชน</FormLabel>
                 <FormDescription>
                   สําหรับใช้ยืนยันว่าคุณมีตัวตนจริง
                 </FormDescription>
@@ -258,7 +258,7 @@ export default function CreateStorePage() {
                 name="bank_provider"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>ธนาคาร</FormLabel>
+                    <FormLabel asterisk>ธนาคาร</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -334,7 +334,7 @@ export default function CreateStorePage() {
                 name="bank_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>ชื่อบัญชีธนาคาร</FormLabel>
+                    <FormLabel asterisk>ชื่อบัญชีธนาคาร</FormLabel>
                     <FormControl>
                       <Input placeholder="ชื่อบัญชีธนาคาร" {...field} />
                     </FormControl>
@@ -347,7 +347,7 @@ export default function CreateStorePage() {
                 name="bank_account"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>เลขบัญชีธนาคาร</FormLabel>
+                    <FormLabel asterisk>เลขบัญชีธนาคาร</FormLabel>
                     <FormControl>
                       <Input placeholder="เลขบัญชีธนาคาร" {...field} />
                     </FormControl>
@@ -356,7 +356,7 @@ export default function CreateStorePage() {
                 )}
               />
               <div>
-                <FormLabel>ภาพถ่ายสมุดเงินฝาก</FormLabel>
+                <FormLabel asterisk>ภาพถ่ายสมุดเงินฝาก</FormLabel>
                 <FormDescription>
                   สําหรับใช้ยืนยันว่าบัญชีนี้เป็นของคุณ
                 </FormDescription>

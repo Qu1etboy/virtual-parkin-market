@@ -65,7 +65,7 @@ export function AddressForm() {
           name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ที่อยู่</FormLabel>
+              <FormLabel asterisk>ที่อยู่</FormLabel>
               <FormControl>
                 <Input
                   placeholder="กรุณาระบุที่อยู่ (บ้านเลขที่, ถนน, ตําบล)"
@@ -81,7 +81,7 @@ export function AddressForm() {
           name="province"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>จังหวัด</FormLabel>
+              <FormLabel asterisk>จังหวัด</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -143,7 +143,7 @@ export function AddressForm() {
           name="district"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>เขต/ตําบล</FormLabel>
+              <FormLabel asterisk>เขต/ตําบล</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -213,7 +213,7 @@ export function AddressForm() {
           name="postalCode"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>รหัสไปรษณีย์</FormLabel>
+              <FormLabel asterisk>รหัสไปรษณีย์</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>

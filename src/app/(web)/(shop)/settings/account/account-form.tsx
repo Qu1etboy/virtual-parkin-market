@@ -47,7 +47,7 @@ export function AccountForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>อีเมล</FormLabel>
+              <FormLabel asterisk>อีเมล</FormLabel>
               <FormControl>
                 <Input placeholder="me@example.com" {...field} />
               </FormControl>
@@ -68,7 +68,7 @@ export function AccountForm() {
           <FormLabel>บัญชีที่เชื่อมต่อ</FormLabel>
           <ul className="mt-3">
             <li className="flex items-center gap-3">
-              <Icons.google width="20" height="20" />
+              <Icons.google className="w-[20px] h-[20px]" />
               <Link
                 href="#"
                 className="text-sm text-orange-600 hover:text-orange-800"
