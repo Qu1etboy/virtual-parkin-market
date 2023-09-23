@@ -32,76 +32,68 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
-// import { toast } from "@/components/ui/toast";
+import { customerProfileSchema } from "@/types/main";
+import axios from "@/lib/axios";
+import { Gender } from "@prisma/client";
+import toast from "react-hot-toast";
 
-const profileFormSchema = z.object({
-  name: z.object({
-    first_name: z
-      .string()
-      .min(2, {
-        message: "first name must be at least 2 characters.",
-      })
-      .max(30, {
-        message: "first name must not be longer than 30 characters.",
-      }),
-    last_name: z
-      .string()
-      .min(2, {
-        message: "last name must be at least 2 characters.",
-      })
-      .max(30, {
-        message: "last name must not be longer than 30 characters.",
-      }),
-  }),
-  phone_number: z
-    .string()
-    .length(10, { message: "phone number must be only 10 characters." })
-    .optional(),
-  birth_date: z.date().optional(),
-  gender: z.enum(["MALE", "FEMALE"]).optional(),
-});
+type ProfileFormValues = z.infer<typeof customerProfileSchema>;
 
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
+// const genderSchema = z.nativeEnum(Gender).optional().catch(undefined);
 
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  name: {
-    first_name: "",
-    last_name: "",
-  },
-  phone_number: "",
-  birth_date: undefined,
-  gender: undefined,
-};
+const genderSchema = z
+  .object({
+    gender: z.nativeEnum(Gender),
+  })
+  .partial()
+  .optional()
+  .catch(undefined);
 
 export function ProfileForm() {
+  const { data: session } = useSession();
+  const user = session?.user;
+
   const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileFormSchema),
-    defaultValues,
+    resolver: zodResolver(customerProfileSchema),
+    defaultValues: {
+      name: {
+        firstName: "",
+        lastName: "",
+      },
+      phoneNumber: "",
+      birthday: null,
+      gender: null,
+    },
+    values: {
+      name: {
+        firstName: user?.name?.split(" ")[0] ?? "",
+        lastName: user?.name?.split(" ")[1] ?? "",
+      },
+      phoneNumber: user?.customerProfile?.phoneNumber
+        ? user?.customerProfile?.phoneNumber
+        : "",
+      birthday: user?.customerProfile?.birthday,
+      gender: user?.customerProfile?.gender,
+    },
     mode: "onChange",
   });
 
-  const { data: session } = useSession();
+  console.log(user);
 
-  // const { fields, append } = useFieldArray({
-  //   name: "urls",
-  //   control: form.control,
-  // });
+  async function onSubmit(data: ProfileFormValues) {
+    // console.log("Form submitted value", data);
+    // TODO: add error handling
+    await axios.put("/user/me", data);
 
-  function onSubmit(data: ProfileFormValues) {
-    console.log(data);
-    // toast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // });
+    toast.success("บันทึกข้อมูลสำเร็จ");
+  }
+
+  if (!user) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -125,7 +117,7 @@ export function ProfileForm() {
         </div>
         <FormField
           control={form.control}
-          name="name.first_name"
+          name="name.firstName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>ชื่อจริง</FormLabel>
@@ -138,7 +130,7 @@ export function ProfileForm() {
         />
         <FormField
           control={form.control}
-          name="name.last_name"
+          name="name.lastName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>นามสกุล</FormLabel>
@@ -151,7 +143,7 @@ export function ProfileForm() {
         />
         <FormField
           control={form.control}
-          name="phone_number"
+          name="phoneNumber"
           render={({ field }) => (
             <FormItem>
               <FormLabel>เบอร์โทรศัพท์</FormLabel>
@@ -167,7 +159,7 @@ export function ProfileForm() {
         />
         <FormField
           control={form.control}
-          name="birth_date"
+          name="birthday"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>วันเกิด</FormLabel>
@@ -182,7 +174,7 @@ export function ProfileForm() {
                       )}
                     >
                       {field.value ? (
-                        format(field.value, "PPP")
+                        format(new Date(field.value), "dd MMMM yyyy")
                       ) : (
                         <span>เลือกวัน</span>
                       )}
@@ -193,7 +185,7 @@ export function ProfileForm() {
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={field.value}
+                    selected={field.value as any}
                     onSelect={field.onChange}
                     disabled={(date) =>
                       date > new Date() || date < new Date("1900-01-01")
@@ -213,15 +205,19 @@ export function ProfileForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>เพศ</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                value={genderSchema.parse(form.watch("gender"))?.gender}
+                defaultValue={genderSchema.parse(field.value)?.gender}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="เลือกเพศ" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="MALE">ชาย</SelectItem>
-                  <SelectItem value="FEMALE">หญุิง</SelectItem>
+                  <SelectItem value={Gender.MALE}>ชาย</SelectItem>
+                  <SelectItem value={Gender.FEMALE}>หญิง</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>

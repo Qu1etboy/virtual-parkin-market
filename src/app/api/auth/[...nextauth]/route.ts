@@ -67,6 +67,10 @@ const handler = NextAuth({
           where: {
             id: token.sub,
           },
+          include: {
+            customerProfile: true,
+            addresses: true,
+          },
         });
 
         if (user) {

@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Prompt } from "next/font/google";
 import Providers from "./providers";
+import { Toaster } from "react-hot-toast";
 
 const prompt = Prompt({
   subsets: ["latin", "latin-ext", "thai"],
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="th">
       <body className={prompt.className}>
         <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );
