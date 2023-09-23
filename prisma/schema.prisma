@@ -91,7 +91,7 @@ model CustomerProfile {
 }
 
 model Address {
-  id            BigInt   @id @default(autoincrement())
+  id            String   @id @default(cuid())
   // Address belongs to user
   userId        String   @map("user_id")
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -123,7 +123,7 @@ enum StoreStatus {
 }
 
 model Store {
-  id               BigInt      @id @default(autoincrement())
+  id               String      @id @default(cuid())
   name             String      @unique
   description      String
   address          String
@@ -146,6 +146,8 @@ model Store {
   userId           String?
   // Store has many orders
   order            Order[]
+  // Store has many products
+  product          Product[]
   // Timestamp
   createdAt        DateTime    @default(now()) @map("created_at")
   updatedAt        DateTime    @updatedAt @map("updated_at")
@@ -170,7 +172,7 @@ enum ProductCategory {
 }
 
 model Product {
-  id            BigInt          @id @default(autoincrement())
+  id            String          @id @default(cuid())
   name          String
   description   String
   // Slug is a unique string for identify product in url
@@ -182,15 +184,17 @@ model Product {
   category      ProductCategory
   images        ProductImage[]
   orderItem     OrderItem[]
+  store         Store?          @relation(fields: [storeId], references: [id])
+  storeId       String?
+  review        Review[]
   // Timestamp
   createdAt     DateTime        @default(now()) @map("created_at")
   updatedAt     DateTime        @updatedAt @map("updated_at")
-  Review        Review[]
 }
 
 model ProductImage {
-  id        BigInt   @id @default(autoincrement())
-  productId BigInt
+  id        String   @id @default(cuid())
+  productId String
   product   Product  @relation(fields: [productId], references: [id])
   image     String
   // Timestamp
@@ -208,12 +212,12 @@ enum OrderStatus {
 }
 
 model Order {
-  id            BigInt      @id @default(autoincrement())
+  id            String      @id @default(cuid())
   // Order belongs to user
   userId        String      @map("user_id")
   user          User        @relation(fields: [userId], references: [id])
   // Order belongs to store
-  storeId       BigInt      @map("store_id")
+  storeId       String      @map("store_id")
   store         Store       @relation(fields: [storeId], references: [id])
   // 
   shippingPrice Float       @map("shipping_price")
@@ -226,12 +230,12 @@ model Order {
 }
 
 model OrderItem {
-  id        BigInt   @id @default(autoincrement())
+  id        String   @id @default(cuid())
   // OrderItem belongs to order
-  orderId   BigInt   @map("order_id")
+  orderId   String   @map("order_id")
   order     Order    @relation(fields: [orderId], references: [id])
   // OrderItem belongs to product
-  productId BigInt   @map("product_id")
+  productId String   @map("product_id")
   product   Product  @relation(fields: [productId], references: [id])
   // Current price, this help when product price change
   price     Float
@@ -242,12 +246,12 @@ model OrderItem {
 }
 
 model Review {
-  id        BigInt   @id @default(autoincrement())
+  id        String   @id @default(cuid())
   // Review belongs to user
   userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id])
   // Review belongs to product
-  productId BigInt   @map("product_id")
+  productId String   @map("product_id")
   product   Product  @relation(fields: [productId], references: [id])
   // 
   rating    Float
