@@ -99,16 +99,16 @@ model Address {
   address       String
   //
   province      String
-  provinceId    String?  @map("province_id")
+  provinceId    Int      @map("province_id")
   //
   district      String
-  districtId    String?  @map("district_id")
+  districtId    Int      @map("district_id")
   //
   subDistrict   String?  @map("sub_district")
-  subDistrictId String?  @map("sub_district_id")
+  subDistrictId Int?     @map("sub_district_id")
   //
   postalCode    String   @map("postal_code")
-  postalCodeId  String?  @map("postal_code_id")
+  postalCodeId  Int      @map("postal_code_id")
   // Timestamp
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

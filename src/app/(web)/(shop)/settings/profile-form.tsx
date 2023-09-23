@@ -92,10 +92,6 @@ export function ProfileForm() {
     toast.success("บันทึกข้อมูลสำเร็จ");
   }
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

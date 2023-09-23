@@ -28,3 +28,26 @@ export const customerProfileSchema = z.object({
   gender: z.nativeEnum(Gender).optional().nullable(),
   image: z.string().optional().nullable(),
 });
+
+export const addressSchema = z.object({
+  address: z.string(),
+  district: z.object({
+    districtId: z.number(),
+    districtName: z.string(),
+  }),
+  subDistrict: z
+    .object({
+      subDistrictId: z.number(),
+      subDistrictName: z.string(),
+    })
+    .optional()
+    .nullable(),
+  province: z.object({
+    provinceId: z.number(),
+    provinceName: z.string(),
+  }),
+  postalCode: z.object({
+    zipcodeId: z.number(),
+    zipcode: z.string(),
+  }),
+});

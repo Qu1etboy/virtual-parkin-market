@@ -37,44 +37,24 @@ import subDistricts from "@/data/address/thai/subDistricts.json";
 import districts from "@/data/address/thai/districts.json";
 import zipcodes from "@/data/address/thai/zipcodes.json";
 import { cn } from "@/lib/utils";
+import { addressSchema } from "@/types/main";
+import axios from "@/lib/axios";
+import toast from "react-hot-toast";
 
-const addressFormSchema = z.object({
-  address: z.string(),
-  subDistrict: z.object({
-    SUB_DISTRICT_ID: z.number(),
-    SUB_DISTRICT_CODE: z.string(),
-    SUB_DISTRICT_NAME: z.string(),
-    GEO_ID: z.number(),
-    DISTRICT_ID: z.number(),
-    PROVINCE_ID: z.number(),
-  }),
-  province: z.object({
-    PROVINCE_ID: z.number(),
-    PROVINCE_NAME: z.string(),
-    PROVINCE_CODE: z.string(),
-    GEO_ID: z.number(),
-  }),
-  postalCode: z.object({
-    ZIPCODE_ID: z.number(),
-    ZIPCODE: z.string(),
-    SUB_DISTRICT_ID: z.string(),
-    DISTRICT_ID: z.string(),
-    PROVINCE_ID: z.string(),
-  }),
-});
-
-type AddressFormValues = z.infer<typeof addressFormSchema>;
+type AddressFormValues = z.infer<typeof addressSchema>;
 
 export function AddressForm() {
   const form = useForm<AddressFormValues>({
-    resolver: zodResolver(addressFormSchema),
+    resolver: zodResolver(addressSchema),
     defaultValues: {
       address: "",
     },
   });
 
-  function onSubmit(data: AddressFormValues) {
+  async function onSubmit(data: AddressFormValues) {
     console.log(data);
+    await axios.post("/user/me/address", data);
+    toast.success("บันทึกที่อยู่สำเร็จ");
   }
 
   return (
@@ -116,7 +96,7 @@ export function AddressForm() {
                       {field.value
                         ? provinces.find(
                             (province) =>
-                              province.PROVINCE_ID === field.value.PROVINCE_ID
+                              province.PROVINCE_ID === field.value.provinceId
                           )?.PROVINCE_NAME
                         : "เลือกจังหวัด"}
                       <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -133,13 +113,16 @@ export function AddressForm() {
                           value={province.PROVINCE_NAME}
                           key={province.PROVINCE_ID}
                           onSelect={() => {
-                            form.setValue("province", province);
+                            form.setValue("province", {
+                              provinceId: province.PROVINCE_ID,
+                              provinceName: province.PROVINCE_NAME,
+                            });
                           }}
                         >
                           <CheckIcon
                             className={cn(
                               "mr-2 h-4 w-4",
-                              province.PROVINCE_ID === field.value?.PROVINCE_ID
+                              province.PROVINCE_ID === field.value?.provinceId
                                 ? "opacity-100"
                                 : "opacity-0"
                             )}
@@ -157,7 +140,7 @@ export function AddressForm() {
         />
         <FormField
           control={form.control}
-          name="subDistrict"
+          name="district"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>เขต/ตําบล</FormLabel>
@@ -175,11 +158,10 @@ export function AddressForm() {
                       disabled={!form.watch("province")}
                     >
                       {field.value
-                        ? subDistricts.find(
-                            (subDistrict) =>
-                              subDistrict.SUB_DISTRICT_ID ===
-                              field.value?.SUB_DISTRICT_ID
-                          )?.SUB_DISTRICT_NAME
+                        ? districts.find(
+                            (district) =>
+                              district.DISTRICT_ID === field.value?.districtId
+                          )?.DISTRICT_NAME
                         : "เลือกเขต/ตําบล"}
                       <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -190,30 +172,32 @@ export function AddressForm() {
                     <CommandInput placeholder="ค้นหาเขต/ตําบล" />
                     <CommandEmpty>ไม่พบเขต/ตําบล</CommandEmpty>
                     <CommandGroup className="max-h-[200px] overflow-auto">
-                      {subDistricts
+                      {districts
                         .filter(
-                          (subDistrict) =>
-                            subDistrict.PROVINCE_ID ===
-                            form.watch("province")?.PROVINCE_ID
+                          (district) =>
+                            district.PROVINCE_ID ===
+                            form.watch("province")?.provinceId
                         )
-                        .map((subDistrict) => (
+                        .map((district) => (
                           <CommandItem
-                            value={subDistrict.SUB_DISTRICT_NAME}
-                            key={subDistrict.SUB_DISTRICT_ID}
+                            value={district.DISTRICT_NAME}
+                            key={district.DISTRICT_ID}
                             onSelect={() => {
-                              form.setValue("subDistrict", subDistrict);
+                              form.setValue("district", {
+                                districtId: district.DISTRICT_ID,
+                                districtName: district.DISTRICT_NAME,
+                              });
                             }}
                           >
                             <CheckIcon
                               className={cn(
                                 "mr-2 h-4 w-4",
-                                subDistrict.SUB_DISTRICT_ID ===
-                                  field.value?.SUB_DISTRICT_ID
+                                district.DISTRICT_ID === field.value?.districtId
                                   ? "opacity-100"
                                   : "opacity-0"
                               )}
                             />
-                            {subDistrict.SUB_DISTRICT_NAME}
+                            {district.DISTRICT_NAME}
                           </CommandItem>
                         ))}
                     </CommandGroup>
@@ -239,18 +223,18 @@ export function AddressForm() {
                       className={cn(
                         "w-[200px] justify-between",
                         !field.value && "text-muted-foreground",
-                        !form.watch("province") || !form.watch("subDistrict")
+                        !form.watch("province") || !form.watch("district")
                           ? "cursor-not-allowed"
                           : "cursor-pointer"
                       )}
                       disabled={
-                        !form.watch("province") || !form.watch("subDistrict")
+                        !form.watch("province") || !form.watch("district")
                       }
                     >
                       {field.value
                         ? zipcodes.find(
                             (zipcode) =>
-                              zipcode.ZIPCODE_ID === field.value?.ZIPCODE_ID
+                              zipcode.ZIPCODE_ID === field.value?.zipcodeId
                           )?.ZIPCODE
                         : "เลือกรหัสไปรษณีย์"}
                       <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -266,24 +250,25 @@ export function AddressForm() {
                         .filter(
                           (zipcode) =>
                             zipcode.PROVINCE_ID ===
-                              form.watch("province")?.PROVINCE_ID.toString() &&
-                            zipcode.SUB_DISTRICT_ID ===
-                              form
-                                .watch("subDistrict")
-                                ?.SUB_DISTRICT_ID.toString()
+                              form.watch("province")?.provinceId.toString() &&
+                            zipcode.DISTRICT_ID ===
+                              form.watch("district")?.districtId.toString()
                         )
                         .map((zipcode) => (
                           <CommandItem
                             value={zipcode.ZIPCODE}
                             key={zipcode.ZIPCODE_ID}
                             onSelect={() => {
-                              form.setValue("postalCode", zipcode);
+                              form.setValue("postalCode", {
+                                zipcodeId: zipcode.ZIPCODE_ID,
+                                zipcode: zipcode.ZIPCODE,
+                              });
                             }}
                           >
                             <CheckIcon
                               className={cn(
                                 "mr-2 h-4 w-4",
-                                zipcode.ZIPCODE_ID === field.value?.ZIPCODE_ID
+                                zipcode.ZIPCODE_ID === field.value?.zipcodeId
                                   ? "opacity-100"
                                   : "opacity-0"
                               )}
