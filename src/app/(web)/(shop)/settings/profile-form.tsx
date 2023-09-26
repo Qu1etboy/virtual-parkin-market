@@ -40,6 +40,9 @@ import { customerProfileSchema } from "@/types/main";
 import axios from "@/lib/axios";
 import { Gender } from "@prisma/client";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import { ca } from "date-fns/locale";
+import { upload } from "@/services/upload";
 
 type ProfileFormValues = z.infer<typeof customerProfileSchema>;
 
@@ -56,6 +59,7 @@ const genderSchema = z
 export function ProfileForm() {
   const { data: session } = useSession();
   const user = session?.user;
+  const [file, setFile] = useState<File | null>(null);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(customerProfileSchema),
@@ -82,14 +86,27 @@ export function ProfileForm() {
     mode: "onChange",
   });
 
-  console.log(user);
-
   async function onSubmit(data: ProfileFormValues) {
-    // console.log("Form submitted value", data);
     // TODO: add error handling
-    await axios.put("/user/me", data);
+
+    let image: string | null | undefined = null;
+
+    // If user upload new image then upload it to server
+    if (file) {
+      const _file = await upload("image", file);
+      image = _file.filename;
+    }
+
+    await axios.put("/user/me", { ...data, image });
 
     toast.success("บันทึกข้อมูลสำเร็จ");
+  }
+
+  function onUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setFile(file);
   }
 
   return (
@@ -98,7 +115,7 @@ export function ProfileForm() {
         <div className="w-full flex items-center gap-3">
           <Avatar className="ml-auto w-20 h-20">
             <AvatarImage
-              src={session?.user.image ?? ""}
+              src={`http://localhost:4000/${session?.user.image}` ?? ""}
               alt={session?.user.name ?? ""}
             />
             <AvatarFallback>
@@ -108,7 +125,11 @@ export function ProfileForm() {
 
           <div className="w-full">
             <Label htmlFor="avatar">เปลี่ยนรูปโปรไฟล์</Label>
-            <Input type="file" placeholder="เปลี่ยนรูปโปรไฟล์" />
+            <Input
+              type="file"
+              onChange={onUpload}
+              placeholder="เปลี่ยนรูปโปรไฟล์"
+            />
           </div>
         </div>
         <FormField

@@ -20,7 +20,10 @@ export default function UserAvatar({ user }: { user: Prisma.User }) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="ml-auto cursor-pointer">
-          <AvatarImage src={user.image ?? ""} alt={user.name ?? ""} />
+          <AvatarImage
+            src={`http://localhost:4000/${user.image}` ?? ""}
+            alt={user.name ?? ""}
+          />
           <AvatarFallback>{user.name ? user.name[0] : null}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
