@@ -35,42 +35,81 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Dropzone from "@/components/dropzone";
 import { Step } from "../components/stepper";
+import { storeSchema } from "@/types/main";
+import { upload } from "@/services/upload";
+import axios from "@/lib/axios";
+import { useRouter } from "next/router";
 
-const CreateStoreSchema = z.object({
-  name: z.string().min(1),
-  address: z.string().min(1),
-  description: z.string(),
-  id_card: z.string().length(13),
-  bank_account: z.string().min(1),
-  bank_name: z.string().min(1),
-  bank_provider: z.string().min(1),
-});
-
-type CreateStore = z.infer<typeof CreateStoreSchema>;
+type CreateStore = z.infer<typeof storeSchema>;
 
 export default function CreateStorePage() {
   const form = useForm<CreateStore>({
-    resolver: zodResolver(CreateStoreSchema),
+    resolver: zodResolver(storeSchema),
     defaultValues: {
       name: "",
       address: "",
       description: "",
-      id_card: "",
-      bank_account: "",
-      bank_name: "",
-      bank_provider: "",
+      ownerIdCard: "",
+      ownerIdCardPhoto: "",
+      bankAccount: "",
+      bankName: "",
+      bankProvider: "",
+      bookBankPhoto: "",
     },
   });
 
   const [idCardfiles, setIdCardfiles] = useState<File[]>([]);
   const [bookBankFiles, setBookBankFiles] = useState<File[]>([]);
 
+  // const router = useRouter();
+
   async function onSubmit(data: CreateStore) {
     // TODO: Upload files
-    console.log(idCardfiles);
-    console.log(bookBankFiles);
-    // TODO: Submit form with file urls returned from upload
+    let error = false;
+
+    if (idCardfiles.length > 0) {
+      const idCardUpload = await upload("image", idCardfiles[0]);
+      data.ownerIdCardPhoto = idCardUpload.filename;
+    }
+
+    if (bookBankFiles.length > 0) {
+      const bookBankUpload = await upload("image", bookBankFiles[0]);
+      data.bookBankPhoto = bookBankUpload.filename;
+    }
+
+    if (data.ownerIdCardPhoto === "") {
+      form.setError("ownerIdCardPhoto", {
+        message: "กรุณาอัพโหลดรูปบัตรประชาชน",
+      });
+      error = true;
+    }
+
+    if (data.bookBankPhoto === "") {
+      form.setError("bookBankPhoto", {
+        message: "กรุณาอัพโหลดรูปสมุดเงินฝาก",
+      });
+      error = true;
+    }
+
+    if (error) {
+      return;
+    }
+
+    // Submit form with file urls returned from upload
+
     console.log(data);
+
+    try {
+      await axios.post("stores", data);
+      window.location.href = "/seller";
+    } catch (error: any) {
+      console.log(error);
+      for (const [key, value] of Object.entries(error.response.data.errors)) {
+        form.setError(key as any, {
+          message: value as string,
+        });
+      }
+    }
   }
 
   const onDropIdCard = useCallback((acceptedFiles: File[]) => {
@@ -219,7 +258,7 @@ export default function CreateStorePage() {
             <div className="space-y-8">
               <FormField
                 control={form.control}
-                name="id_card"
+                name="ownerIdCard"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel asterisk>เลขบัตรประชาชน</FormLabel>
@@ -255,7 +294,7 @@ export default function CreateStorePage() {
             <div className="space-y-8">
               <FormField
                 control={form.control}
-                name="bank_provider"
+                name="bankProvider"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel asterisk>ธนาคาร</FormLabel>
@@ -289,7 +328,7 @@ export default function CreateStorePage() {
                                 value={bank}
                                 key={bank}
                                 onSelect={() => {
-                                  form.setValue("bank_provider", bank);
+                                  form.setValue("bankProvider", bank);
                                 }}
                                 className="cursor-pointer"
                               >
@@ -331,7 +370,7 @@ export default function CreateStorePage() {
               />
               <FormField
                 control={form.control}
-                name="bank_name"
+                name="bankName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel asterisk>ชื่อบัญชีธนาคาร</FormLabel>
@@ -344,7 +383,7 @@ export default function CreateStorePage() {
               />
               <FormField
                 control={form.control}
-                name="bank_account"
+                name="bankAccount"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel asterisk>เลขบัญชีธนาคาร</FormLabel>

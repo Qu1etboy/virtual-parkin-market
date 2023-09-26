@@ -139,8 +139,8 @@ model Store {
   status           StoreStatus @default(PENDING)
   approvedAt       DateTime?   @map("approved_at")
   // For display
-  profileImage     String      @map("profile_image")
-  bannerImage      String      @map("banner_image")
+  profileImage     String?     @map("profile_image")
+  bannerImage      String?     @map("banner_image")
   // Store has one owner
   user             User?       @relation(fields: [userId], references: [id])
   userId           String?
