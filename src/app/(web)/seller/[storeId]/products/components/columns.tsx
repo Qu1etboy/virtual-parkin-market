@@ -6,8 +6,9 @@ import Image from "next/image";
 import { ProductInStock } from "@/__mock__/products";
 import { DataTableRowActions } from "./data-table-row-actions";
 import ToggleSell from "./toggle-sell";
+import { Product } from "@prisma/client";
 
-export const columns: ColumnDef<ProductInStock>[] = [
+export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
@@ -25,11 +26,14 @@ export const columns: ColumnDef<ProductInStock>[] = [
     cell: ({ row }) => {
       const product: any = row.getValue("product");
       const name: string = product.name;
-      const thumbnail: string = product.thumbnail;
+      const thumbnail: string = product.images[0].image;
+
+      console.log(thumbnail);
+
       return (
         <div className="flex items-center gap-6">
           <Image
-            src={thumbnail}
+            src={`http://localhost:4000/${thumbnail}`}
             alt={name}
             width={100}
             height={100}
