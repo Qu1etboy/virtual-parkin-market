@@ -34,70 +34,58 @@ import {
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import MainLayout from "@/components/layout/main-layout";
+import { productSchema } from "@/types/main";
+import { upload } from "@/services/upload";
+import axios from "@/lib/axios";
+import { useParams } from "next/navigation";
+import { ProductCategory } from "@prisma/client";
 
-const AddProductSchema = z.object({
-  name: z
-    .string({
-      required_error: "กรุณากรอกชื่อสินค้า",
-    })
-    .min(3, { message: "ชื่อสินค้าต้องมีอย่างน้อย 3 ตัวอักษรขึ้นไป" })
-    .max(255, { message: "ชื่อสินค้าต้องไม่เกิน 255 ตัวอักษร" }),
-  price: z
-    .number({
-      required_error: "กรุณากรอกราคาสินค้า",
-    })
-    .min(0, { message: "ราคาต้องมีมูลค่ามากกว่า 0" }),
-  originalPrice: z
-    .number({
-      required_error: "กรุณากรอกราคาต้น",
-    })
-    .min(0, { message: "ราคาต้นต้องมีมูลค่ามากกว่า 0" }),
-  stockQuantity: z
-    .number({
-      required_error: "กรุณากรอกจํานวนสินค้า",
-    })
-    .min(0, { message: "จำนวนสินค้าต้องมีมูลค่ามากกว่า 0" }),
-  description: z
-    .string({
-      required_error: "กรุณากรอกคําอธิบายสินค้า",
-    })
-    .min(3, { message: "คําอธิบายสินค้าต้องมีอย่างน้อย 3 ตัวอักษรขึ้นไป" })
-    .max(1000, { message: "คำอธิบายสินค้าต้องไม่เกิน 1000 ตัวอักษร" }),
-  category: z.number({
-    required_error: "กรุณาเลือกประเภทสินค้า",
-  }),
-});
-
-type AddProduct = z.infer<typeof AddProductSchema>;
+type AddProduct = z.infer<typeof productSchema>;
 
 const productCategories = [
-  { id: 1, name: "อิเล็กทรอนิกส์" },
-  { id: 2, name: "เสื้อผ้า" },
-  { id: 3, name: "เฟอร์นิเจอร์" },
-  { id: 4, name: "ความงาม" },
-  { id: 5, name: "หนังสือ" },
-  { id: 6, name: "กีฬา" },
-  { id: 7, name: "ของเล่น" },
-  { id: 8, name: "สุขภาพ" },
-  { id: 9, name: "ของชำร่วย" },
-  { id: 10, name: "ยานยนต์" },
-  { id: 11, name: "สัตว์เลี้ยง" },
-  { id: 12, name: "เครื่องประดับ" },
-  { id: 13, name: "ศิลปะ" },
-  { id: 14, name: "เครื่องมือ" },
-  { id: 15, name: "เด็ก" },
+  { id: 1, name: "อิเล็กทรอนิกส์", value: ProductCategory.Electronics },
+  { id: 2, name: "เสื้อผ้า", value: ProductCategory.Apparel },
+  { id: 3, name: "เฟอร์นิเจอร์", value: ProductCategory.Furniture },
+  { id: 4, name: "ความงาม", value: ProductCategory.Beauty },
+  { id: 5, name: "หนังสือ", value: ProductCategory.Books },
+  { id: 6, name: "กีฬา", value: ProductCategory.Sports },
+  { id: 7, name: "ของเล่น", value: ProductCategory.Toys },
+  { id: 8, name: "สุขภาพ", value: ProductCategory.Wellness },
+  { id: 9, name: "ของชำร่วย", value: ProductCategory.Groceries },
+  { id: 10, name: "ยานยนต์", value: ProductCategory.Automotive },
+  { id: 11, name: "สัตว์เลี้ยง", value: ProductCategory.Pets },
+  { id: 12, name: "เครื่องประดับ", value: ProductCategory.Jewelry },
+  { id: 13, name: "ศิลปะ", value: ProductCategory.Art },
+  { id: 14, name: "เครื่องมือ", value: ProductCategory.Tools },
+  { id: 15, name: "เด็ก", value: ProductCategory.Baby },
 ];
 
 export default function AddProductPage() {
   const form = useForm<AddProduct>({
-    resolver: zodResolver(AddProductSchema),
+    resolver: zodResolver(productSchema),
     mode: "onChange",
   });
 
   const [productImages, setProductImages] = useState<File[]>([]);
+  const params = useParams();
 
-  function onSubmit(data: AddProduct) {
-    console.log(data);
+  async function onSubmit(data: AddProduct) {
+    // console.log(data);
+
+    try {
+      const result = await upload("images[]", productImages);
+      const images = result.map((image: any) => image.filename);
+
+      // console.log(images);
+      await axios.post(`/stores/${params.storeId}/products`, {
+        ...data,
+        images,
+      });
+
+      window.location.href = `/seller/${params.storeId}/products`;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const onDrop = (acceptedFiles: File[]) => {
@@ -327,7 +315,7 @@ export default function AddProductPage() {
           </div>
 
           <div className="col-span-2 p-4">
-            <Button>เพิ่มสินค้า</Button>
+            <Button type="submit">เพิ่มสินค้า</Button>
           </div>
         </form>
       </Form>
