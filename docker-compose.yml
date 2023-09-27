@@ -24,8 +24,22 @@ services:
       - my-network
     ports:
       - 8001:80
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis_data:/data"
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      retries: 3
+      timeout: 5s
 networks:
   my-network:
     driver: bridge
 volumes:
   db_data:
+  redis_data:

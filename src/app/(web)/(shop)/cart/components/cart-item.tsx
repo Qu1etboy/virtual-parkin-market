@@ -1,24 +1,59 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Quantity from "@/components/quantity";
 import Currency from "@/components/currency";
+import { Product, ProductImage } from "@prisma/client";
+import axios from "@/lib/axios";
 
-export default function CartItem({ product }: { product: any }) {
+type CartItemProps = {
+  product: Product & {
+    images: ProductImage[];
+  };
+  initialQuantity: number;
+};
+
+export default function CartItem({ product, initialQuantity }: CartItemProps) {
+  const [quantity, setQuantity] = useState(initialQuantity);
+
+  async function handleSetQuantity(value: number) {
+    if (value < 1 || value > product.stockQuantity) {
+      return;
+    }
+
+    setQuantity(value);
+
+    // Update quantity in cart
+    await axios.put("/cart", {
+      productId: product.id,
+      quantity: value,
+    });
+  }
+
+  async function removeItem() {
+    await axios.delete(`/cart`, {
+      data: { productId: product.id },
+    });
+
+    window.location.reload();
+  }
+
   return (
     <li className="flex py-6 border-b">
       <div className="relative h-24 w-24 rounded-md overflow-hidden sm:h-48 sm:w-48">
         <Image
           fill
-          src={product.thumbnail}
+          src={`http://localhost:4000/${product.images[0].image}`}
           alt={product.name}
           className="object-cover object-center"
         />
       </div>
       <div className="relative ml-4 flex flex-1 flex-col justify-between sm:ml-6">
         <div className="absolute z-10 right-0 top-0">
-          <Button>
+          <Button onClick={removeItem}>
             <X />
           </Button>
         </div>
@@ -26,15 +61,12 @@ export default function CartItem({ product }: { product: any }) {
           <div className="flex justify-between">
             <p className=" text-lg font-semibold text-black">{product.name}</p>
           </div>
-
-          {/* <div className="mt-1 flex text-sm">
-            <p className="text-gray-500">{data.color.name}</p>
-            <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">
-              {data.size.name}
-            </p>
-          </div> */}
           <Currency value={product.price} />
-          <Quantity className="mt-6" />
+          <Quantity
+            value={quantity}
+            onSetQuantity={handleSetQuantity}
+            className="mt-6"
+          />
         </div>
       </div>
     </li>

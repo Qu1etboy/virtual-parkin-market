@@ -1,29 +1,33 @@
 import React from "react";
 import CartItem from "./components/cart-item";
 import Summary from "./components/summary";
+import { redis } from "@/lib/redis";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { prisma } from "@/lib/prisma";
 
-const cart = {
-  items: [
-    {
-      id: 1,
-      name: "Product 1",
-      price: 100,
-      quantity: 1,
-      thumbnail:
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2798&q=80",
-    },
-    {
-      id: 2,
-      name: "Product 2",
-      price: 200,
-      quantity: 3,
-      thumbnail:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80",
-    },
-  ],
-};
+export default async function CartPage() {
+  const session = await getServerSession(authOptions);
 
-export default function CartPage() {
+  console.log("[cart] user = ", session?.user);
+
+  const cartItems = await (
+    await redis
+  ).hGetAll(`user:cart:${session?.user.id}`);
+
+  console.log("[cart] cartItems = ", cartItems);
+
+  const items = await prisma.product.findMany({
+    where: {
+      id: {
+        in: Object.keys(cartItems),
+      },
+    },
+    include: {
+      images: true,
+    },
+  });
+
   return (
     <div className="bg-white">
       <div className="container mx-auto">
@@ -31,18 +35,35 @@ export default function CartPage() {
           <h1 className="text-3xl font-bold text-black">ตะกร้าสินค้า</h1>
           <div className="mt-12 lg:grid lg:grid-cols-12 lg:items-start gap-x-12">
             <div className="lg:col-span-7">
-              {cart.items.length === 0 && (
-                <p className="text-neutral-500">
-                  ตะกร้าว่าง ลองเพิ่มสินค้าดูสิ!
-                </p>
+              {items.length === 0 && (
+                <div>
+                  {/* eslint-disable @next/next/no-img-element */}
+                  <img
+                    src="/graphics/undraw_empty_cart.svg"
+                    alt="empty cart"
+                    width={300}
+                    className="mx-auto"
+                  />
+                  <p className="text-neutral-500 text-center mt-6">
+                    ตะกร้าว่าง ลองเพิ่มสินค้าดูสิ!
+                  </p>
+                </div>
               )}
               <ul>
-                {cart.items.map((item) => (
-                  <CartItem key={item.id} product={item} />
+                {items.map((item) => (
+                  <CartItem
+                    key={item.id}
+                    product={item}
+                    initialQuantity={+cartItems[item.id]}
+                  />
                 ))}
               </ul>
             </div>
-            <Summary />
+            <Summary
+              total={items
+                .map((item) => item.price * +cartItems[item.id])
+                .reduce((p1, p2) => p1 + p2, 0)}
+            />
           </div>
         </div>
       </div>

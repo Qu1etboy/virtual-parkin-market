@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import React from "react";
 
-export default function Summary() {
+export default function Summary({ total }: { total: number }) {
   async function onCheckout() {
     const { data } = await axios.post(
       "http://localhost:3000/api/stores/1/checkout",
@@ -23,7 +23,7 @@ export default function Summary() {
       <div className="mt-6 space-y-4">
         <div className="flex items-center justify-between border-t border-gray-200 pt-4">
           <div className="text-base font-medium text-gray-900">ยอดรวม</div>
-          <Currency value={1000} />
+          <Currency value={total} />
         </div>
       </div>
       <Button
