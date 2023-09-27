@@ -1,4 +1,4 @@
-import { requestStores } from "@/__mock__/stores";
+// import { requestStores } from "@/__mock__/stores";
 import MainLayout from "@/components/layout/main-layout";
 import {
   AlertDialog,
@@ -19,10 +19,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import axios from "@/lib/axios";
+import { prisma } from "@/lib/prisma";
+import { Store, StoreStatus } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const requestStores = await prisma.store.findMany({
+    where: {
+      status: StoreStatus.PENDING,
+    },
+  });
+
   return (
     <MainLayout
       title="คําขอการสมัครร้านค้า"

@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { storeSchema } from "@/types/main";
+import { StoreStatus } from "@prisma/client";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const session = await getServerSession();
@@ -54,4 +55,26 @@ export async function POST(req: Request) {
   });
 
   return NextResponse.json("done");
+}
+
+export async function GET(req: NextRequest) {
+  const session = await getServerSession();
+
+  if (!session || !session.user) {
+    return new NextResponse(null, { status: 401 });
+  }
+
+  // Get search params
+  const searchParams = req.nextUrl.searchParams;
+  const status = searchParams.get("status") as StoreStatus;
+
+  console.log("[GET /store] status = ", status);
+
+  const store = await prisma.store.findMany({
+    where: {
+      status,
+    },
+  });
+
+  return NextResponse.json(store);
 }

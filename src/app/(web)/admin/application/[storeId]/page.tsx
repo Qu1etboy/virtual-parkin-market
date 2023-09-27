@@ -3,27 +3,42 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
 import Image from "next/image";
 import MainLayout from "@/components/layout/main-layout";
+import { prisma } from "@/lib/prisma";
+import { notFound } from "next/navigation";
 
-const storeDetails = [
-  {
-    label: "ชื่อร้าน",
-    value: "Nike Thailand",
-  },
-  {
-    label: "ที่อยู่ร้าน",
-    value: "A-01",
-  },
-  {
-    label: "คําอธิบายร้าน",
-    value: "ขายอุปกรณ์กีฬา Nike",
-  },
-];
-
-export default function ApplicationPage({
+export default async function ApplicationPage({
   params,
 }: {
   params: { storeId: string };
 }) {
+  const store = await prisma.store.findUnique({
+    where: {
+      id: params.storeId,
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  if (!store) {
+    notFound();
+  }
+
+  const storeDetails = [
+    {
+      label: "ชื่อร้าน",
+      value: store.name,
+    },
+    {
+      label: "ที่อยู่ร้าน",
+      value: store.address,
+    },
+    {
+      label: "คําอธิบายร้าน",
+      value: store.description,
+    },
+  ];
+
   return (
     <MainLayout
       title={`คําขอการสมัครร้านค้า ${params.storeId}`}
@@ -50,19 +65,24 @@ export default function ApplicationPage({
           <CardContent className="space-y-8">
             <div className="flex items-center gap-3">
               <Avatar>
-                <AvatarImage src="" alt="" />
-                <AvatarFallback>R</AvatarFallback>
+                <AvatarImage
+                  src={store.user?.image ? store.user.image : ""}
+                  alt={store.user?.name ? store.user.name : ""}
+                />
+                <AvatarFallback>
+                  {store.user?.name ? store.user?.name[0] : ""}
+                </AvatarFallback>
               </Avatar>
-              <span>Rufus Stewart</span>
+              <span>{store.user?.name}</span>
             </div>
             <div>
               <h2>บัตรประชาชน</h2>
-              <p className="text-gray-600">123456789123</p>
+              <p className="text-gray-600">{store.ownerIdCard}</p>
             </div>
             <div>
               <h2>หลักฐานยืนยัน</h2>
               <Image
-                src="https://marketplace.canva.com/EAFOvBgrUOM/1/0/1600w/canva-gray-modern-name-id-card-h47cMu1Mmlk.jpg"
+                src={`http://localhost:4000/${store.ownerIdCardPhoto}`}
                 alt="Personal Id Card"
                 width={300}
                 height={200}
@@ -78,20 +98,20 @@ export default function ApplicationPage({
           <CardContent className="space-y-8">
             <div>
               <h2>ธนาคาร</h2>
-              <p className="text-gray-600">SCB</p>
+              <p className="text-gray-600">{store.bankProvider}</p>
             </div>
             <div>
               <h2>เลขบัญชีธนาคาร</h2>
-              <p className="text-gray-600">123456789</p>
+              <p className="text-gray-600">{store.bankAccount}</p>
             </div>
             <div>
               <h2>ชื่อบัญชีธนาคาร</h2>
-              <p className="text-gray-600">Rufus Stewart</p>
+              <p className="text-gray-600">{store.bankName}</p>
             </div>
             <div>
               <h2>ภาพถ่ายสมุดบัญชี</h2>
               <Image
-                src="https://www.wesignlab.co.th/images/editor/%E0%B9%80%E0%B8%AD%E0%B8%81%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%9A%E0%B8%A3%E0%B8%B4%E0%B8%A9%E0%B8%B1%E0%B8%97-05.jpg"
+                src={`http://localhost:4000/${store.bookBankPhoto}`}
                 alt="Book Bank"
                 width={300}
                 height={200}
