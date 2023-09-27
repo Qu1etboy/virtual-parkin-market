@@ -12,6 +12,7 @@ import Rating from "@mui/material/Rating";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 import { Gallery } from "@/components/gallery";
+import { prisma } from "@/lib/prisma";
 
 const ratings = [
   {
@@ -41,9 +42,22 @@ const ratings = [
   },
 ];
 
-export default function ProductPage({ params }: { params: { id: string } }) {
+export default async function ProductPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   // Get product from product id
-  const product = products.find((product) => product.id === +params.id);
+  const product = await prisma.product.findUnique({
+    where: {
+      id: params.id,
+    },
+    include: {
+      images: true,
+      review: true,
+      store: true,
+    },
+  });
 
   if (!product) {
     notFound();
@@ -53,7 +67,12 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     <main className="my-12">
       <section className="container mx-auto grid grid-cols-1 lg:grid-cols-2">
         <div>
-          <Gallery images={product.images} />
+          <Gallery
+            images={product.images.map((image, idx) => ({
+              src: `http://localhost:4000/${image.image}`,
+              altText: `${product.name} image ${idx}`,
+            }))}
+          />
         </div>
         <div className="py-4 px-8">
           <span className="text-orange-500">{product.category}</span>
@@ -63,7 +82,9 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           <Currency value={product.price} />
           <div className="flex items-center gap-6 mt-6 mb-3">
             <Quantity />
-            <span className="text-gray-600">สินค้าเหลืออยู่ 6 ชิ้น</span>
+            <span className="text-gray-600">
+              สินค้าเหลืออยู่ {product.stockQuantity} ชิ้น
+            </span>
           </div>
           <Button className="w-full rounded-full py-6 mt-3">
             เพิ่มเข้าตะกร้า
@@ -75,12 +96,17 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
           <div className="mt-6">
             <h2 className="text-sm text-gray-600">จําหน่ายโดย</h2>
-            <Link href="/shop/1" className="flex items-center gap-3 mt-3 group">
+            <Link
+              href={`/shop/${product.store?.id}`}
+              className="flex items-center gap-3 mt-3 group"
+            >
               <Avatar>
                 <AvatarImage src="" alt="" />
-                <AvatarFallback>N</AvatarFallback>
+                <AvatarFallback>{product.store?.name[0]}</AvatarFallback>
               </Avatar>
-              <span className="group-hover:text-orange-600">Nike Thailand</span>
+              <span className="group-hover:text-orange-600">
+                {product.store?.name}
+              </span>
             </Link>
           </div>
         </div>
@@ -91,33 +117,14 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           <h2 className="text-lg sm:text-xl md:text-2xl font-semibold my-3">
             รายละเอียดสินค้า
           </h2>
-          <article className="prose max-w-none">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita,
-              repellat quas voluptatibus vel autem necessitatibus aut in dolorum
-              quod architecto eius maiores libero esse! Voluptatum repellat
-              debitis ipsum quae nam!
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita,
-              repellat quas voluptatibus vel autem necessitatibus aut in dolorum
-              quod architecto eius maiores libero esse! Voluptatum repellat
-              debitis ipsum quae nam!
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita,
-              repellat quas voluptatibus vel autem necessitatibus aut in dolorum
-              quod architecto eius maiores libero esse! Voluptatum repellat
-              debitis ipsum quae nam!
-            </p>
-          </article>
+          <article className="prose max-w-none">{product.description}</article>
         </div>
       </section>
 
       <section className="my-12">
         <div className="container mx-auto">
           <h2 className="flex items-center text-lg sm:text-xl md:text-2xl font-semibold my-3">
-            4.6 Rating <Dot /> {product.reviews.length} รีวิว
+            4.6 Rating <Dot /> {product.review.length} รีวิว
           </h2>
           <Button className="rounded-full" asChild>
             <Link href={`/products/${params.id}/review#write-review`}>
@@ -145,7 +152,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           </div>
 
           <div className="my-6">
-            {product.reviews.map((review) => (
+            {product.review.map((review) => (
               <ReviewCard key={review.id} review={review} />
             ))}
           </div>

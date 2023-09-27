@@ -1,12 +1,34 @@
 import { products } from "@/__mock__/products";
 import ProductCard from "@/components/product-card";
+import { prisma } from "@/lib/prisma";
 import { MapPin } from "lucide-react";
+import { notFound } from "next/navigation";
 import React from "react";
 
-export default function ShopPage() {
+export default async function ShopPage({
+  params,
+}: {
+  params: { shopId: string };
+}) {
   // TODO: Get shop from shop id
+  const shop = await prisma.store.findUnique({
+    where: {
+      id: params.shopId,
+    },
+  });
   // TODO: Check if shop is exist, if not return not found
+  if (!shop) return notFound();
   // TODO: Get products from shop id
+  const products = await prisma.product.findMany({
+    where: {
+      storeId: params.shopId,
+    },
+    include: {
+      images: true,
+      review: true,
+    },
+  });
+
   return (
     <main>
       <div className="relative w-full h-[400px]">
@@ -26,10 +48,10 @@ export default function ShopPage() {
             />
           </div>
           <div className="py-6 text-center md:text-left mt-[125px] md:mt-0 md:ml-[325px]">
-            <h2 className="mb-3 text-4xl font-bold">Nike Thailand</h2>
+            <h2 className="mb-3 text-4xl font-bold">{shop.name}</h2>
             <p className="mt-3">
               <MapPin className="mr-2 inline-block" />
-              A-01
+              {shop.address}
             </p>
           </div>
         </div>
@@ -40,12 +62,7 @@ export default function ShopPage() {
             เกี่ยวกับร้านค้า
           </h2>
           <article className="prose">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              culpa nobis, odit corrupti, a fugiat eaque, rerum neque omnis iste
-              maiores sit molestiae atque? Accusantium similique aspernatur nisi
-              quidem exercitationem!
-            </p>
+            <p>{shop.description}</p>
           </article>
         </div>
         <div>

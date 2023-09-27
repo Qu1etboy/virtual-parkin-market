@@ -1,9 +1,16 @@
 import CategoryMenu from "@/components/category-menu";
 import ProductCard from "@/components/product-card";
 import React from "react";
-import { products } from "@/__mock__/products";
+import { prisma } from "@/lib/prisma";
 
-export default function ShopHome() {
+export default async function ShopHome() {
+  const products = await prisma.product.findMany({
+    include: {
+      images: true,
+      review: true,
+    },
+  });
+
   return (
     <main className="container mx-auto py-6">
       <CategoryMenu />
