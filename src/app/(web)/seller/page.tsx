@@ -11,8 +11,21 @@ import { stores } from "@/__mock__/stores";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Store } from "lucide-react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { prisma } from "@/lib/prisma";
 
-export default function SelectStorePage() {
+export default async function SelectStorePage() {
+  const session = await getServerSession(authOptions);
+
+  const stores = await prisma.store.findMany({
+    where: {
+      userId: session?.user?.id,
+    },
+  });
+
+  // console.log("[store page] ", session?.user);
+
   return (
     <main className="bg-gray-50 min-h-screen w-full flex flex-col justify-center items-center">
       <Store className="text-gray-500 h-20 w-20 m-4" />
