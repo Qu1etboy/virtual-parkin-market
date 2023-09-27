@@ -12,6 +12,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -32,7 +33,9 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>แก้ไข</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href={`products/${row.getValue("id")}/edit`}>แก้ไข</Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuSeparator />
         <DropdownMenuItem>

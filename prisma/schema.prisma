@@ -125,7 +125,7 @@ enum StoreStatus {
 model Store {
   id               String      @id @default(cuid())
   name             String      @unique
-  description      String
+  description      String      @db.LongText
   address          String
   // For identify store owner
   ownerIdCard      String      @map("owner_id_card")
@@ -174,7 +174,7 @@ enum ProductCategory {
 model Product {
   id            String          @id @default(cuid())
   name          String
-  description   String
+  description   String          @db.LongText
   // Slug is a unique string for identify product in url
   slug          String          @unique
   // Price can be the same as original price or different, this help when product has discount
