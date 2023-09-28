@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
+import { BillStatus } from "@prisma/client";
+import { redis } from "@/lib/redis";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -38,30 +40,44 @@ export async function POST(req: Request) {
   if (event.type === "checkout.session.completed") {
     console.log("[stripe] address = ", addressString);
 
-    // const order = await prismadb.order.update({
-    //   where: {
-    //     id: session?.metadata?.orderId,
-    //   },
-    //   data: {
-    //     isPaid: true,
-    //     address: addressString,
-    //     phone: session?.customer_details?.phone || "",
-    //   },
-    //   include: {
-    //     orderItems: true,
-    //   },
-    // });
-    // const productIds = order.orderItems.map((orderItem) => orderItem.productId);
-    // await prismadb.product.updateMany({
-    //   where: {
-    //     id: {
-    //       in: [...productIds],
-    //     },
-    //   },
-    //   data: {
-    //     isArchived: true,
-    //   },
-    // });
+    const bill = await prisma.bill.update({
+      where: {
+        id: session?.metadata?.billId,
+      },
+      data: {
+        status: BillStatus.PAID,
+      },
+      include: {
+        order: {
+          include: {
+            orderItem: true,
+          },
+        },
+        user: true,
+      },
+    });
+
+    console.log("[stripe] bill = ", bill);
+
+    const receipt = await prisma.receipt.create({
+      data: {
+        userId: bill.userId,
+        amount: session?.amount_total || 0,
+        shippingAddress: addressString,
+        contactNumber: session?.customer_details?.phone || "",
+        contactEmail: session?.customer_details?.email || "",
+        bill: {
+          connect: {
+            id: bill.id,
+          },
+        },
+      },
+    });
+
+    // Clear cart
+    await (await redis).del(`user:cart:${bill.userId}`);
+  } else if (event.type === "checkout.session.expired") {
+    console.log("[stripe] checkout.session.expired", session?.id);
   }
 
   return new NextResponse(null, { status: 200 });

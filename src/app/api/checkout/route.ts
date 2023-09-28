@@ -7,6 +7,7 @@ import { products as mockProducts } from "@/__mock__/products";
 import { redis } from "@/lib/redis";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
+import { FILE_URL } from "@/services/upload";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -25,6 +26,7 @@ export async function POST(req: Request) {
     },
     include: {
       images: true,
+      store: true,
     },
   });
 
@@ -32,17 +34,63 @@ export async function POST(req: Request) {
     return new NextResponse(null, { status: 400 });
   }
 
+  // Creating bill that contain user's orders
+  const bill = await prisma.bill.create({
+    data: {
+      userId: session.user.id,
+    },
+  });
+
+  // Creating order for each product
+  for (const product of products) {
+    if (product.stockQuantity < +items[product.id]) {
+      return new NextResponse(null, { status: 400 });
+    }
+
+    // Creating new order for each store that user bought from if not exists yet
+    let order = await prisma.order.findUnique({
+      where: {
+        storeId_billId: {
+          storeId: product.storeId as string,
+          billId: bill.id,
+        },
+      },
+    });
+
+    // If order not exists, create new order
+    if (!order) {
+      order = await prisma.order.create({
+        data: {
+          userId: session.user.id,
+          storeId: product.storeId as string,
+          shippingPrice: 0,
+          billId: bill.id,
+        },
+      });
+    }
+
+    // Creating order items from cart items
+    const orderItem = await prisma.orderItem.create({
+      data: {
+        orderId: order.id,
+        productId: product.id,
+        quantity: +items[product.id],
+        price: product.price,
+      },
+    });
+  }
+
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
   products.forEach((product) => {
     line_items.push({
-      quantity: 1,
+      quantity: +items[product.id],
       price_data: {
         currency: "THB",
         product_data: {
           name: product.name,
           description: product.description,
-          images: [`http://localhost:4000/${product.images[0].image}`],
+          images: [`${FILE_URL}/${product.images[0].image}`],
         },
         unit_amount: product.price * 100,
       },
@@ -53,14 +101,17 @@ export async function POST(req: Request) {
     line_items,
     mode: "payment",
     billing_address_collection: "required",
+    shipping_address_collection: {
+      allowed_countries: ["TH"],
+    },
     phone_number_collection: {
       enabled: true,
     },
     success_url: `${process.env.FRONTEND_STORE_URL}/cart?success=1`,
     cancel_url: `${process.env.FRONTEND_STORE_URL}/cart?canceled=1`,
-    // metadata: {
-    //   orderId: order.id,
-    // },
+    metadata: {
+      billId: bill.id,
+    },
   });
 
   return NextResponse.json({ url: stripeSession.url });

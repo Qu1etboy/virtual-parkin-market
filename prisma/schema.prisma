@@ -230,8 +230,8 @@ model Bill {
   // Bill belongs to order
   order     Order[]
   //
-  receipt   Receipt    @relation(fields: [receiptId], references: [id])
-  receiptId String     @unique @map("receipt_id")
+  receipt   Receipt?   @relation(fields: [receiptId], references: [id])
+  receiptId String?    @unique @map("receipt_id")
   // 
   status    BillStatus @default(PENDING)
   // Timestamp
@@ -275,6 +275,8 @@ model Order {
   // Timestamp
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  @@unique([storeId, billId])
 }
 
 model OrderItem {
