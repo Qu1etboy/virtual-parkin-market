@@ -54,9 +54,17 @@ model User {
   stores          Store[]
   accounts        Account[]
   sessions        Session[]
+  // User has many orders
   orders          Order[]
+  // User write many reviews to products
   reviews         Review[]
+  // User has many addresses used for shipping
   addresses       Address[]
+  // User receive many bills from purchasing products
+  bills           Bill[]
+  // User receive many receipts from purchased products
+  receipts        Receipt[]
+  // Timestamp
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 }
@@ -202,13 +210,50 @@ model ProductImage {
   updatedAt DateTime @updatedAt @map("updated_at")
 }
 
-// Can be change later
 enum OrderStatus {
   PENDING
-  PAID
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+enum BillStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+model Bill {
+  id        String     @id @default(cuid())
+  userId    String     @map("user_id")
+  user      User       @relation(fields: [userId], references: [id])
+  // Bill belongs to order
+  order     Order[]
+  //
+  receipt   Receipt    @relation(fields: [receiptId], references: [id])
+  receiptId String     @unique @map("receipt_id")
+  // 
+  status    BillStatus @default(PENDING)
+  // Timestamp
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+}
+
+model Receipt {
+  id              String   @id @default(cuid())
+  // Receipt belongs to bill
+  bill            Bill?
+  //
+  amount          Float
+  shippingAddress String   @map("shipping_address")
+  contactNumber   String   @map("contact_number")
+  contactEmail    String?  @map("contact_email")
+  // Receipt belongs to user
+  user            User?    @relation(fields: [userId], references: [id])
+  userId          String?
+  // Timestamp
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 }
 
 model Order {
@@ -224,6 +269,9 @@ model Order {
   status        OrderStatus @default(PENDING)
   // Order has many order item
   orderItem     OrderItem[]
+  // Order has one bill
+  billId        String
+  bill          Bill        @relation(fields: [billId], references: [id])
   // Timestamp
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime    @updatedAt @map("updated_at")

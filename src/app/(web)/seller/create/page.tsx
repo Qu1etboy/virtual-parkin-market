@@ -39,6 +39,7 @@ import { storeSchema } from "@/types/main";
 import { upload } from "@/services/upload";
 import axios from "@/lib/axios";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 type CreateStore = z.infer<typeof storeSchema>;
 

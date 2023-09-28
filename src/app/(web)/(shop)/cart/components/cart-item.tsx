@@ -8,6 +8,7 @@ import Quantity from "@/components/quantity";
 import Currency from "@/components/currency";
 import { Product, ProductImage } from "@prisma/client";
 import axios from "@/lib/axios";
+import { FILE_URL } from "@/services/upload";
 
 type CartItemProps = {
   product: Product & {
@@ -46,7 +47,7 @@ export default function CartItem({ product, initialQuantity }: CartItemProps) {
       <div className="relative h-24 w-24 rounded-md overflow-hidden sm:h-48 sm:w-48">
         <Image
           fill
-          src={`http://localhost:4000/${product.images[0].image}`}
+          src={`${FILE_URL}/${product.images[0].image}`}
           alt={product.name}
           className="object-cover object-center"
         />

@@ -42,7 +42,7 @@ import { Gender } from "@prisma/client";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { ca } from "date-fns/locale";
-import { upload } from "@/services/upload";
+import { FILE_URL, upload } from "@/services/upload";
 
 type ProfileFormValues = z.infer<typeof customerProfileSchema>;
 
@@ -115,7 +115,7 @@ export function ProfileForm() {
         <div className="w-full flex items-center gap-3">
           <Avatar className="ml-auto w-20 h-20">
             <AvatarImage
-              src={`http://localhost:4000/${session?.user.image}` ?? ""}
+              src={`${FILE_URL}/${session?.user.image}` ?? ""}
               alt={session?.user.name ?? ""}
             />
             <AvatarFallback>

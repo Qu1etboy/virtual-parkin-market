@@ -4,6 +4,7 @@ import Link from "next/link";
 import Currency from "./currency";
 import { Rating } from "@mui/material";
 import { Product, ProductImage, Review } from "@prisma/client";
+import { FILE_URL } from "@/services/upload";
 
 export default function ProductCard({
   product,
@@ -15,7 +16,7 @@ export default function ProductCard({
   return (
     <Link href={href} className="flex flex-col gap-3 group">
       <Image
-        src={`http://localhost:4000/${product.images[0].image}`}
+        src={`${FILE_URL}/${product.images[0].image}`}
         alt={product.name}
         height={300}
         width={300}

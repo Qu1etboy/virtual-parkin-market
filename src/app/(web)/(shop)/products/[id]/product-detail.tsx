@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import axios from "@/lib/axios";
+import { FILE_URL } from "@/services/upload";
 import { Rating } from "@mui/material";
 import { Product, ProductImage, Review, Store } from "@prisma/client";
 import { Dot, Heart, PenLine } from "lucide-react";
@@ -86,7 +87,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
         <div>
           <Gallery
             images={product.images.map((image, idx) => ({
-              src: `http://localhost:4000/${image.image}`,
+              src: `${FILE_URL}/${image.image}`,
               altText: `${product.name} image ${idx}`,
             }))}
           />

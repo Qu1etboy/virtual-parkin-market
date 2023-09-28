@@ -7,6 +7,7 @@ import { ProductInStock } from "@/__mock__/products";
 import { DataTableRowActions } from "./data-table-row-actions";
 import ToggleSell from "./toggle-sell";
 import { Product } from "@prisma/client";
+import { FILE_URL } from "@/services/upload";
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -33,7 +34,7 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <div className="flex items-center gap-6">
           <Image
-            src={`http://localhost:4000/${thumbnail}`}
+            src={`${FILE_URL}/${thumbnail}`}
             alt={name}
             width={100}
             height={100}

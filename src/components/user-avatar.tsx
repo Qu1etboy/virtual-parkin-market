@@ -14,6 +14,7 @@ import { Button } from "./ui/button";
 import logout from "next-auth/next";
 import LogOutButton from "./logout-button";
 import Link from "next/link";
+import { FILE_URL } from "@/services/upload";
 
 export default function UserAvatar({ user }: { user: Prisma.User }) {
   return (
@@ -21,7 +22,7 @@ export default function UserAvatar({ user }: { user: Prisma.User }) {
       <DropdownMenuTrigger asChild>
         <Avatar className="ml-auto cursor-pointer">
           <AvatarImage
-            src={`http://localhost:4000/${user.image}` ?? ""}
+            src={`${FILE_URL}/${user.image}` ?? ""}
             alt={user.name ?? ""}
           />
           <AvatarFallback>{user.name ? user.name[0] : null}</AvatarFallback>

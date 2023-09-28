@@ -2,17 +2,12 @@
 
 import Currency from "@/components/currency";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
+import axios from "@/lib/axios";
 import React from "react";
 
 export default function Summary({ total }: { total: number }) {
   async function onCheckout() {
-    const { data } = await axios.post(
-      "http://localhost:3000/api/stores/1/checkout",
-      {
-        productIds: [1, 2],
-      }
-    );
+    const { data } = await axios.post("/checkout");
 
     window.location.href = data.url;
   }

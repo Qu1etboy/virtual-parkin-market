@@ -5,6 +5,7 @@ import Image from "next/image";
 import MainLayout from "@/components/layout/main-layout";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { FILE_URL } from "@/services/upload";
 
 export default async function ApplicationPage({
   params,
@@ -82,7 +83,7 @@ export default async function ApplicationPage({
             <div>
               <h2>หลักฐานยืนยัน</h2>
               <Image
-                src={`http://localhost:4000/${store.ownerIdCardPhoto}`}
+                src={`${FILE_URL}/${store.ownerIdCardPhoto}`}
                 alt="Personal Id Card"
                 width={300}
                 height={200}
@@ -111,7 +112,7 @@ export default async function ApplicationPage({
             <div>
               <h2>ภาพถ่ายสมุดบัญชี</h2>
               <Image
-                src={`http://localhost:4000/${store.bookBankPhoto}`}
+                src={`${FILE_URL}/${store.bookBankPhoto}`}
                 alt="Book Bank"
                 width={300}
                 height={200}

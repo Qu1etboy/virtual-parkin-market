@@ -7,6 +7,7 @@ import { Gallery } from "@/components/gallery";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { prisma } from "@/lib/prisma";
+import { FILE_URL } from "@/services/upload";
 
 export default async function WriteReviewPage({
   params,
@@ -38,7 +39,7 @@ export default async function WriteReviewPage({
           <div>
             <Gallery
               images={product.images.map((image, idx) => ({
-                src: `http://localhost:4000/${image.image}`,
+                src: `${FILE_URL}/${image.image}`,
                 altText: `${product.name} image ${idx}`,
               }))}
             />

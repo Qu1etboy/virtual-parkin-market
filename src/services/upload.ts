@@ -1,5 +1,7 @@
 import axios from "@/lib/axios";
 
+export const FILE_URL = process.env.NEXT_PUBLIC_FILE_URL;
+
 export const upload = async (name: string, file: File | File[]) => {
   const formData = new FormData();
 
@@ -12,8 +14,8 @@ export const upload = async (name: string, file: File | File[]) => {
   }
 
   const url = Array.isArray(file)
-    ? "http://localhost:4000/upload-multiple"
-    : "http://localhost:4000/upload";
+    ? `${FILE_URL}/upload-multiple`
+    : `${FILE_URL}/upload`;
 
   const { data: _file } = await axios.post(url, formData, {
     headers: {
