@@ -104,10 +104,14 @@ export default function CreateStorePage() {
       window.location.href = "/seller";
     } catch (error: any) {
       console.log(error);
-      for (const [key, value] of Object.entries(error.response.data.errors)) {
-        form.setError(key as any, {
-          message: value as string,
-        });
+      if (error.response.status === 400) {
+        for (const [key, value] of Object.entries(error.response.data.errors)) {
+          form.setError(key as any, {
+            message: value as string,
+          });
+        }
+      } else {
+        toast.error("เกิดข้อผิดพลาดกรุณาลองใหม่อีกครั้ง");
       }
     }
   }

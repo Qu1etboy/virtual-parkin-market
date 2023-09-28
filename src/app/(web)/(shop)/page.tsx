@@ -19,7 +19,7 @@ export default async function ShopHome() {
           <ProductCard
             key={product.id}
             product={product}
-            href={`/products/${product.id}`}
+            href={`/products/${product.slug}`}
           />
         ))}
       </section>

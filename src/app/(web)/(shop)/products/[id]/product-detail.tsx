@@ -144,7 +144,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             4.6 Rating <Dot /> {product.review.length} รีวิว
           </h2>
           <Button className="rounded-full" asChild>
-            <Link href={`/products/${product.id}/review#write-review`}>
+            <Link href={`/products/${product.slug}/review#write-review`}>
               <PenLine className="inline-block w-4 h-4 mr-3" />
               รีวิวสินค้า
             </Link>

@@ -6,14 +6,25 @@ import Currency from "@/components/currency";
 import { Gallery } from "@/components/gallery";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { prisma } from "@/lib/prisma";
 
-export default function WriteReviewPage({
+export default async function WriteReviewPage({
   params,
 }: {
   params: { id: string };
 }) {
   // Get product from product id
-  const product = products.find((product) => product.id === +params.id);
+  // const product = products.find((product) => product.id === +params.id);
+  const product = await prisma.product.findUnique({
+    where: {
+      slug: params.id,
+    },
+    include: {
+      images: true,
+      review: true,
+      store: true,
+    },
+  });
 
   if (!product) {
     notFound();
@@ -25,7 +36,12 @@ export default function WriteReviewPage({
         {/* Product detail */}
         <section className="container mx-auto grid grid-cols-1 lg:grid-cols-2">
           <div>
-            <Gallery images={product.images} />
+            <Gallery
+              images={product.images.map((image, idx) => ({
+                src: `http://localhost:4000/${image.image}`,
+                altText: `${product.name} image ${idx}`,
+              }))}
+            />
           </div>
           <div className="py-4 px-8">
             <span className="text-orange-500">{product.category}</span>
@@ -37,15 +53,15 @@ export default function WriteReviewPage({
             <div className="mt-6">
               <h2 className="text-sm text-gray-600">จําหน่ายโดย</h2>
               <Link
-                href="/shop/1"
+                href={`/shop/${product.store?.id}`}
                 className="flex items-center gap-3 mt-3 group"
               >
                 <Avatar>
                   <AvatarImage src="" alt="" />
-                  <AvatarFallback>N</AvatarFallback>
+                  <AvatarFallback>{product.store?.name[0]}</AvatarFallback>
                 </Avatar>
                 <span className="group-hover:text-orange-600">
-                  Nike Thailand
+                  {product.store?.name}
                 </span>
               </Link>
             </div>

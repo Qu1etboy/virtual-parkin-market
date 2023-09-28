@@ -25,21 +25,6 @@ export async function POST(
   // const validData = storeSchema.parse(data);
   const validData = productSchema.parse(data);
 
-  // const user = await prisma.user.findUnique({
-  //   where: {
-  //     email: session.user.email as string,
-  //   },
-  // });
-  console.log("[add product] user = ", session.user);
-  console.log(
-    "[add product] category = ",
-    validData.category,
-    // @ts-ignore
-    ProductCategory[+validData.category],
-    // @ts-ignore
-    ProductCategory[Object.keys(ProductCategory)[+validData.category]]
-  );
-
   // Check if user is the owner of the store
   const store = await prisma.store.findUnique({
     where: {
@@ -49,6 +34,20 @@ export async function POST(
 
   if (!store || store.userId !== session.user.id) {
     return new NextResponse(null, { status: 401 });
+  }
+
+  // Check if product name is already taken
+  const productNameTaken = await prisma.product.findFirst({
+    where: {
+      name: validData.name,
+    },
+  });
+
+  if (productNameTaken) {
+    return new NextResponse(
+      JSON.stringify({ errors: { name: "ชื่อสินค้านี้ถูกใช้ไปแล้ว" } }),
+      { status: 400 }
+    );
   }
 
   const product = await prisma.product.create({

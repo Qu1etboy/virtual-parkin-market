@@ -11,7 +11,7 @@ export default async function ProductPage({
   // Get product from product id
   const product = await prisma.product.findUnique({
     where: {
-      id: params.id,
+      slug: params.id,
     },
     include: {
       images: true,

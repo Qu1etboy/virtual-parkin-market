@@ -173,7 +173,7 @@ enum ProductCategory {
 
 model Product {
   id            String          @id @default(cuid())
-  name          String
+  name          String          @unique
   description   String          @db.LongText
   // Slug is a unique string for identify product in url
   slug          String          @unique

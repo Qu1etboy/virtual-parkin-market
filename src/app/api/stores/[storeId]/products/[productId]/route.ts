@@ -35,6 +35,20 @@ export async function PUT(
     return new NextResponse(null, { status: 401 });
   }
 
+  // Check if product name is already taken
+  const productNameTaken = await prisma.product.findFirst({
+    where: {
+      name: validData.name,
+    },
+  });
+
+  if (productNameTaken) {
+    return new NextResponse(
+      JSON.stringify({ errors: { name: "ชื่อสินค้านี้ถูกใช้ไปแล้ว" } }),
+      { status: 400 }
+    );
+  }
+
   const product = await prisma.product.update({
     where: {
       id: productId,

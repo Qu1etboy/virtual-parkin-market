@@ -38,6 +38,7 @@ import { upload } from "@/services/upload";
 import axios from "@/lib/axios";
 import { useParams } from "next/navigation";
 import { ProductCategory } from "@prisma/client";
+import toast from "react-hot-toast";
 
 type AddProduct = z.infer<typeof productSchema>;
 
@@ -97,8 +98,17 @@ export default function ProductForm({ product }: ProductFormProps) {
       }
 
       window.location.href = `/seller/${params.storeId}/products`;
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      if (error.response.status === 400) {
+        for (const [key, value] of Object.entries(error.response.data.errors)) {
+          form.setError(key as any, {
+            message: value as string,
+          });
+        }
+      } else {
+        toast.error("เกิดข้อผิดพลาดกรุณาลองใหม่อีกครั้ง");
+      }
     }
   }
 
