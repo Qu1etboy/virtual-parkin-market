@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
 import axios from "@/lib/axios";
 import React from "react";
 
-export default function Summary({ total }: { total: number }) {
+export default function Summary({
+  total,
+  itemsInCart,
+}: {
+  total: number;
+  itemsInCart: number;
+}) {
   async function onCheckout() {
     const { data } = await axios.post("/checkout");
 
@@ -23,7 +29,7 @@ export default function Summary({ total }: { total: number }) {
       </div>
       <Button
         onClick={onCheckout}
-        // disabled={items.length === 0}
+        disabled={itemsInCart === 0}
         className="w-full mt-6"
       >
         ชําระเงิน

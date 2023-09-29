@@ -44,7 +44,7 @@ export default async function ProductsPage() {
               <ProductCard
                 key={product.id}
                 product={product}
-                href={`/products/${product.id}`}
+                href={`/products/${product.slug}`}
               />
             ))}
           </div>

@@ -63,6 +63,7 @@ export default async function CartPage() {
               total={items
                 .map((item) => item.price * +cartItems[item.id])
                 .reduce((p1, p2) => p1 + p2, 0)}
+              itemsInCart={items.length}
             />
           </div>
         </div>

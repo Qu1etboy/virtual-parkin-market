@@ -15,11 +15,14 @@ import {
 import LogOutButton from "./logout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import UserAvatar from "./user-avatar";
+import { redis } from "@/lib/redis";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const cart = 5;
 
 export default async function Navbar() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
+  const items = await (await redis).hGetAll(`user:cart:${session?.user.id}`);
 
   return (
     <header className="px-3 py-6 border-b">
@@ -51,9 +54,13 @@ export default async function Navbar() {
             <Button variant={"ghost"} className="rounded-full relative" asChild>
               <Link href="/cart">
                 <ShoppingCart className="w-5 h-5" />
-                <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900">
-                  {cart < 100 ? cart : cart + "+"}
-                </div>
+                {items && Object.keys(items).length > 0 ? (
+                  <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900">
+                    {items && Object.keys(items).length < 100
+                      ? Object.keys(items).length
+                      : Object.keys(items).length + "+"}
+                  </div>
+                ) : null}
               </Link>
             </Button>
           </div>

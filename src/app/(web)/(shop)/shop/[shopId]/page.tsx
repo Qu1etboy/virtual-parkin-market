@@ -74,7 +74,7 @@ export default async function ShopPage({
               <ProductCard
                 key={product.id}
                 product={product}
-                href={`/products/${product.id}`}
+                href={`/products/${product.slug}`}
               />
             ))}
           </section>
