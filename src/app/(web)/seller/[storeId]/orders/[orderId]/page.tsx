@@ -14,12 +14,47 @@ import { columns } from "./components/columns";
 import React from "react";
 import Currency from "@/components/currency";
 import MainLayout from "@/components/layout/main-layout";
+import { BillStatus } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
+import { notFound } from "next/navigation";
+import { FILE_URL } from "@/services/upload";
+import { Button } from "@/components/ui/button";
 
-export default function OrderItemPage({
+export default async function OrderItemPage({
   params,
 }: {
   params: { orderId: string };
 }) {
+  const order = await prisma.order.findUnique({
+    where: {
+      id: params.orderId,
+      bill: {
+        status: BillStatus.PAID,
+      },
+    },
+    include: {
+      bill: {
+        include: {
+          receipt: true,
+        },
+      },
+      user: true,
+      orderItem: {
+        include: {
+          product: {
+            include: {
+              images: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!order) {
+    return notFound();
+  }
+
   return (
     <MainLayout
       title="รายละเอียดออเดอร์"
@@ -27,7 +62,7 @@ export default function OrderItemPage({
     >
       <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
         <div className="order-2 md:order-1 col-span-8">
-          <DataTable columns={columns} data={orderItems} />
+          <DataTable columns={columns} data={order.orderItem} />
         </div>
         <div className="order-1 md:order-2 col-span-4 space-y-4">
           <Card className="w-full">
@@ -39,21 +74,26 @@ export default function OrderItemPage({
             <CardContent className="space-y-8">
               <div className="flex items-center gap-3">
                 <Avatar>
-                  <AvatarImage src={""} alt={""} />
-                  <AvatarFallback>T</AvatarFallback>
+                  <AvatarImage
+                    src={`${FILE_URL}/${order.user.image}`}
+                    alt={order.user.name ?? ""}
+                  />
+                  <AvatarFallback>
+                    {order.user.name ? order.user.name[0] : ""}
+                  </AvatarFallback>
                 </Avatar>
-                <span>Test</span>
+                <span>{order.user.name}</span>
               </div>
               <div>
                 <h2>ช่องทางติดต่อ</h2>
-                <p className="text-sm text-gray-600">081-234-5678</p>
+                <p className="text-sm text-gray-600">
+                  {order.bill?.receipt?.contactNumber}
+                </p>
               </div>
               <div>
                 <h2>ที่อยู่</h2>
                 <p className="text-sm text-gray-600">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
-                  eveniet neque commodi quam officia blanditiis nesciunt esse
-                  laboriosam ipsum,
+                  {order.bill?.receipt?.shippingAddress}
                 </p>
               </div>
             </CardContent>
@@ -68,8 +108,16 @@ export default function OrderItemPage({
               <Separator />
             </CardHeader>
             <CardContent className="space-y-8">
-              ยอดรวมทั้งหมด: <Currency value={1000} />
+              ยอดรวมทั้งหมด:{" "}
+              <Currency
+                value={order.orderItem
+                  .map((item) => item.price * item.quantity)
+                  .reduce((a, b) => a + b, 0)}
+              />
             </CardContent>
+            <CardFooter>
+              <Button>แพ็คสินค้า</Button>
+            </CardFooter>
           </Card>
         </div>
       </div>

@@ -6,11 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { Order } from "@/__mock__/orders";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { Order } from "@prisma/client";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -42,18 +42,18 @@ export const columns: ColumnDef<Order>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  {
-    accessorKey: "price",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ราคารวม" />
-    ),
-    cell: ({ row }) => {
-      return <span>{row.getValue("price")}</span>;
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
-  },
+  // {
+  //   accessorKey: "price",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="ราคารวม" />
+  //   ),
+  //   cell: ({ row }) => {
+  //     return <span>{row.getValue("price")}</span>;
+  //   },
+  //   filterFn: (row, id, value) => {
+  //     return value.includes(row.getValue(id));
+  //   },
+  // },
   {
     accessorKey: "status",
     header: ({ column }) => (

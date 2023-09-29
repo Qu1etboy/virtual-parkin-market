@@ -5,9 +5,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { OrderItem } from "@/__mock__/orders";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { OrderItem, Product, ProductImage } from "@prisma/client";
+import { FILE_URL } from "@/services/upload";
 
 export const columns: ColumnDef<OrderItem>[] = [
   {
@@ -16,11 +17,12 @@ export const columns: ColumnDef<OrderItem>[] = [
       <DataTableColumnHeader column={column} title="สินค้า" />
     ),
     cell: ({ row }) => {
-      const product: any = row.getValue("product");
+      const product: Product & { images: ProductImage[] } =
+        row.getValue("product");
       return (
         <div className="flex items-center gap-3">
           <Image
-            src={product.image}
+            src={`${FILE_URL}/${product.images[0].image}`}
             alt={product.name}
             width={100}
             height={100}
