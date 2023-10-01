@@ -1,6 +1,7 @@
 import { products } from "@/__mock__/products";
 import ProductCard from "@/components/product-card";
 import { prisma } from "@/lib/prisma";
+import { FILE_URL } from "@/services/upload";
 import { MapPin } from "lucide-react";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -16,6 +17,7 @@ export default async function ShopPage({
       id: params.shopId,
     },
   });
+
   // TODO: Check if shop is exist, if not return not found
   if (!shop) return notFound();
   // TODO: Get products from shop id
@@ -29,21 +31,24 @@ export default async function ShopPage({
     },
   });
 
+  const bannerImage = `${FILE_URL}/${shop.bannerImage}`;
+  const profileImage = `${FILE_URL}/${shop.profileImage}`;
+
   return (
     <main>
       <div className="relative w-full h-[400px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="https://static01.nyt.com/images/2021/03/30/multimedia/28xp-shoes-09/28xp-shoes-09-articleLarge.jpg?quality=75&auto=webp&disable=upscale"
-          alt="Shop cover"
+          src={bannerImage}
+          alt="Shop banner"
           className="w-full h-[400px] object-cover object-center"
         />
         <div className="flex md:block justify-center">
           <div className="absolute bottom-[-30%] md:ml-20 ml-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://static.nike.com/a/images/f_jpg,q_auto:eco/61b4738b-e1e1-4786-8f6c-26aa0008e80b/swoosh-logo-black.png"
-              alt="Shop logo"
+              src={profileImage}
+              alt="Shop profile"
               className="w-[200px] h-[200px] rounded-full object-cover object-center border"
             />
           </div>
