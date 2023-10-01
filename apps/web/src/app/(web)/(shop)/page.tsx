@@ -5,6 +5,9 @@ import { prisma } from "@/lib/prisma";
 
 export default async function ShopHome() {
   const products = await prisma.product.findMany({
+    where: {
+      sell: true,
+    },
     include: {
       images: true,
       review: true,

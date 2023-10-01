@@ -1,48 +1,37 @@
 "use client";
 
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
-import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "@/lib/axios";
 import React from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import toast from "react-hot-toast";
+import { useParams } from "next/navigation";
 
-const schema = z.object({
-  forSell: z.boolean(),
-});
+export default function ToggleSell({
+  productId,
+  sell,
+}: {
+  productId: string;
+  sell: boolean;
+}) {
+  const [sellState, setSellState] = React.useState<boolean>(sell);
+  const params = useParams();
 
-type FormData = z.infer<typeof schema>;
+  async function onToggle() {
+    try {
+      await axios.put(`/stores/${params.storeId}/products/${productId}/sell`, {
+        sell: !sellState,
+      });
 
-export default function ToggleSell({ forSell }: { forSell: boolean }) {
-  const form = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      forSell,
-    },
-  });
-
-  function onSubmit(data: any) {
-    console.log(data);
+      setSellState((prev) => !prev);
+      toast.success(
+        !sellState ? "เปิดวางจําหน่ายสําเร็จ" : "ปิดวางจําหน่ายสําเร็จ"
+      );
+    } catch (error) {
+      toast.error("บันทึกไม่สำเร็จ");
+      setSellState(false);
+      console.error(error);
+    }
   }
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          control={form.control}
-          name="forSell"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
-  );
+  return <Switch checked={sellState} onClick={onToggle} />;
 }

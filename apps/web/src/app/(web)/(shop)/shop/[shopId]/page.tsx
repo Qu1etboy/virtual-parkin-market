@@ -24,6 +24,7 @@ export default async function ShopPage({
   const products = await prisma.product.findMany({
     where: {
       storeId: params.shopId,
+      sell: true,
     },
     include: {
       images: true,

@@ -29,8 +29,6 @@ export const columns: ColumnDef<Product>[] = [
       const name: string = product.name;
       const thumbnail: string = product.images[0].image;
 
-      console.log(thumbnail);
-
       return (
         <div className="flex items-center gap-6">
           <Image
@@ -72,12 +70,17 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
-    accessorKey: "forSell",
+    accessorKey: "sell",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="วางขายสินค้า" />
     ),
     cell: ({ row }) => {
-      return <ToggleSell forSell={row.getValue("forSell")} />;
+      return (
+        <ToggleSell
+          productId={row.getValue("id")}
+          sell={row.getValue("sell")}
+        />
+      );
     },
     enableSorting: false,
     enableHiding: false,

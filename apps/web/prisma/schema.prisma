@@ -190,6 +190,8 @@ model Product {
   originalPrice Float           @map("original_price")
   stockQuantity Int             @map("stock_quantity")
   category      ProductCategory
+  // Is product available to sell
+  sell          Boolean         @default(false)
   images        ProductImage[]
   orderItem     OrderItem[]
   store         Store?          @relation(fields: [storeId], references: [id])

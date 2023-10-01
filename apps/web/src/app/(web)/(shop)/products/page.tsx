@@ -11,6 +11,9 @@ import MyDrawer from "@/components/drawer";
 
 export default async function ProductsPage() {
   const products = await prisma.product.findMany({
+    where: {
+      sell: true,
+    },
     include: {
       images: true,
       review: true,
