@@ -38,8 +38,9 @@ NEXT_PUBLIC_API_URL="your_api_url_here"
 3. **Prisma Setup**
 
    ```bash
-   pnpx prisma generate
-   pnpx prisma db push
+   cd apps/web
+   npx prisma generate
+   npx prisma db push
    ```
 
 ## Setup stripe on local development
