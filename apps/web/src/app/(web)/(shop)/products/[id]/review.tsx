@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/auth-options";
 import ReviewCard from "@/components/review-card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";

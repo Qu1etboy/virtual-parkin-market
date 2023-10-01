@@ -35,7 +35,7 @@ export default function AddressBooks() {
       {user?.addresses && user?.addresses.length > 0 ? (
         <>
           {user.addresses.map((address) => (
-            <Card>
+            <Card key={address.id}>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardDescription>
                   {address.address} {address.district} {address.subDistrict}{" "}

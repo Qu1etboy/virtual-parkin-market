@@ -1,4 +1,3 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import {
   Card,
   CardHeader,
@@ -15,6 +14,7 @@ import Link from "next/link";
 import MyOrdersPagination from "./pagination";
 import Currency from "@/components/currency";
 import { Dot } from "lucide-react";
+import { authOptions } from "@/app/api/auth/auth-options";
 
 export default async function SettingsOrdersPage({
   searchParams,

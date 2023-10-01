@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/auth-options";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
 import { productSchema } from "@/types/main";

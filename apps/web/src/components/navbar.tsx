@@ -16,9 +16,7 @@ import LogOutButton from "./logout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import UserAvatar from "./user-avatar";
 import { redis } from "@/lib/redis";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
-const cart = 5;
+import { authOptions } from "@/app/api/auth/auth-options";
 
 export default async function Navbar() {
   const session = await getServerSession(authOptions);

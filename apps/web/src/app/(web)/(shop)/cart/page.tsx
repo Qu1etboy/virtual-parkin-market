@@ -3,8 +3,8 @@ import CartItem from "./components/cart-item";
 import Summary from "./components/summary";
 import { redis } from "@/lib/redis";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/app/api/auth/auth-options";
 
 export default async function CartPage() {
   const session = await getServerSession(authOptions);

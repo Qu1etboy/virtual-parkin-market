@@ -1,7 +1,7 @@
 import { redis } from "@/lib/redis";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "../auth/auth-options";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
