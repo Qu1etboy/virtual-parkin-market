@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import axios from "@/lib/axios";
+import toast from "react-hot-toast";
 
 const reviewSchema = z.object({
   rating: z.coerce.number().min(1).max(5),
@@ -24,7 +26,13 @@ const reviewSchema = z.object({
 
 type ReviewForm = z.infer<typeof reviewSchema>;
 
-export default function ReviewForm() {
+export default function ReviewForm({
+  productSlug,
+  productId,
+}: {
+  productSlug: string;
+  productId: string;
+}) {
   const form = useForm({
     resolver: zodResolver(reviewSchema),
     defaultValues: {
@@ -33,8 +41,20 @@ export default function ReviewForm() {
     },
   });
 
-  function onSubmit(data: ReviewForm) {
+  async function onSubmit(data: ReviewForm) {
     console.log(data);
+    try {
+      await axios.post(`/reviews`, {
+        productId: productId,
+        rating: data.rating,
+        content: data.content,
+      });
+      toast.success("เขียนรีวิวสำเร็จ");
+      window.location.href = `/products/${productSlug}`;
+    } catch (error) {
+      toast.error("เกิดข้อผิดพลาด");
+      console.error(error);
+    }
   }
   return (
     <Form {...form}>

@@ -15,7 +15,6 @@ export default async function WriteReviewPage({
   params: { id: string };
 }) {
   // Get product from product id
-  // const product = products.find((product) => product.id === +params.id);
   const product = await prisma.product.findUnique({
     where: {
       slug: params.id,
@@ -28,6 +27,20 @@ export default async function WriteReviewPage({
   });
 
   if (!product) {
+    notFound();
+  }
+
+  const order = await prisma.order.count({
+    where: {
+      orderItem: {
+        some: {
+          productId: product.id,
+        },
+      },
+    },
+  });
+
+  if (order === 0) {
     notFound();
   }
 
@@ -71,7 +84,7 @@ export default async function WriteReviewPage({
 
         <section id="write-review" className="mt-6">
           <h1>ให้คะแนนสินค้า</h1>
-          <ReviewForm />
+          <ReviewForm productId={product.id} productSlug={product.slug} />
         </section>
       </div>
     </main>

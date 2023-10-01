@@ -2,6 +2,9 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import ProductDetail from "./product-detail";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import ProductReview from "./review";
 
 export default async function ProductPage({
   params,
@@ -15,7 +18,11 @@ export default async function ProductPage({
     },
     include: {
       images: true,
-      review: true,
+      review: {
+        include: {
+          user: true,
+        },
+      },
       store: true,
     },
   });
@@ -27,6 +34,7 @@ export default async function ProductPage({
   return (
     <main className="my-12">
       <ProductDetail product={product} />
+      <ProductReview product={product} />
     </main>
   );
 }

@@ -10,48 +10,25 @@ import { Progress } from "@/components/ui/progress";
 import axios from "@/lib/axios";
 import { FILE_URL } from "@/services/upload";
 import { Rating } from "@mui/material";
-import { Product, ProductImage, Review, Store } from "@prisma/client";
+import { Product, ProductImage, Review, Store, User } from "@prisma/client";
 import { Dot, Heart, PenLine } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+
+type ReviewWithUser = {
+  user: User;
+} & Review;
 
 type ProductDetailProps = {
   product: Product & {
     images: ProductImage[];
   } & {
-    review: Review[];
+    review: ReviewWithUser[];
   } & {
     store: Store | null;
   };
 };
-
-const ratings = [
-  {
-    id: "1",
-    star: 5,
-    count: 10,
-  },
-  {
-    id: "2",
-    star: 4,
-    count: 5,
-  },
-  {
-    id: "3",
-    star: 3,
-    count: 2,
-  },
-  {
-    id: "4",
-    star: 2,
-    count: 1,
-  },
-  {
-    id: "5",
-    star: 1,
-    count: 0,
-  },
-];
 
 export default function ProductDetail({ product }: ProductDetailProps) {
   const [quantity, setQuantity] = useState(1);
@@ -136,44 +113,6 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             รายละเอียดสินค้า
           </h2>
           <article className="prose max-w-none">{product.description}</article>
-        </div>
-      </section>
-
-      <section className="my-12">
-        <div className="container mx-auto">
-          <h2 className="flex items-center text-lg sm:text-xl md:text-2xl font-semibold my-3">
-            4.6 Rating <Dot /> {product.review.length} รีวิว
-          </h2>
-          <Button className="rounded-full" asChild>
-            <Link href={`/products/${product.slug}/review#write-review`}>
-              <PenLine className="inline-block w-4 h-4 mr-3" />
-              รีวิวสินค้า
-            </Link>
-          </Button>
-          <div className="flex gap-6">
-            <Rating name="read-only" value={4.6} precision={0.5} readOnly />
-
-            <div className="w-full max-w-xl">
-              {ratings.map((rating) => (
-                <div className="flex items-center gap-3" key={rating.id}>
-                  <Rating
-                    name="read-only"
-                    value={rating.star}
-                    size="small"
-                    readOnly
-                  />
-                  <Progress value={(rating.count / 18) * 100} className="h-2" />
-                  <span>{rating.count}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="my-6">
-            {product.review.map((review) => (
-              <ReviewCard key={review.id} review={review} />
-            ))}
-          </div>
         </div>
       </section>
     </>
