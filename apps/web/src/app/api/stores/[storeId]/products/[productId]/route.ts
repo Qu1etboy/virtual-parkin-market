@@ -35,10 +35,13 @@ export async function PUT(
     return new NextResponse(null, { status: 401 });
   }
 
-  // Check if product name is already taken
+  // Check if product name is already taken but not by the current product
   const productNameTaken = await prisma.product.findFirst({
     where: {
       name: validData.name,
+      id: {
+        not: productId,
+      },
     },
   });
 
@@ -48,6 +51,13 @@ export async function PUT(
       { status: 400 }
     );
   }
+
+  console.log(
+    "[PUT product] category = ",
+    validData.category,
+    // @ts-ignore
+    ProductCategory[Object.keys(ProductCategory)[+validData.category - 1]]
+  );
 
   const product = await prisma.product.update({
     where: {
@@ -62,7 +72,7 @@ export async function PUT(
       slug: slugify(validData.name),
       category:
         // @ts-ignore
-        ProductCategory[Object.keys(ProductCategory)[+validData.category]],
+        ProductCategory[Object.keys(ProductCategory)[+validData.category - 1]],
       // images: {
       //   create: validData.images?.map((image) => ({
       //     image: image,
