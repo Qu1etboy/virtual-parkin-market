@@ -36,7 +36,7 @@ jobs:
         run: pnpm install
 
       - name: Prisma generate
-        run: npx prisma generate
+        run: cd apps/web && npx prisma generate
 
       - name: Build
         run: pnpm build
