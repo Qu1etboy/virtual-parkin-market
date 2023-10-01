@@ -38,6 +38,9 @@ jobs:
       - name: Prisma generate
         run: cd apps/web && npx prisma generate
 
+      - name: Lint
+        run: pnpm lint
+
       - name: Build
         run: pnpm build
 
