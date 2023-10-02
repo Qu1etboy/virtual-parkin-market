@@ -44,11 +44,11 @@ export default function AdminNavLinks({
           "relative text-sm duration-300 hover:text-black pb-4 px-8"
         )}
       >
-        {notification && (
+        {notification ? (
           <span className="absolute flex justify-center items-center p-[9px] -top-2 right-[20%] rounded-full text-xs text-white bg-red-600 w-4 h-4">
             {notification}
           </span>
-        )}
+        ) : null}
         {label}
       </Link>
     </li>

@@ -1,16 +1,5 @@
 // import { requestStores } from "@/__mock__/stores";
 import MainLayout from "@/components/layout/main-layout";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,6 +13,7 @@ import { prisma } from "@/lib/prisma";
 import { Store, StoreStatus } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
+import ApproveRejectButtons from "./components/form";
 
 export default async function AdminPage() {
   const requestStores = await prisma.store.findMany({
@@ -53,46 +43,7 @@ export default async function AdminPage() {
                         ดูใบสมัคร
                       </Link>
                     </Button>
-
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button className="bg-green-600 hover:bg-green-700">
-                          อนุมัติ
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>คุณแน่ใจหรือไม่?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            เมื่อกดอนุมัติไปแล้วจะไม่สามารถยกเลิกได้
-                            กรุณาตรวจสอบให้ดีก่อนกดตกลง
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                          <AlertDialogAction>ตกลง</AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="destructive">ปฎิเสธ</Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>คุณแน่ใจหรือไม่?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            เมื่อกดปฎิเสธไปแล้วจะไม่สามารถยกเลิกได้
-                            กรุณาตรวจสอบให้ดีก่อนกดตกลง
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                          <AlertDialogAction>ตกลง</AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <ApproveRejectButtons storeId={store.id} />
                   </div>
                 </CardFooter>
               </Card>
