@@ -4,6 +4,7 @@ import {
   CardContent,
   CardTitle,
   CardDescription,
+  CardFooter,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { prisma } from "@/lib/prisma";
@@ -15,6 +16,7 @@ import MyOrdersPagination from "./pagination";
 import Currency from "@/components/currency";
 import { Dot } from "lucide-react";
 import { authOptions } from "@/app/api/auth/auth-options";
+import { Badge } from "@/components/ui/badge";
 
 export default async function SettingsOrdersPage({
   searchParams,
@@ -45,6 +47,9 @@ export default async function SettingsOrdersPage({
         },
       },
     },
+    orderBy: {
+      createdAt: "desc",
+    },
     take: size,
     skip: (page - 1) * size,
   });
@@ -60,7 +65,7 @@ export default async function SettingsOrdersPage({
       <div>
         <h3 className="text-lg font-medium">รายการคําสั่งซื้อของฉัน</h3>
         <p className="text-sm text-muted-foreground">
-          ข้อมูลนี้จะถูกนําไปใช้เพื่อเพิ่มประสบการณ์ในการใช้งานให้ดียิ่งขึ้น
+          ดูรายการคําสั่งซื้อทั้งหมดที่คุณได้สั่งซื้อ
         </p>
       </div>
       <Separator />
@@ -74,6 +79,9 @@ export default async function SettingsOrdersPage({
                 </CardTitle>
                 <CardDescription>
                   วันที่ {format(receipt.createdAt, "PPP", { locale: th })}
+                  <span className="block">
+                    จัดส่งไปที่ {receipt.shippingAddress}
+                  </span>
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -81,7 +89,12 @@ export default async function SettingsOrdersPage({
                 <div>
                   {receipt.bill?.order.map((order) => (
                     <div key={order.id} className="mt-2">
-                      <h3 className="text-sm">ร้าน {order.store.name}</h3>
+                      <h3 className="text-sm">
+                        ร้าน {order.store.name}{" "}
+                        <span className="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                          {order.status}
+                        </span>
+                      </h3>
                       <ol className="list-decimal mt-1 ml-4">
                         {order.orderItem.map((orderItem) => (
                           <li key={orderItem.id} className="text-sm">
@@ -103,11 +116,13 @@ export default async function SettingsOrdersPage({
                       </ol>
                     </div>
                   ))}
-                  <div className="flex justify-end">
-                    ยอดรวม: {receipt.amount}
-                  </div>
                 </div>
               </CardContent>
+              <CardFooter>
+                <div className="ml-auto flex gap-3">
+                  ยอดรวม: <Currency value={receipt.amount} />
+                </div>
+              </CardFooter>
             </Card>
           ))}
           <MyOrdersPagination page={page} count={Math.ceil(count / size)} />

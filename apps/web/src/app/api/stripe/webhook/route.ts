@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     const receipt = await prisma.receipt.create({
       data: {
         userId: bill.userId,
-        amount: session?.amount_total || 0,
+        amount: session.amount_total ? session.amount_total / 100 : 0,
         shippingAddress: addressString,
         contactNumber: session?.customer_details?.phone || "",
         contactEmail: session?.customer_details?.email || "",
