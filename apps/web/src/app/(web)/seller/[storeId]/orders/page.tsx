@@ -23,6 +23,9 @@ export default async function SellerOrderPage({
       bill: true,
       user: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   return (

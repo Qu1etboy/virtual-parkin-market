@@ -14,11 +14,13 @@ import { columns } from "./components/columns";
 import React from "react";
 import Currency from "@/components/currency";
 import MainLayout from "@/components/layout/main-layout";
-import { BillStatus } from "@prisma/client";
+import { BillStatus, OrderStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { FILE_URL } from "@/services/upload";
 import { Button } from "@/components/ui/button";
+import ShippingOrderButton from "./components/shipping-order";
+import Link from "next/link";
 
 export default async function OrderItemPage({
   params,
@@ -116,7 +118,14 @@ export default async function OrderItemPage({
               />
             </CardContent>
             <CardFooter>
-              <Button>แพ็คสินค้า</Button>
+              {order.status === OrderStatus.PACKED ||
+              order.status === OrderStatus.SHIPPED ? (
+                <Button asChild>
+                  <Link href={`${order.id}/shipping`}>จัดส่งสินค้า</Link>
+                </Button>
+              ) : (
+                <ShippingOrderButton />
+              )}
             </CardFooter>
           </Card>
         </div>

@@ -214,6 +214,7 @@ model ProductImage {
 
 enum OrderStatus {
   PENDING
+  PACKED
   SHIPPED
   DELIVERED
   CANCELLED
@@ -258,6 +259,28 @@ model Receipt {
   updatedAt       DateTime @updatedAt @map("updated_at")
 }
 
+model Delivery {
+  id             String          @id @default(cuid())
+  // Delivery belongs to order
+  orderId        String          @unique @map("order_id")
+  order          Order           @relation(fields: [orderId], references: [id])
+  //
+  deliveryImages DeliveryImage[]
+  // Timestamp
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+}
+
+model DeliveryImage {
+  id         String   @id @default(cuid())
+  deliveryId String   @map("delivery_id")
+  delivery   Delivery @relation(fields: [deliveryId], references: [id])
+  image      String
+  // Timestamp
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+}
+
 model Order {
   id            String      @id @default(cuid())
   // Order belongs to user
@@ -274,6 +297,8 @@ model Order {
   // Order has one bill
   billId        String
   bill          Bill        @relation(fields: [billId], references: [id])
+  // Order has one delivery
+  delivery      Delivery?
   // Timestamp
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime    @updatedAt @map("updated_at")

@@ -10,7 +10,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { Order } from "@prisma/client";
+import { Order, OrderStatus } from "@prisma/client";
+import { format } from "date-fns";
+import { th } from "date-fns/locale";
+import { FILE_URL } from "@/services/upload";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -32,7 +35,7 @@ export const columns: ColumnDef<Order>[] = [
       return (
         <div className="flex items-center gap-3">
           <Avatar>
-            <AvatarImage src="" alt="" />
+            <AvatarImage src={`${FILE_URL}/${user.image}`} alt={user.name[0]} />
             <AvatarFallback>{user.name[0]}</AvatarFallback>
           </Avatar>
           <span>{user.name}</span>
@@ -42,31 +45,35 @@ export const columns: ColumnDef<Order>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  // {
-  //   accessorKey: "price",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="ราคารวม" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     return <span>{row.getValue("price")}</span>;
-  //   },
-  //   filterFn: (row, id, value) => {
-  //     return value.includes(row.getValue(id));
-  //   },
-  // },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="วันที่" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <span>{format(row.getValue("createdAt"), "PPP", { locale: th })}</span>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+    enableHiding: false,
+  },
   {
     accessorKey: "status",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="สถานะ" />
     ),
     cell: ({ row }) => {
-      const status: "pending" | "shipped" | "delivered" =
-        row.getValue("status");
+      const status: OrderStatus = row.getValue("status");
 
       const color = {
-        pending: "bg-yellow-500",
-        shipped: "bg-orange-600",
-        delivered: "bg-green-600",
+        PENDING: "bg-yellow-500 hover:bg-yellow-600",
+        PACKED: "bg-orange-600 hover:bg-orange-700",
+        SHIPPED: "bg-green-600 hover:bg-green-700",
+        CANCELLED: "bg-red-600 hover:bg-red-700",
+        DELIVERED: "bg-blue-600 hover:bg-blue-700",
       };
 
       return (
