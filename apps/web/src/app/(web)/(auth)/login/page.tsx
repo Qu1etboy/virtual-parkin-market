@@ -14,13 +14,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 
 export default function SignUpPage() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
   const { handleSubmit, register, reset } = useForm({
     defaultValues: {
       email: "",
@@ -29,9 +28,10 @@ export default function SignUpPage() {
   });
 
   async function onSubmit(data: any) {
-    // console.log(data);
-
-    await signIn("credentials", { ...data, callbackUrl: "/" });
+    await signIn("credentials", {
+      ...data,
+      callbackUrl: searchParams.get("callbackUrl") || "/",
+    });
   }
 
   return (

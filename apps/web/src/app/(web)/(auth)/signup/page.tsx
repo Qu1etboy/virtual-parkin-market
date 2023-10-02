@@ -37,7 +37,7 @@ export default function SignUpPage() {
 
     reset();
 
-    router.push("/");
+    router.push("/login");
   }
 
   return (
