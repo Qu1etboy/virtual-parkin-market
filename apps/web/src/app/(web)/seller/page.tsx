@@ -37,24 +37,28 @@ export default async function SelectStorePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div>
-            {stores.map((store) => (
-              <Link
-                key={store.id}
-                href={`/seller/${store.id}`}
-                className="p-4 rounded-md border mb-4 flex items-start last:mb-0 hover:bg-gray-100"
-              >
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    {store.name}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {store.address}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
+          {stores.length > 0 ? (
+            <div>
+              {stores.map((store) => (
+                <Link
+                  key={store.id}
+                  href={`/seller/${store.id}`}
+                  className="p-4 rounded-md border mb-4 flex items-start last:mb-0 hover:bg-gray-100"
+                >
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {store.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {store.address}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div>คุณยังไม่มีร้านค้า</div>
+          )}
         </CardContent>
         <CardFooter>
           <Button asChild>
