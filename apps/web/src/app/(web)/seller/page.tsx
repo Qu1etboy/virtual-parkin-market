@@ -14,6 +14,7 @@ import { Store } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/app/api/auth/auth-options";
+import { cn } from "@/lib/utils";
 
 export default async function SelectStorePage() {
   const session = await getServerSession(authOptions);
@@ -25,6 +26,12 @@ export default async function SelectStorePage() {
   });
 
   // console.log("[store page] ", session?.user);
+  const color = {
+    PENDING: "bg-yellow-100 text-yellow-800",
+    APPROVED: "bg-green-100 text-green-800",
+    REJECTED: "bg-red-100 text-red-800",
+    DELETED: "bg-gray-100 text-gray-800",
+  };
 
   return (
     <main className="bg-gray-50 min-h-screen w-full flex flex-col justify-center items-center">
@@ -47,7 +54,15 @@ export default async function SelectStorePage() {
                 >
                   <div className="space-y-1">
                     <p className="text-sm font-medium leading-none">
-                      {store.name}
+                      {store.name}{" "}
+                      <span
+                        className={cn(
+                          color[store.status],
+                          "text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
+                        )}
+                      >
+                        {store.status}
+                      </span>
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {store.address}
