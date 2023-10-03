@@ -31,6 +31,7 @@ type ProductDetailProps = {
 };
 
 export default function ProductDetail({ product }: ProductDetailProps) {
+  const { data: session } = useSession();
   const [quantity, setQuantity] = useState(1);
 
   async function addToCart() {
@@ -81,13 +82,27 @@ export default function ProductDetail({ product }: ProductDetailProps) {
               สินค้าเหลืออยู่ {product.stockQuantity} ชิ้น
             </span>
           </div>
-          <Button onClick={addToCart} className="w-full rounded-full py-6 mt-3">
-            เพิ่มเข้าตะกร้า
-          </Button>
-          <Button variant="outline" className="w-full rounded-full py-6 mt-3">
-            <Heart className="mr-3 w-5 h-5" />
-            <span>รายการโปรด</span>
-          </Button>
+          {session ? (
+            <>
+              <Button
+                onClick={addToCart}
+                className="w-full rounded-full py-6 mt-3"
+              >
+                เพิ่มเข้าตะกร้า
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full rounded-full py-6 mt-3"
+              >
+                <Heart className="mr-3 w-5 h-5" />
+                <span>รายการโปรด</span>
+              </Button>
+            </>
+          ) : (
+            <Button className="w-full rounded-full py-6 mt-3" asChild>
+              <Link href="/login">เข้าสู่ระบบเพื่อซื้อสินค้า</Link>
+            </Button>
+          )}
 
           <div className="mt-6">
             <h2 className="text-sm text-gray-600">จําหน่ายโดย</h2>

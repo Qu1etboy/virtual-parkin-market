@@ -178,7 +178,7 @@ export default async function ProductReview({ product }: ProductReviewProps) {
                   รีวิวสินค้า
                 </Link>
               </Button>
-            ) : myReview ? (
+            ) : myReview && session ? (
               <ReviewCard review={myReview} />
             ) : null}
           </>

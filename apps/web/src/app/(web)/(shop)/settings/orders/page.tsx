@@ -91,7 +91,7 @@ export default async function SettingsOrdersPage({
                     <div key={order.id} className="mt-2">
                       <h3 className="text-sm">
                         ร้าน {order.store.name}{" "}
-                        <span className="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                        <span className="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">
                           {order.status}
                         </span>
                       </h3>
