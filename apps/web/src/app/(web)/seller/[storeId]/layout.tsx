@@ -10,7 +10,7 @@ export default function SellerLayout({
 }) {
   return (
     <div>
-      <SellerNavbar />
+      <SellerNavbar storeId={params.storeId} />
       {children}
     </div>
   );

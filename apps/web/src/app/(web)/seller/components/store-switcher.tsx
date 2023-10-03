@@ -30,19 +30,29 @@ import {
 import Link from "next/link";
 import { stores } from "@/__mock__/stores";
 import { useParams } from "next/navigation";
+import { Store } from "@prisma/client";
+import { FILE_URL } from "@/services/upload";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
 >;
 
-interface StoreSwitcherProps extends PopoverTriggerProps {}
+interface StoreSwitcherProps extends PopoverTriggerProps {
+  className?: string;
+  stores: Store[];
+  selectedStore: Store;
+}
 
-export default function StoreSwitcher({ className }: StoreSwitcherProps) {
-  const params = useParams();
-  const storeId = params.storeId;
+export default function StoreSwitcher({
+  className,
+  stores,
+  selectedStore,
+}: StoreSwitcherProps) {
+  // const params = useParams();
+  // const storeId = params.storeId;
   const [open, setOpen] = useState(false);
   const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
-  const [selectedStore, setSelectedStore] = useState(stores[+storeId - 1]);
+  // const [selectedStore, setSelectedStore] = useState(stores[+storeId - 1]);
 
   const router = useRouter();
 
@@ -55,13 +65,18 @@ export default function StoreSwitcher({ className }: StoreSwitcherProps) {
             role="combobox"
             aria-expanded={open}
             aria-label="Select a team"
-            className={cn("w-[200px] justify-between", className)}
+            className={cn("justify-between", className)}
           >
             <Avatar className="mr-4 h-10 w-10">
-              <AvatarImage src="" alt={selectedStore?.name} />
-              <AvatarFallback>{selectedStore?.name[0]}</AvatarFallback>
+              <AvatarImage
+                src={`${FILE_URL}/${selectedStore.profileImage}`}
+                alt={selectedStore.name}
+              />
+              <AvatarFallback>{selectedStore.name[0]}</AvatarFallback>
             </Avatar>
-            <span className="text-base font-normal">{selectedStore?.name}</span>
+            <span className="text-base font-normal mr-4">
+              {selectedStore.name}
+            </span>
             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -74,7 +89,7 @@ export default function StoreSwitcher({ className }: StoreSwitcherProps) {
                 <CommandItem
                   key={store.id}
                   onSelect={() => {
-                    setSelectedStore(store);
+                    // setSelectedStore(store);
                     setOpen(false);
                     router.push(`/seller/${store.id}`);
                   }}
@@ -82,11 +97,11 @@ export default function StoreSwitcher({ className }: StoreSwitcherProps) {
                 >
                   <Avatar className="mr-2 h-10 w-10">
                     <AvatarImage
-                      src=""
+                      src={`${FILE_URL}/${store.profileImage}`}
                       alt={store.name}
                       className="grayscale"
                     />
-                    <AvatarFallback>SC</AvatarFallback>
+                    <AvatarFallback>{store.name[0]}</AvatarFallback>
                   </Avatar>
                   {store.name}
                   <CheckIcon

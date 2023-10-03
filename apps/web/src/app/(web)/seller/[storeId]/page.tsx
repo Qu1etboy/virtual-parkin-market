@@ -96,7 +96,9 @@ export default async function Page({
             <AreaChart className="w-4 h-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalSales._sum.quantity}</div>
+            <div className="text-2xl font-bold">
+              {totalSales._sum.quantity || 0}
+            </div>
             <p className="text-xs text-muted-foreground">
               +180.1% จากเดือนที่แล้ว
             </p>
@@ -121,7 +123,7 @@ export default async function Page({
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {product._sum.stockQuantity}
+              {product._sum.stockQuantity || 0}
             </div>
             <p className="text-xs text-muted-foreground">
               -201 เมื่อ 2 สัปดาห์ที่แล้ว

@@ -4,10 +4,23 @@ import { getServerSession } from "next-auth/next";
 import UserAvatar from "@/components/user-avatar";
 import StoreSwitcher from "./store-switcher";
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
 // import StoreSwitcher from './store-swicher';
 
-export default async function SellerNavbar() {
+export default async function SellerNavbar({ storeId }: { storeId: string }) {
   const session = await getServerSession();
+
+  const stores = await prisma.store.findMany({
+    where: {
+      userId: session?.user?.id,
+    },
+  });
+
+  const selectedStore = stores.find((store) => store.id === storeId);
+
+  if (!selectedStore) {
+    return <div>ไม่พบร้านค้า</div>;
+  }
 
   return (
     <header className="border-b sticky top-0 bg-white z-50">
@@ -31,7 +44,11 @@ export default async function SellerNavbar() {
             >
               <path d="M16.88 3.549L7.12 20.451"></path>
             </svg>
-            <StoreSwitcher className="border-none" />
+            <StoreSwitcher
+              className="border-none"
+              stores={stores}
+              selectedStore={selectedStore}
+            />
           </div>
           {session && <UserAvatar user={session?.user as any} />}
         </div>
