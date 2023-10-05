@@ -1,4 +1,5 @@
 import { authOptions } from "@/app/api/auth/auth-options";
+import { sendEmail } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
 import { OrderStatus } from "@prisma/client";
 import { getServerSession } from "next-auth";
@@ -32,6 +33,14 @@ export async function PUT(
     where: {
       id: orderId,
     },
+    include: {
+      user: true,
+      bill: {
+        include: {
+          receipt: true,
+        },
+      },
+    },
   });
 
   if (!order || order.storeId !== storeId) {
@@ -42,18 +51,18 @@ export async function PUT(
 
   // Check if order has been shipped
   if (
-    order.status !== OrderStatus.SHIPPED &&
+    order.status === OrderStatus.SHIPPED &&
     data.status === OrderStatus.PACKED
   ) {
-    return new NextResponse(null, { status: 409 });
+    return new NextResponse("Order has already been shipped", { status: 409 });
   }
 
   // Check if order has been packed
   if (
-    order.status !== OrderStatus.PACKED &&
+    order.status === OrderStatus.PACKED &&
     data.status === OrderStatus.PENDING
   ) {
-    return new NextResponse(null, { status: 409 });
+    return new NextResponse("Order has already been packed", { status: 409 });
   }
 
   // Update order status
@@ -64,6 +73,15 @@ export async function PUT(
     data: {
       status: data.status,
     },
+  });
+
+  // Notify customer
+  await sendEmail({
+    to: order.bill.receipt?.contactEmail
+      ? order.bill.receipt?.contactEmail
+      : order.user?.email!,
+    subject: `Order ${order.id} has been updated`,
+    html: `Your order status has been updated to ${data.status}`,
   });
 
   return NextResponse.json(updatedOrder);

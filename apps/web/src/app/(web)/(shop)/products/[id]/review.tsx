@@ -172,7 +172,7 @@ export default async function ProductReview({ product }: ProductReviewProps) {
             order &&
             product.store?.userId !== session?.user.id &&
             !myReview ? (
-              <Button className="rounded-full" asChild>
+              <Button className="rounded-full mb-6" asChild>
                 <Link href={`/products/${product.slug}/review#write-review`}>
                   <PenLine className="inline-block w-4 h-4 mr-3" />
                   รีวิวสินค้า

@@ -1,8 +1,10 @@
 import { authOptions } from "@/app/api/auth/auth-options";
+import { sendEmail } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
 import { OrderStatus } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { send } from "process";
 
 export async function POST(
   req: Request,
@@ -28,7 +30,15 @@ export async function POST(
   // Check if order belongs to store
   const order = await prisma.order.findUnique({
     where: { id: orderId },
-    include: { delivery: true },
+    include: {
+      delivery: true,
+      user: true,
+      bill: {
+        include: {
+          receipt: true,
+        },
+      },
+    },
   });
 
   if (!order || order.storeId !== storeId) {
@@ -56,6 +66,15 @@ export async function POST(
         create: data.images.map((image: string) => ({ image })),
       },
     },
+  });
+
+  // Notify customer
+  await sendEmail({
+    to: order.bill.receipt?.contactEmail
+      ? order.bill.receipt.contactEmail
+      : order.user.email!,
+    subject: `Order ${order.id} has been shipped`,
+    html: `Your order has been shipped!`,
   });
 
   return NextResponse.json(delivery);

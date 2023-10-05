@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { authOptions } from "../auth/auth-options";
+import { sendEmail } from "@/lib/email";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -20,7 +21,11 @@ export async function POST(req: Request) {
       id: data.productId,
     },
     include: {
-      store: true,
+      store: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
 
@@ -64,6 +69,13 @@ export async function POST(req: Request) {
       rating: data.rating,
       content: data.content,
     },
+  });
+
+  // Send email to store owner about new review
+  await sendEmail({
+    to: product.store?.user?.email!,
+    subject: "You have a new review",
+    html: `You have a new review for ${product.name}`,
   });
 
   return NextResponse.json(newReview);

@@ -6,6 +6,8 @@ import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import { BillStatus } from "@prisma/client";
 import { redis } from "@/lib/redis";
+import { sendEmail } from "@/lib/email";
+import { send } from "process";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -51,6 +53,11 @@ export async function POST(req: Request) {
         order: {
           include: {
             orderItem: true,
+            store: {
+              include: {
+                user: true,
+              },
+            },
           },
         },
         user: true,
@@ -73,6 +80,22 @@ export async function POST(req: Request) {
         },
       },
     });
+
+    // Send emali to user
+    await sendEmail({
+      to: receipt.contactEmail || "",
+      subject: "Virtual Park In Receipt",
+      html: "Thank you for your purchase!",
+    });
+
+    // Notify store owners of new order
+    for (const order of bill.order) {
+      await sendEmail({
+        to: order.store.user?.email!,
+        subject: "Virtual Park In Receipt",
+        html: "You have a new order!",
+      });
+    }
 
     // Clear cart
     await (await redis).del(`user:cart:${bill.userId}`);

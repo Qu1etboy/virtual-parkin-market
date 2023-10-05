@@ -4,6 +4,8 @@ import { getServerSession } from "next-auth";
 
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { sendEmail } from "@/lib/email";
+
 export async function PUT(
   req: Request,
   { params: { storeId } }: { params: { storeId: string } }
@@ -22,6 +24,9 @@ export async function PUT(
   // Check if store exists
   const store = await prisma.store.findUnique({
     where: { id: storeId },
+    include: {
+      user: true,
+    },
   });
 
   if (!store) {
@@ -46,6 +51,13 @@ export async function PUT(
     data: {
       status: data.status,
     },
+  });
+
+  // Send email to store owner
+  await sendEmail({
+    to: store.user?.email!,
+    subject: "Your application to sell on ParkIn Online Market",
+    html: "Your application has been " + data.status + ".",
   });
 
   return NextResponse.json(updatedStore);
