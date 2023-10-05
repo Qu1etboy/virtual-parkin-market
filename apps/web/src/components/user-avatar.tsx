@@ -35,9 +35,14 @@ export default function UserAvatar({ user }: { user: Prisma.User }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>หน้าร้านค้า</DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="/settings">การตั้งค่า</Link>
+            <Link href="/profile">ข้อมูลของฉัน</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/orders">ออเดอร์ของฉัน</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/seller">ร้านของฉัน</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

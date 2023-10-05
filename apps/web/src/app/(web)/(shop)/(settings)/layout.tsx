@@ -12,19 +12,19 @@ export const metadata: Metadata = {
 const sidebarNavItems = [
   {
     title: "ข้อมูลส่วนตัว",
-    href: "/settings",
+    href: "/profile",
   },
   {
     title: "บัญชีของฉัน",
-    href: "/settings/account",
+    href: "/account",
   },
   {
     title: "สมุดที่อยู่",
-    href: "/settings/address",
+    href: "/address",
   },
   {
     title: "รายการคําสั่งซื้อ",
-    href: "/settings/orders",
+    href: "/orders",
   },
   // {
   //   title: "Display",
@@ -40,9 +40,9 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
   return (
     <div className="space-y-6 p-10 pb-16">
       <div className="space-y-0.5">
-        <h2 className="text-2xl font-bold tracking-tight">การตั้งค่า</h2>
+        <h2 className="text-2xl font-bold tracking-tight">ข้อมูลของฉัน</h2>
         <p className="text-muted-foreground">
-          แก้ไขข้อมูลส่วนตัว และ บัญชีของคุณ
+          แก้ไขข้อมูลส่วนตัว, บัญชีของคุณ และ ดูรายละเอียดการสั่งซื้อ
         </p>
       </div>
       <Separator className="my-6" />

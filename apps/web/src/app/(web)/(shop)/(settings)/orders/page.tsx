@@ -17,6 +17,7 @@ import Currency from "@/components/currency";
 import { Dot } from "lucide-react";
 import { authOptions } from "@/app/api/auth/auth-options";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export default async function SettingsOrdersPage({
   searchParams,
@@ -60,6 +61,14 @@ export default async function SettingsOrdersPage({
     },
   });
 
+  const color = {
+    PENDING: "bg-yellow-100 text-yellow-800",
+    PACKED: "bg-orange-100 text-orange-800",
+    SHIPPED: "bg-green-100 text-green-800",
+    DELIVERED: "bg-blue-100 text-blue-800",
+    CANCELLED: "bg-gray-100 text-gray-800",
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -91,7 +100,12 @@ export default async function SettingsOrdersPage({
                     <div key={order.id} className="mt-2">
                       <h3 className="text-sm">
                         ร้าน {order.store.name}{" "}
-                        <span className="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">
+                        <span
+                          className={cn(
+                            color[order.status],
+                            "text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
+                          )}
+                        >
                           {order.status}
                         </span>
                       </h3>
