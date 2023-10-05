@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback } from "react";
-import { productCategories } from "../page";
+import { productCategories } from "../category";
 
 export default function ProductFilter({ className }: { className?: string }) {
   const searchParams = useSearchParams();
