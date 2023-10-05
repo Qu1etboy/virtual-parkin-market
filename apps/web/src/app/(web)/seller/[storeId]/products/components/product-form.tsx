@@ -34,10 +34,10 @@ import {
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import { productSchema } from "@/types/main";
-import { upload } from "@/services/upload";
+import { FILE_URL, getFileFromUrl, upload } from "@/services/upload";
 import axios from "@/lib/axios";
 import { useParams } from "next/navigation";
-import { ProductCategory } from "@prisma/client";
+import { ProductCategory, ProductImage } from "@prisma/client";
 import toast from "react-hot-toast";
 
 type AddProduct = z.infer<typeof productSchema>;
@@ -168,12 +168,34 @@ export default function ProductForm({ product }: ProductFormProps) {
   );
 
   useEffect(() => {
+    const result: any = [];
+
+    const handle = async () => {
+      for (const image of product?.images || []) {
+        const file: any = await getFileFromUrl(`${FILE_URL}/${image}`, image);
+        result.push(
+          Object.assign(file, {
+            path: image,
+            preview: `${FILE_URL}/${image}`,
+          })
+        );
+      }
+
+      setProductImages(result);
+    };
+
+    handle();
+
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
     return () => {
       productImages.forEach((file: any) => URL.revokeObjectURL(file.preview));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    console.log("productImages = ", productImages);
+  }, [productImages]);
 
   return (
     <Form {...form}>

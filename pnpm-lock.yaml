@@ -184,6 +184,9 @@ importers:
       lucide-react:
         specifier: ^0.272.0
         version: 0.272.0(react@18.2.0)
+      mime-types:
+        specifier: ^2.1.35
+        version: 2.1.35
       next:
         specifier: 13.4.19
         version: 13.4.19(react-dom@18.2.0)(react@18.2.0)
@@ -251,6 +254,9 @@ importers:
       '@types/bcrypt':
         specifier: ^5.0.0
         version: 5.0.0
+      '@types/mime-types':
+        specifier: ^2.1.2
+        version: 2.1.2
       '@types/nodemailer':
         specifier: ^6.4.11
         version: 6.4.11
@@ -2592,6 +2598,10 @@ packages:
   /@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: false
+
+  /@types/mime-types@2.1.2:
+    resolution: {integrity: sha512-q9QGHMGCiBJCHEvd4ZLdasdqXv570agPsUW0CeIm/B8DzhxsYMerD0l3IlI+EQ1A2RWHY2mmM9x1YIuuWxisCg==}
+    dev: true
 
   /@types/node@20.5.7:
     resolution: {integrity: sha512-dP7f3LdZIysZnmvP3ANJYTSwg+wLLl8p7RqniVlV7j+oXSXAbt9h0WIBFmJy5inWZoX9wZN6eXx+YXd9Rh3RBA==}

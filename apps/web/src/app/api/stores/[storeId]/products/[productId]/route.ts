@@ -59,6 +59,12 @@ export async function PUT(
     ProductCategory[Object.keys(ProductCategory)[+validData.category - 1]]
   );
 
+  // await prisma.productImage.deleteMany({
+  //   where: {
+  //     productId: productId,
+  //   },
+  // });
+
   const product = await prisma.product.update({
     where: {
       id: productId,
