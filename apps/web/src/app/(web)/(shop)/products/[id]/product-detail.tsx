@@ -37,7 +37,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
   async function addToCart() {
     await axios.post("/cart", {
       productId: product.id,
-      quantity: 1,
+      quantity,
     });
 
     window.location.href = "/cart";
@@ -87,6 +87,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
               <Button
                 onClick={addToCart}
                 className="w-full rounded-full py-6 mt-3"
+                disabled={product.stockQuantity === 0}
               >
                 เพิ่มเข้าตะกร้า
               </Button>
@@ -111,7 +112,10 @@ export default function ProductDetail({ product }: ProductDetailProps) {
               className="flex items-center gap-3 mt-3 group"
             >
               <Avatar>
-                <AvatarImage src="" alt="" />
+                <AvatarImage
+                  src={`${FILE_URL}/${product.store?.profileImage}`}
+                  alt={product.store?.name}
+                />
                 <AvatarFallback>{product.store?.name[0]}</AvatarFallback>
               </Avatar>
               <span className="group-hover:text-orange-600">

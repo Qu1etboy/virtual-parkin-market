@@ -2,6 +2,7 @@ import { redis } from "@/lib/redis";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../auth/auth-options";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -11,6 +12,22 @@ export async function POST(req: Request) {
   }
 
   const { productId, quantity } = await req.json();
+
+  const product = await prisma.product.findUnique({
+    where: {
+      id: productId,
+    },
+  });
+
+  if (!product) {
+    return new NextResponse("Product not found", { status: 404 });
+  }
+
+  if (product.stockQuantity < quantity) {
+    return new NextResponse("Product stock quantity not enough", {
+      status: 409,
+    });
+  }
 
   (await redis).hSet(`user:cart:${session.user.id}`, productId, quantity);
 

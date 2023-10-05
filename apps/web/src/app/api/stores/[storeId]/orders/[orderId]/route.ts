@@ -5,6 +5,7 @@ import { OrderStatus } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
+// Packing order
 export async function PUT(
   req: Request,
   {
@@ -38,6 +39,11 @@ export async function PUT(
       bill: {
         include: {
           receipt: true,
+        },
+      },
+      orderItem: {
+        include: {
+          product: true,
         },
       },
     },
@@ -74,6 +80,18 @@ export async function PUT(
       status: data.status,
     },
   });
+
+  // Update products stock
+  for (const item of order.orderItem) {
+    await prisma.product.update({
+      where: {
+        id: item.productId,
+      },
+      data: {
+        stockQuantity: item.product.stockQuantity - item.quantity,
+      },
+    });
+  }
 
   // Notify customer
   await sendEmail({
