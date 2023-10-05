@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { sendEmail } from "@/lib/email";
+import { render } from "@react-email/render";
+import WelcomeEmail from "../../../../../emails";
 
 export async function POST(req: Request) {
   const { email, password, name } = await req.json();
@@ -25,6 +28,12 @@ export async function POST(req: Request) {
       password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
       name: name.firstName + " " + name.lastName,
     },
+  });
+
+  await sendEmail({
+    to: email,
+    subject: "ยินดีต้อนรับสู่ตลาดนัดพาร์คอินออนไลน์",
+    html: render(WelcomeEmail({ userFirstname: name.firstName })),
   });
 
   // const data = await res.json();
