@@ -14,7 +14,7 @@ export default function MyOrdersPagination({
   const searchParams = useSearchParams();
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     // Add page search params to the URL
-    window.location.href = `/settings/orders?page=${value}`;
+    window.location.href = `/orders?page=${value}`;
   };
   return (
     <div className="flex justify-center">
