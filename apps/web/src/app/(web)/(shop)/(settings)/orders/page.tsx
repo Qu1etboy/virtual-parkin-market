@@ -18,6 +18,7 @@ import { Dot } from "lucide-react";
 import { authOptions } from "@/app/api/auth/auth-options";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import OrderDetail from "./order-detail";
 
 export default async function SettingsOrdersPage({
   searchParams,
@@ -41,6 +42,11 @@ export default async function SettingsOrdersPage({
               orderItem: {
                 include: {
                   product: true,
+                },
+              },
+              delivery: {
+                include: {
+                  deliveryImages: true,
                 },
               },
             },
@@ -128,6 +134,8 @@ export default async function SettingsOrdersPage({
                           </li>
                         ))}
                       </ol>
+                      {/* <OrderDetail order={order as any} /> */}
+                      <Link href={`/orders/${order.id}`}>รายละเอียด</Link>
                     </div>
                   ))}
                 </div>
