@@ -8,13 +8,39 @@ import { upload } from "@/services/upload";
 import axios from "@/lib/axios";
 import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormLabel,
+  FormDescription,
+  FormMessage,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Input } from "@/components/ui/input";
+
+const shippingSchema = z.object({
+  trackingNumber: z.string().length(13, "กรุณากรอกหมายเลขพัสดุ 13 หลัก"),
+});
+
+type TShippingForm = z.infer<typeof shippingSchema>;
 
 export default function ShippingForm() {
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const params = useParams();
 
-  const onSubmit = async () => {
+  const form = useForm({
+    defaultValues: {
+      trackingNumber: "",
+    },
+    resolver: zodResolver(shippingSchema),
+  });
+
+  const onSubmit = async (data: TShippingForm) => {
     console.log(files);
 
     if (files.length === 0) {
@@ -28,6 +54,7 @@ export default function ShippingForm() {
         `/stores/${params.storeId}/orders/${params.orderId}/delivery`,
         {
           images: images.map((image: any) => image.filename),
+          trackingNumber: data.trackingNumber,
         }
       );
 
@@ -89,23 +116,49 @@ export default function ShippingForm() {
   }, []);
 
   return (
-    <div>
-      <label>
-        หลักฐานการส่งสินค้า<span className="text-red-500">*</span>
-      </label>
-      <p className="text-sm text-muted-foreground">อัพโหลดได้ไม่เกิน 10 รูป</p>
-      <Dropzone
-        options={{
-          onDrop,
-          maxFiles: 10,
-        }}
-        preview={<Previews files={files} />}
-        className="my-3"
-      />
-      <>{error && <p className="text-sm text-red-500">{error}</p>}</>
-      <Button onClick={onSubmit} className="mt-4">
-        ยืนยันการส่งสินค้า
-      </Button>
-    </div>
+    <section>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            name="trackingNumber"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  หมายเลขพัสดุ<span className="text-red-500">*</span>
+                </FormLabel>
+                <FormDescription>
+                  ขณะนี้รองรับเฉพาะไปรษณีย์ไทยเท่านั้น
+                </FormDescription>
+                <FormControl>
+                  <Input placeholder="เช่น EF582568151TH" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div>
+            <FormLabel>
+              หลักฐานการส่งสินค้า<span className="text-red-500">*</span>
+            </FormLabel>
+            <p className="text-sm text-muted-foreground">
+              อัพโหลดได้ไม่เกิน 10 รูป
+            </p>
+            <Dropzone
+              options={{
+                onDrop,
+                maxFiles: 10,
+              }}
+              preview={<Previews files={files} />}
+              className="my-3"
+            />
+            <>{error && <p className="text-sm text-red-500">{error}</p>}</>
+            <Button type="submit" className="mt-4">
+              ยืนยันการส่งสินค้า
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </section>
   );
 }

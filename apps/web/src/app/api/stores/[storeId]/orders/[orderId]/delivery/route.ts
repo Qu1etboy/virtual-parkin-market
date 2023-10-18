@@ -58,6 +58,10 @@ export async function POST(
     },
   });
 
+  if (!data.trackingNumber || !data.images || data.images.length === 0) {
+    return new NextResponse(null, { status: 400 });
+  }
+
   // Create delivery
   const delivery = await prisma.delivery.create({
     data: {
@@ -65,6 +69,7 @@ export async function POST(
       deliveryImages: {
         create: data.images.map((image: string) => ({ image })),
       },
+      trackingNumber: data.trackingNumber,
     },
   });
 

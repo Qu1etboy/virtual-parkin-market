@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -76,7 +77,7 @@ export default async function ShippingPage({
           <CardHeader>
             <CardTitle>ยืนยันการส่งสินค้า</CardTitle>
             <CardDescription>
-              แนบรูปใบเสร็จจากการส่งของเพื่อยืนยันว่าคุณได้ส่งแล้ว
+              กรอกหมายเลขพัสดุแลพแนบรูปใบเสร็จเพื่อยืนยันการส่ง
             </CardDescription>
           </CardHeader>
           <CardContent>

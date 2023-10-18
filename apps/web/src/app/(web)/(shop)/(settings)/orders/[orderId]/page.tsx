@@ -151,6 +151,12 @@ export default async function OrderDetailPage({
           <AccordionItem value="item-1">
             <AccordionTrigger>หลักฐานการจัดส่งสินค้า</AccordionTrigger>
             <AccordionContent>
+              <div className="mb-3">
+                หมายเลขพัสดุ​{" "}
+                <span className="text-orange-600">
+                  {order.delivery.trackingNumber}
+                </span>
+              </div>
               <div className="flex gap-2">
                 {order.delivery?.deliveryImages.map((image) => (
                   <img

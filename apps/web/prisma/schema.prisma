@@ -266,6 +266,7 @@ model Delivery {
   order          Order           @relation(fields: [orderId], references: [id])
   //
   deliveryImages DeliveryImage[]
+  trackingNumber String          @map("tracking_number")
   // Timestamp
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @updatedAt @map("updated_at")
