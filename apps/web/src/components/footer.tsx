@@ -3,8 +3,8 @@ import React from "react";
 
 export default function Footer() {
   return (
-    <footer className="mt-12">
-      <section>
+    <footer className="mt-auto">
+      <section className="mt-12">
         <div className="container mx-auto border-t flex flex-col gap-6 md:flex-row md:gap-12 px-6 py-12 text-sm">
           <Link href="/" className="text-base font-bold">
             Virtual Park In

@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import axios from "@/lib/axios";
+import { cn } from "@/lib/utils";
 import { FILE_URL } from "@/services/upload";
 import { Rating } from "@mui/material";
 import {
@@ -17,11 +18,13 @@ import {
   Review,
   Store,
   User,
+  WishList,
 } from "@prisma/client";
 import { Dot, Heart, PenLine } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type ReviewWithUser = {
   user: User;
@@ -37,11 +40,16 @@ type ProductDetailProps = {
   } & {
     reservedStock: ReservedStock[];
   };
+  defaultWishList: WishList | null;
 };
 
-export default function ProductDetail({ product }: ProductDetailProps) {
+export default function ProductDetail({
+  product,
+  defaultWishList,
+}: ProductDetailProps) {
   const { data: session } = useSession();
   const [quantity, setQuantity] = useState(1);
+  const [wishList, setWishList] = useState<WishList | null>(defaultWishList);
 
   async function addToCart() {
     await axios.post("/cart", {
@@ -62,6 +70,17 @@ export default function ProductDetail({ product }: ProductDetailProps) {
     } else {
       setQuantity(value);
     }
+  }
+
+  async function handleAddToWishlist() {
+    const { data } = await axios.post(`/wishlists/${product.id}`);
+    console.log(data.wishlist);
+    setWishList(data.wishlist);
+    toast.success(
+      data.wishlist
+        ? "เพิ่มเข้ารายการโปรดเรียบร้อยแล้ว"
+        : "ลบออกจากรายการโปรดเรียบร้อยแล้ว"
+    );
   }
 
   useEffect(() => {
@@ -106,10 +125,16 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                 เพิ่มเข้าตะกร้า
               </Button>
               <Button
+                onClick={handleAddToWishlist}
                 variant="outline"
                 className="w-full rounded-full py-6 mt-3"
               >
-                <Heart className="mr-3 w-5 h-5" />
+                <Heart
+                  className={cn(
+                    "mr-3 w-5 h-5",
+                    wishList ? "fill-red-500 stroke-red-500" : ""
+                  )}
+                />
                 <span>รายการโปรด</span>
               </Button>
             </>

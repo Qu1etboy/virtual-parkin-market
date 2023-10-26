@@ -4,12 +4,14 @@ import { prisma } from "@/lib/prisma";
 import ProductDetail from "./product-detail";
 import { getServerSession } from "next-auth";
 import ProductReview from "./review";
+import { authOptions } from "@/app/api/auth/auth-options";
 
 export default async function ProductPage({
   params,
 }: {
   params: { id: string };
 }) {
+  const session = await getServerSession(authOptions);
   // Get product from product id
   const product = await prisma.product.findUnique({
     where: {
@@ -31,9 +33,16 @@ export default async function ProductPage({
     notFound();
   }
 
+  const wishlist = await prisma.wishList.findFirst({
+    where: {
+      productId: product.id,
+      userId: session?.user?.id,
+    },
+  });
+
   return (
     <main className="my-12">
-      <ProductDetail product={product} />
+      <ProductDetail product={product} defaultWishList={wishlist} />
       <ProductReview product={product} />
     </main>
   );
