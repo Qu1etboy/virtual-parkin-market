@@ -19,11 +19,20 @@ export async function POST(req: Request) {
     },
   });
 
+  const reservedStock = await prisma.reservedStock.aggregate({
+    where: {
+      productId,
+    },
+    _sum: {
+      quantity: true,
+    },
+  });
+
   if (!product) {
     return new NextResponse("Product not found", { status: 404 });
   }
 
-  if (product.stockQuantity < quantity) {
+  if (product.stockQuantity - (reservedStock._sum.quantity || 0) < quantity) {
     return new NextResponse("Product stock quantity not enough", {
       status: 409,
     });

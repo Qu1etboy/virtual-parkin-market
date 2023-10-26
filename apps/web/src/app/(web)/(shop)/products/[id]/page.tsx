@@ -22,6 +22,7 @@ export default async function ProductPage({
           user: true,
         },
       },
+      reservedStock: true,
       store: true,
     },
   });

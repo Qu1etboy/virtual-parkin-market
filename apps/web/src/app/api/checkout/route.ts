@@ -78,6 +78,16 @@ export async function POST(req: Request) {
         price: product.price,
       },
     });
+
+    // Creating reserved stock for each product
+    await prisma.reservedStock.create({
+      data: {
+        userId: session.user.id,
+        productId: product.id,
+        orderId: order.id,
+        quantity: +items[product.id],
+      },
+    });
   }
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];

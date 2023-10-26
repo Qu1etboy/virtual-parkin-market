@@ -91,9 +91,11 @@ model User {
   bills           Bill[]
   // User receive many receipts from purchased products
   receipts        Receipt[]
+  reservedStock   ReservedStock[]
   // Timestamp
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
+  WishList        WishList[]
 }
 
 // model VerificationRequest {
@@ -213,6 +215,19 @@ enum ProductCategory {
   Baby // สินค้าเด็ก
 }
 
+model WishList {
+  id        String   @id @default(cuid())
+  // WishList belongs to user
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  // WishList has many products
+  productId String   @map("product_id")
+  product   Product  @relation(fields: [productId], references: [id])
+  // Timestamp
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
 model Product {
   id            String          @id @default(cuid())
   name          String          @unique
@@ -234,6 +249,8 @@ model Product {
   // Timestamp
   createdAt     DateTime        @default(now()) @map("created_at")
   updatedAt     DateTime        @updatedAt @map("updated_at")
+  reservedStock ReservedStock[]
+  WishList      WishList[]
 }
 
 model ProductImage {
@@ -316,27 +333,52 @@ model DeliveryImage {
   updatedAt  DateTime @updatedAt @map("updated_at")
 }
 
-model Order {
-  id            String      @id @default(cuid())
-  // Order belongs to user
-  userId        String      @map("user_id")
-  user          User        @relation(fields: [userId], references: [id])
-  // Order belongs to store
-  storeId       String      @map("store_id")
-  store         Store       @relation(fields: [storeId], references: [id])
+// enum ReservedStockStatus {
+//   PENDING
+//   RESERVED
+
+// }
+
+model ReservedStock {
+  id        String   @id @default(cuid())
+  // ReservedStock belongs to user
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  // ReservedStock belongs to product
+  productId String   @map("product_id")
+  product   Product  @relation(fields: [productId], references: [id])
+  // ReservedStock belongs to order
+  orderId   String   @map("order_id")
+  order     Order    @relation(fields: [orderId], references: [id])
   // 
-  shippingPrice Float       @map("shipping_price")
-  status        OrderStatus @default(PENDING)
+  quantity  Int
+  // Timestamp
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Order {
+  id            String          @id @default(cuid())
+  // Order belongs to user
+  userId        String          @map("user_id")
+  user          User            @relation(fields: [userId], references: [id])
+  // Order belongs to store
+  storeId       String          @map("store_id")
+  store         Store           @relation(fields: [storeId], references: [id])
+  // 
+  shippingPrice Float           @map("shipping_price")
+  status        OrderStatus     @default(PENDING)
   // Order has many order item
   orderItem     OrderItem[]
   // Order has one bill
   billId        String
-  bill          Bill        @relation(fields: [billId], references: [id])
+  bill          Bill            @relation(fields: [billId], references: [id])
   // Order has one delivery
   delivery      Delivery?
   // Timestamp
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+  reservedStock ReservedStock[]
 
   @@unique([storeId, billId])
 }

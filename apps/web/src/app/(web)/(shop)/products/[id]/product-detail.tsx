@@ -10,7 +10,14 @@ import { Progress } from "@/components/ui/progress";
 import axios from "@/lib/axios";
 import { FILE_URL } from "@/services/upload";
 import { Rating } from "@mui/material";
-import { Product, ProductImage, Review, Store, User } from "@prisma/client";
+import {
+  Product,
+  ProductImage,
+  ReservedStock,
+  Review,
+  Store,
+  User,
+} from "@prisma/client";
 import { Dot, Heart, PenLine } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -27,6 +34,8 @@ type ProductDetailProps = {
     review: ReviewWithUser[];
   } & {
     store: Store | null;
+  } & {
+    reservedStock: ReservedStock[];
   };
 };
 
@@ -59,6 +68,11 @@ export default function ProductDetail({ product }: ProductDetailProps) {
     console.log(quantity);
   }, [quantity]);
 
+  const totalReservedStock = product.reservedStock.reduce(
+    (acc, current) => acc + current.quantity,
+    0
+  );
+
   return (
     <>
       <section className="container mx-auto grid grid-cols-1 lg:grid-cols-2">
@@ -79,7 +93,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
           <div className="flex items-center gap-6 mt-6 mb-3">
             <Quantity value={quantity} onSetQuantity={handleSetQuantity} />
             <span className="text-gray-600">
-              สินค้าเหลืออยู่ {product.stockQuantity} ชิ้น
+              สินค้าเหลืออยู่ {product.stockQuantity - totalReservedStock} ชิ้น
             </span>
           </div>
           {session ? (

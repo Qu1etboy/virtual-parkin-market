@@ -93,6 +93,13 @@ export async function PUT(
     });
   }
 
+  // Remove reserved stock
+  await prisma.reservedStock.deleteMany({
+    where: {
+      orderId: orderId,
+    },
+  });
+
   // Notify customer
   await sendEmail({
     to: order.bill.receipt?.contactEmail
