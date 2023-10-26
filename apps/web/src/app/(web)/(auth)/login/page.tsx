@@ -46,7 +46,16 @@ export default function SignUpPage() {
           </CardHeader>
           <CardContent className="grid gap-4">
             <div>
-              <Button variant="outline" className="w-full">
+              <Button
+                onClick={() =>
+                  signIn("google", {
+                    callbackUrl: searchParams.get("callbackUrl") || "/",
+                  })
+                }
+                type="button"
+                variant="outline"
+                className="w-full"
+              >
                 <Icons.google className="mr-2 h-4 w-4" />
                 Google
               </Button>

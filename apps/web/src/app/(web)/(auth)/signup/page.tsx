@@ -15,11 +15,13 @@ import { Label } from "@/components/ui/label";
 import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { handleSubmit, register, reset } = useForm({
     defaultValues: {
       email: "",
@@ -52,7 +54,16 @@ export default function SignUpPage() {
           </CardHeader>
           <CardContent className="grid gap-4">
             <div>
-              <Button variant="outline" className="w-full">
+              <Button
+                onClick={() =>
+                  signIn("google", {
+                    callbackUrl: searchParams.get("callbackUrl") || "/",
+                  })
+                }
+                variant="outline"
+                type="button"
+                className="w-full"
+              >
                 <Icons.google className="mr-2 h-4 w-4" />
                 Google
               </Button>
