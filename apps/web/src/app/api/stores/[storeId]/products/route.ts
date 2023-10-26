@@ -60,7 +60,7 @@ export async function POST(
       slug: slugify(validData.name),
       category:
         // @ts-ignore
-        ProductCategory[Object.keys(ProductCategory)[+validData.category]],
+        ProductCategory[Object.keys(ProductCategory)[+validData.category - 1]],
       images: {
         create: validData.images?.map((image) => ({
           image: image,
