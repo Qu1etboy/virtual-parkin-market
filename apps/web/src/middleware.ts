@@ -9,5 +9,12 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/seller/:path*", "/admin/:path*", "/settings/:path*"],
+  matcher: [
+    "/seller/:path*",
+    "/admin/:path*",
+    "/orders/:path*",
+    "/address/:path*",
+    "/account/:path*",
+    "/profile/:path*",
+  ],
 };

@@ -6,6 +6,7 @@ import { orders } from "@/__mock__/orders";
 import MainLayout from "@/components/layout/main-layout";
 import { prisma } from "@/lib/prisma";
 import { BillStatus } from "@prisma/client";
+import DataTableFilter from "../../../../../components/data-table/data-table-filter";
 
 export default async function SellerOrderPage({
   params,
@@ -30,7 +31,7 @@ export default async function SellerOrderPage({
 
   return (
     <MainLayout title="ออเดอร์ทั้งหมด" description="ออเดอร์ทั้งหมดของร้านคุณ">
-      <DataTable columns={columns} data={orders} />
+      <DataTable columns={columns} data={orders} filters />
     </MainLayout>
   );
 }
