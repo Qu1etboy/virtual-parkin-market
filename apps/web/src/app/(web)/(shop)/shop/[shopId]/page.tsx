@@ -2,6 +2,7 @@ import { products } from "@/__mock__/products";
 import ProductCard from "@/components/product-card";
 import { prisma } from "@/lib/prisma";
 import { FILE_URL } from "@/services/upload";
+import { StoreStatus } from "@prisma/client";
 import { MapPin } from "lucide-react";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -25,6 +26,9 @@ export default async function ShopPage({
     where: {
       storeId: params.shopId,
       sell: true,
+      store: {
+        status: StoreStatus.APPROVED,
+      },
     },
     include: {
       images: true,

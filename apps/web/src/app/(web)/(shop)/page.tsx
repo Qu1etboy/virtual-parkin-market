@@ -2,11 +2,15 @@ import CategoryMenu from "@/components/category-menu";
 import ProductCard from "@/components/product-card";
 import React from "react";
 import { prisma } from "@/lib/prisma";
+import { StoreStatus } from "@prisma/client";
 
 export default async function ShopHome() {
   const products = await prisma.product.findMany({
     where: {
       sell: true,
+      store: {
+        status: StoreStatus.APPROVED,
+      },
     },
     include: {
       images: true,

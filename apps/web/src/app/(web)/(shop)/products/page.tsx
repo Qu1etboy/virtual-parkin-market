@@ -5,6 +5,7 @@ import ProductFilter from "./components/filter";
 import { prisma } from "@/lib/prisma";
 import MyDrawer from "@/components/drawer";
 import { productCategories } from "./category";
+import { StoreStatus } from "@prisma/client";
 
 export default async function ProductsPage({
   searchParams,
@@ -23,6 +24,9 @@ export default async function ProductsPage({
       searchParams.category && category
         ? {
             sell: true,
+            store: {
+              status: StoreStatus.APPROVED,
+            },
             category: searchParams.category,
             name: {
               contains: searchParams.q,
@@ -30,6 +34,9 @@ export default async function ProductsPage({
           }
         : {
             sell: true,
+            store: {
+              status: StoreStatus.APPROVED,
+            },
             name: {
               contains: searchParams.q,
             },

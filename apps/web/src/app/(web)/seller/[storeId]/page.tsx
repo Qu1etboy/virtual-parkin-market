@@ -5,6 +5,7 @@ import { AreaChart, DollarSign, Package, Users2 } from "lucide-react";
 import MainLayout from "@/components/layout/main-layout";
 import { prisma } from "@/lib/prisma";
 import Currency from "@/components/currency";
+import { BillStatus } from "@prisma/client";
 
 const data = [
   {
@@ -42,6 +43,11 @@ export default async function Page({
 
   const totalSales = await prisma.orderItem.aggregate({
     where: {
+      order: {
+        bill: {
+          status: BillStatus.PAID,
+        },
+      },
       orderId: { in: orders.map((order) => order.id) },
     },
     _sum: {
