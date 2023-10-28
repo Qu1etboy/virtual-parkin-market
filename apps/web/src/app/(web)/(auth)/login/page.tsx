@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import PasswordInput from "@/components/password-input";
 
 export default function SignUpPage() {
   const searchParams = useSearchParams();
@@ -81,7 +82,7 @@ export default function SignUpPage() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">รหัสผ่าน</Label>
-              <Input id="password" type="password" {...register("password")} />
+              <PasswordInput id="password" {...register("password")} />
             </div>
           </CardContent>
           <CardFooter className="block">

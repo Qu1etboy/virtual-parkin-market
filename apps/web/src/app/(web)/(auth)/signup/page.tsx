@@ -18,6 +18,7 @@ import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import PasswordInput from "@/components/password-input";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -107,7 +108,7 @@ export default function SignUpPage() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">รหัสผ่าน</Label>
-              <Input id="password" type="password" {...register("password")} />
+              <PasswordInput id="password" {...register("password")} />
             </div>
           </CardContent>
           <CardFooter className="block">
