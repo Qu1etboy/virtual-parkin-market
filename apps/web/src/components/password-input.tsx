@@ -3,7 +3,7 @@ import { Input } from "./ui/input";
 import { Eye, EyeOff } from "lucide-react";
 
 interface PasswordInputProps
-  extends React.HtmlHTMLAttributes<HTMLInputElement> {}
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 export default function PasswordInput({ ...props }: PasswordInputProps) {
   const [showPassword, setShowPassword] = React.useState(false);
