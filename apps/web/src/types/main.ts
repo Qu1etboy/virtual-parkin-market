@@ -79,38 +79,57 @@ export const storeSchema = z.object({
   bookBankPhoto: z.string({ required_error: "กรุณาอัพโหลดรูปถ่ายสมุดเงินฝาก" }),
 });
 
-export const productSchema = z.object({
-  name: z
-    .string({
-      required_error: "กรุณากรอกชื่อสินค้า",
-    })
-    .min(3, "ชื่อสินค้าต้องมีอย่างน้อย 3 ตัวอักษรขึ้นไป")
-    .max(255, "ชื่อสินค้าต้องไม่เกิน 255 ตัวอักษร"),
-  price: z.coerce
-    .number({
-      required_error: "กรุณากรอกราคาสินค้า",
-    })
-    .min(1, "ราคาต้องมีมูลค่ามากกว่า 0"),
-  originalPrice: z.coerce
-    .number({
-      required_error: "กรุณากรอกราคาต้น",
-    })
-    .min(1, "ราคาต้นต้องมีมูลค่ามากกว่า 0"),
-  stockQuantity: z.coerce
-    .number({
-      required_error: "กรุณากรอกจํานวนสินค้า",
-    })
-    .min(0, "จำนวนสินค้าต้องมีมูลค่ามากกว่าหรือเท่ากับ 0"),
-  description: z
-    .string({
-      required_error: "กรุณากรอกคําอธิบายสินค้า",
-    })
-    .min(3, "คําอธิบายสินค้าต้องมีอย่างน้อย 3 ตัวอักษรขึ้นไป")
-    .max(1000, "คำอธิบายสินค้าต้องไม่เกิน 1000 ตัวอักษร"),
-  category: z.number({
-    required_error: "กรุณาเลือกประเภทสินค้า",
-  }),
-  images: z
-    .array(z.string({ required_error: "กรุณาอัพโหลดรูปภาพสินค้า" }))
-    .optional(),
-});
+export const productSchema = z
+  .object({
+    name: z
+      .string({
+        required_error: "กรุณากรอกชื่อสินค้า",
+      })
+      .min(3, "ชื่อสินค้าต้องมีอย่างน้อย 3 ตัวอักษรขึ้นไป")
+      .max(255, "ชื่อสินค้าต้องไม่เกิน 255 ตัวอักษร"),
+    price: z.coerce
+      .number({
+        required_error: "กรุณากรอกราคาสินค้า",
+      })
+      .min(1, "ราคาต้องมีมูลค่ามากกว่า 0"),
+    specialPrice: z.coerce
+      .number({
+        required_error: "กรุณากรอกราคาต้น",
+      })
+      .min(1, "ราคาต้นต้องมีมูลค่ามากกว่า 0")
+      .nullable(),
+    date: z
+      .object({
+        from: z.coerce.date().nullable(),
+        to: z.coerce.date().nullable(),
+      })
+      .nullable(),
+    stockQuantity: z.coerce
+      .number({
+        required_error: "กรุณากรอกจํานวนสินค้า",
+      })
+      .min(0, "จำนวนสินค้าต้องมีมูลค่ามากกว่าหรือเท่ากับ 0"),
+    description: z
+      .string({
+        required_error: "กรุณากรอกคําอธิบายสินค้า",
+      })
+      .min(3, "คําอธิบายสินค้าต้องมีอย่างน้อย 3 ตัวอักษรขึ้นไป")
+      .max(1000, "คำอธิบายสินค้าต้องไม่เกิน 1000 ตัวอักษร"),
+    category: z.number({
+      required_error: "กรุณาเลือกประเภทสินค้า",
+    }),
+    images: z
+      .array(z.string({ required_error: "กรุณาอัพโหลดรูปภาพสินค้า" }))
+      .optional(),
+  })
+  .refine(
+    (data) => !(data.specialPrice && (!data.date?.from || !data.date?.to)),
+    {
+      message: "กรุณาเลือกวันที่เริ่มและสิ้นสุดการลดราคา",
+      path: ["date"],
+    }
+  )
+  .refine((data) => !(!data.specialPrice && data.date?.from && data.date?.to), {
+    message: "กรุณากรอกราคาสินค้าที่ลดราคา",
+    path: ["specialPrice"],
+  });

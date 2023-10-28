@@ -236,7 +236,10 @@ model Product {
   slug          String          @unique
   // Price can be the same as original price or different, this help when product has discount
   price         Float
-  originalPrice Float           @map("original_price")
+  specialPrice  Float?          @map("special_price")
+  specialFrom   DateTime?       @map("special_from")
+  specialTo     DateTime?       @map("special_to")
+  //
   stockQuantity Int             @map("stock_quantity")
   category      ProductCategory
   // Is product available to sell

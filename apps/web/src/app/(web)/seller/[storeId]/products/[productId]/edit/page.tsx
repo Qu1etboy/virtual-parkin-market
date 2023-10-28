@@ -48,7 +48,11 @@ export default async function EditProductPage({
           name: product.name,
           description: product.description,
           price: product.price,
-          originalPrice: product.originalPrice,
+          specialPrice: product.specialPrice,
+          date: {
+            from: product.specialFrom,
+            to: product.specialTo,
+          },
           stockQuantity: product.stockQuantity,
           category: productCategories.find((c) => c.value === product.category)!
             .id,

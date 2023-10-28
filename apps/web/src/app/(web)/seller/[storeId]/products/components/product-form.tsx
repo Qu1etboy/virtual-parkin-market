@@ -32,13 +32,22 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
+import { CalendarIcon, X } from "lucide-react";
 import { productSchema } from "@/types/main";
 import { FILE_URL, getFileFromUrl, upload } from "@/services/upload";
 import axios from "@/lib/axios";
 import { useParams } from "next/navigation";
 import { ProductCategory, ProductImage } from "@prisma/client";
 import toast from "react-hot-toast";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Icons } from "@/components/ui/icons";
 
 type AddProduct = z.infer<typeof productSchema>;
 
@@ -65,6 +74,7 @@ type ProductFormProps = {
 };
 
 export default function ProductForm({ product }: ProductFormProps) {
+  const [loading, setLoading] = useState(false);
   const form = useForm<AddProduct>({
     resolver: zodResolver(productSchema),
     mode: "onChange",
@@ -76,7 +86,7 @@ export default function ProductForm({ product }: ProductFormProps) {
 
   async function onSubmit(data: AddProduct) {
     // console.log(data);
-
+    setLoading(true);
     try {
       const result = await upload("images[]", productImages);
       const images = result.map((image: any) => image.filename);
@@ -94,6 +104,16 @@ export default function ProductForm({ product }: ProductFormProps) {
         await axios.post(`/stores/${params.storeId}/products`, {
           ...data,
           images,
+          date: data.date
+            ? {
+                from: data.date.from
+                  ? new Date(format(data.date.from, "yyyy-MM-dd"))
+                  : null,
+                to: data.date.to
+                  ? new Date(format(data.date.to, "yyyy-MM-dd"))
+                  : null,
+              }
+            : null,
         });
       }
 
@@ -109,6 +129,7 @@ export default function ProductForm({ product }: ProductFormProps) {
       } else {
         toast.error("เกิดข้อผิดพลาดกรุณาลองใหม่อีกครั้ง");
       }
+      setLoading(false);
     }
   }
 
@@ -211,7 +232,11 @@ export default function ProductForm({ product }: ProductFormProps) {
               <FormItem>
                 <FormLabel asterisk>ชื่อสินค้า</FormLabel>
                 <FormControl>
-                  <Input placeholder="ชื่อสินค้า" {...field} />
+                  <Input
+                    placeholder="ชื่อสินค้า"
+                    {...field}
+                    disabled={loading}
+                  />
                 </FormControl>
                 <FormDescription>ไม่เกิน 255 ตัวอักษร</FormDescription>
                 <FormMessage />
@@ -234,6 +259,7 @@ export default function ProductForm({ product }: ProductFormProps) {
                           "w-[200px] justify-between",
                           !field.value && "text-muted-foreground"
                         )}
+                        disabled={loading}
                       >
                         {field.value
                           ? productCategories.find(
@@ -280,15 +306,38 @@ export default function ProductForm({ product }: ProductFormProps) {
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-2 gap-3">
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel asterisk>ราคาปกติ</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="100"
+                    {...field}
+                    disabled={loading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="grid grid-cols-2 content-start gap-3">
             <FormField
               control={form.control}
-              name="originalPrice"
+              name="specialPrice"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel asterisk>ราคาต้น</FormLabel>
+                  <FormLabel>ราคาพิเศษ</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="100" {...field} />
+                    <Input
+                      type="number"
+                      placeholder="100"
+                      {...(field as any)}
+                      disabled={loading}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -296,13 +345,47 @@ export default function ProductForm({ product }: ProductFormProps) {
             />
             <FormField
               control={form.control}
-              name="price"
+              name="date"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel asterisk>ราคาขาย</FormLabel>
-                  <FormControl>
-                    <Input type="number" placeholder="100" {...field} />
-                  </FormControl>
+                <FormItem className="mt-auto flex flex-col">
+                  <FormLabel>ช่วงเวลาโปรโมชั่น</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          type="button"
+                          variant={"outline"}
+                          className={cn("text-center font-normal")}
+                          disabled={loading}
+                        >
+                          {field.value?.from ? (
+                            field.value.to ? (
+                              <>
+                                {format(field.value.from, "LLL dd, y")} -{" "}
+                                {format(field.value.to, "LLL dd, y")}
+                              </>
+                            ) : (
+                              format(field.value.from, "LLL dd, y")
+                            )
+                          ) : (
+                            <span className="text-gray-600">
+                              เลือกช่วงเวลาโปรโมชั่น
+                            </span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="range"
+                        selected={field.value as any}
+                        onSelect={field.onChange}
+                        numberOfMonths={2}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
@@ -319,6 +402,7 @@ export default function ProductForm({ product }: ProductFormProps) {
                     type="number"
                     placeholder="จํานวนสินค้าในคลัง"
                     {...field}
+                    disabled={loading}
                   />
                 </FormControl>
                 <FormMessage />
@@ -332,7 +416,11 @@ export default function ProductForm({ product }: ProductFormProps) {
               <FormItem>
                 <FormLabel asterisk>คําอธิบายสินค้า</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="คําอธิบายสินค้า" {...field} />
+                  <Textarea
+                    placeholder="คําอธิบายสินค้า"
+                    {...field}
+                    disabled={loading}
+                  />
                 </FormControl>
                 <FormDescription>ไม่เกิน 1000 ตัวอักษร</FormDescription>
                 <FormMessage />
@@ -357,7 +445,8 @@ export default function ProductForm({ product }: ProductFormProps) {
         </div>
 
         <div className="col-span-2 p-4">
-          <Button type="submit">
+          <Button type="submit" disabled={loading}>
+            {loading && <Icons.spinner className="animate-spin mr-2" />}
             {params.productId ? "บันทึก" : "เพิ่มสินค้า"}
           </Button>
         </div>

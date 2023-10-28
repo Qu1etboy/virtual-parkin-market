@@ -73,7 +73,9 @@ export async function PUT(
       name: validData.name,
       description: validData.description,
       price: validData.price,
-      originalPrice: validData.originalPrice,
+      specialPrice: validData.specialPrice,
+      specialFrom: validData.date?.from,
+      specialTo: validData.date?.to,
       stockQuantity: validData.stockQuantity,
       slug: slugify(validData.name),
       category:
