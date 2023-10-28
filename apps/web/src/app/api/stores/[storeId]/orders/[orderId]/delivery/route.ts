@@ -2,6 +2,7 @@ import { authOptions } from "@/app/api/auth/auth-options";
 import { sendEmail } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
 import { OrderStatus } from "@prisma/client";
+import axios from "axios";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { send } from "process";
@@ -51,16 +52,47 @@ export async function POST(
 
   const data = await req.json();
 
+  if (!data.trackingNumber || !data.images || data.images.length === 0) {
+    return new NextResponse(null, { status: 400 });
+  }
+
+  // POST to Thailand Post API
+  const { data: token } = await axios.post(
+    "https://trackwebhook.thailandpost.co.th/post/api/v1/authenticate/token",
+    {},
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${process.env.THAILAND_POST_API_KEY}`,
+      },
+    }
+  );
+
+  console.log(token);
+
+  const { data: tracking } = await axios.post(
+    "https://trackwebhook.thailandpost.co.th/post/api/v1/hook",
+    {
+      status: "all",
+      language: "TH",
+      barcode: [data.trackingNumber],
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token.token}`,
+      },
+    }
+  );
+
+  console.log("tracking = ", tracking);
+
   await prisma.order.update({
     where: { id: orderId },
     data: {
       status: OrderStatus.SHIPPED,
     },
   });
-
-  if (!data.trackingNumber || !data.images || data.images.length === 0) {
-    return new NextResponse(null, { status: 400 });
-  }
 
   // Create delivery
   const delivery = await prisma.delivery.create({
