@@ -24,18 +24,29 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
-export default function SignUpPage() {
+const signInSchema = z.object({
+  email: z.string().email("กรุณากรอกอีเมลให้ถูกต้อง"),
+  password: z.string().min(1, "กรุณากรอกรหัสผ่าน"),
+});
+
+export default function SignInPage() {
+  const [loading, setLoading] = React.useState(false);
   const searchParams = useSearchParams();
   const form = useForm({
     defaultValues: {
       email: "",
       password: "",
     },
+    resolver: zodResolver(signInSchema),
   });
 
   async function onSubmit(data: any) {
+    setLoading(true);
     await signIn("credentials", {
       ...data,
       callbackUrl: searchParams.get("callbackUrl") || "/",
@@ -43,45 +54,18 @@ export default function SignUpPage() {
   }
 
   return (
-    <main className="min-h-screen flex justify-center items-center bg-gray-50">
+    <main className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
+      <span>Virtual Park In Market</span>
+      <h1 className="my-12 text-2xl font-semibold leading-none tracking-tight">
+        เข้าสู่ระบบไปยังบัญชีของคุณ
+      </h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full max-w-xl"
+          className="w-full max-w-lg"
         >
-          <Card>
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl">
-                เข้าสู่ระบบไปยังบัญชีของคุณ
-              </CardTitle>
-              <CardDescription>กรอกรายละเอียดเพื่อเข้าสู่ระบบ</CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <div>
-                <Button
-                  onClick={() =>
-                    signIn("google", {
-                      callbackUrl: searchParams.get("callbackUrl") || "/",
-                    })
-                  }
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                >
-                  <Icons.google className="mr-2 h-4 w-4" />
-                  Google
-                </Button>
-              </div>
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    หรือเข้าสู่ระบบด้วย
-                  </span>
-                </div>
-              </div>
+          <Card className="px-6 sm:mx-0 mx-3">
+            <CardContent className="pt-12 grid gap-4">
               <FormField
                 name="email"
                 control={form.control}
@@ -94,8 +78,10 @@ export default function SignUpPage() {
                         placeholder="johndoe@example.com"
                         type="email"
                         {...field}
+                        disabled={loading}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -106,14 +92,50 @@ export default function SignUpPage() {
                   <FormItem>
                     <FormLabel>รหัสผ่าน</FormLabel>
                     <FormControl>
-                      <PasswordInput id="password" {...field} />
+                      <PasswordInput
+                        id="password"
+                        {...field}
+                        disabled={loading}
+                      />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
+              <Button className="w-full mb-3" disabled={loading}>
+                {loading && (
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                เข้าสู่ระบบ
+              </Button>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    หรือเข้าสู่ระบบด้วย
+                  </span>
+                </div>
+              </div>
+              <div>
+                <Button
+                  onClick={() =>
+                    signIn("google", {
+                      callbackUrl: searchParams.get("callbackUrl") || "/",
+                    })
+                  }
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  disabled={loading}
+                >
+                  <Icons.google className="mr-2 h-4 w-4" />
+                  Google
+                </Button>
+              </div>
             </CardContent>
-            <CardFooter className="block">
-              <Button className="w-full mb-3">เข้าสู่ระบบ</Button>
+            <CardFooter className="block mb-6">
               <p className="text-sm">
                 ยังไม่มีบัญชี?{" "}
                 <Link
