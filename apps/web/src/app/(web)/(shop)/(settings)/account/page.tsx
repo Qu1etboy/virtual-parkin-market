@@ -6,9 +6,7 @@ export default function SettingsAccountPage() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium">บัญชีของฉัน</h3>
-        <p className="text-sm text-muted-foreground">
-          แก้ไขอีเมล และยืนยันอีเมลของคุณ
-        </p>
+        <p className="text-sm text-muted-foreground">ยืนยันอีเมลของคุณ</p>
       </div>
       <Separator />
       <AccountForm />

@@ -18,6 +18,8 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Icons } from "@/components/ui/icons";
+import Field from "../components/field";
+import { useSession } from "next-auth/react";
 
 const accountFormSchema = z.object({
   email: z.string().email(),
@@ -30,6 +32,7 @@ const defaultValues: Partial<AccountFormValues> = {
 };
 
 export function AccountForm() {
+  const { data: session } = useSession();
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues,
@@ -42,28 +45,29 @@ export function AccountForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel asterisk>อีเมล</FormLabel>
-              <FormControl>
-                <Input placeholder="me@example.com" {...field} />
-              </FormControl>
-              <FormDescription>
-                อีเมลสําหรับรับข้อมูลการสั่งซื้อ และการติดต่อจากทางร้านค้า
-              </FormDescription>
-              <FormMessage />
-              <div>
-                <Button asChild>
-                  <Link href="#">ยืนยันอีเมล</Link>
-                </Button>
-              </div>
-            </FormItem>
-          )}
+        <Field
+          label="อีเมล"
+          defaultValue={
+            <div>
+              <span>{session?.user.email}</span>
+              {session?.user.emailVerified ? (
+                <span className="ml-auto bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                  ยืนยันแล้ว
+                </span>
+              ) : null}
+            </div>
+          }
         />
-
+        <div>
+          {!session?.user.emailVerified && (
+            <Button
+              type="button"
+              // onClick={sendVerificationEmail}
+            >
+              ยืนยันอีเมล
+            </Button>
+          )}
+        </div>
         <div>
           <FormLabel>บัญชีที่เชื่อมต่อ</FormLabel>
           <ul className="mt-3">
@@ -79,7 +83,7 @@ export function AccountForm() {
           </ul>
         </div>
 
-        <Button type="submit">บันทึก</Button>
+        {/* <Button type="submit">บันทึก</Button> */}
       </form>
     </Form>
   );

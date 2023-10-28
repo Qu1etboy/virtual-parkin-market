@@ -82,7 +82,7 @@ export default function AddressBooks() {
           ))}
         </>
       ) : (
-        <div>ไม่มีรายการที่อยู่</div>
+        <div className="text-sm">ไม่มีรายการที่อยู่</div>
       )}
     </div>
   );
