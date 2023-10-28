@@ -5,6 +5,7 @@ import Currency from "./currency";
 import { Rating } from "@mui/material";
 import { Product, ProductImage, Review } from "@prisma/client";
 import { FILE_URL } from "@/services/upload";
+import PriceLabel from "./price-label";
 
 export default function ProductCard({
   product,
@@ -32,7 +33,7 @@ export default function ProductCard({
           size="small"
           readOnly
         />
-        <Currency value={product.price} />
+        <PriceLabel product={product} />
       </div>
     </Link>
   );

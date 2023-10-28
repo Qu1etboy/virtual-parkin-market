@@ -9,6 +9,7 @@ import Currency from "@/components/currency";
 import { Product, ProductImage } from "@prisma/client";
 import axios from "@/lib/axios";
 import { FILE_URL } from "@/services/upload";
+import PriceLabel from "@/components/price-label";
 
 type CartItemProps = {
   product: Product & {
@@ -62,7 +63,7 @@ export default function CartItem({ product, initialQuantity }: CartItemProps) {
           <div className="flex justify-between">
             <p className=" text-lg font-semibold text-black">{product.name}</p>
           </div>
-          <Currency value={product.price} />
+          <PriceLabel className="flex-col gap-0" product={product} />
           <Quantity
             value={quantity}
             onSetQuantity={handleSetQuantity}

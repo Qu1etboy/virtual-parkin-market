@@ -8,6 +8,7 @@ import { redis } from "@/lib/redis";
 import { getServerSession } from "next-auth";
 import { FILE_URL } from "@/services/upload";
 import { authOptions } from "../auth/auth-options";
+import { getActualPrice } from "@/lib/utils";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -75,7 +76,7 @@ export async function POST(req: Request) {
         orderId: order.id,
         productId: product.id,
         quantity: +items[product.id],
-        price: product.price,
+        price: getActualPrice(product),
       },
     });
 
@@ -102,7 +103,7 @@ export async function POST(req: Request) {
           description: product.description,
           images: [`${FILE_URL}/${product.images[0].image}`],
         },
-        unit_amount: product.price * 100,
+        unit_amount: getActualPrice(product) * 100,
       },
     });
   });

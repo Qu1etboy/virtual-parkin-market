@@ -2,6 +2,7 @@
 
 import Currency from "@/components/currency";
 import { Gallery } from "@/components/gallery";
+import PriceLabel from "@/components/price-label";
 import Quantity from "@/components/quantity";
 import ReviewCard from "@/components/review-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -108,7 +109,7 @@ export default function ProductDetail({
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
             {product.name}
           </h1>
-          <Currency value={product.price} />
+          <PriceLabel product={product} />
           <div className="flex items-center gap-6 mt-6 mb-3">
             <Quantity value={quantity} onSetQuantity={handleSetQuantity} />
             <span className="text-gray-600">

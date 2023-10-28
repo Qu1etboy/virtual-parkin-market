@@ -5,10 +5,10 @@ const formatter = new Intl.NumberFormat("en-US", {
   currency: "THB",
 });
 
-interface CurrencyProps {
+interface CurrencyProps extends React.HTMLAttributes<HTMLDivElement> {
   value?: string | number;
 }
 
-export default function Currency({ value }: CurrencyProps) {
-  return <div>{formatter.format(Number(value))}</div>;
+export default function Currency({ value, ...props }: CurrencyProps) {
+  return <div {...props}>{formatter.format(Number(value))}</div>;
 }

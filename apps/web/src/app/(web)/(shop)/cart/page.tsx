@@ -5,6 +5,7 @@ import { redis } from "@/lib/redis";
 import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/app/api/auth/auth-options";
+import { getActualPrice } from "@/lib/utils";
 
 export default async function CartPage() {
   const session = await getServerSession(authOptions);
@@ -61,7 +62,7 @@ export default async function CartPage() {
             </div>
             <Summary
               total={items
-                .map((item) => item.price * +cartItems[item.id])
+                .map((item) => getActualPrice(item) * +cartItems[item.id])
                 .reduce((p1, p2) => p1 + p2, 0)}
               itemsInCart={items.length}
             />
