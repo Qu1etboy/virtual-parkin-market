@@ -6,21 +6,13 @@ import MainLayout from "@/components/layout/main-layout";
 import { prisma } from "@/lib/prisma";
 import Currency from "@/components/currency";
 import { BillStatus } from "@prisma/client";
+import { format } from "date-fns";
+import { th } from "date-fns/locale";
 
-const data = [
-  {
-    title: "รายได้ทั้งหมด",
-    content: "999 บาท",
-  },
-  {
-    title: "จํานวนสินค้าที่ขายได้ทั้งหมด",
-    content: "999 ชิ้น",
-  },
-  {
-    title: "จํานวนสินค้าคงเหลือ",
-    content: "999 ชิ้น",
-  },
-];
+interface OrderData {
+  name: string;
+  total: number;
+}
 
 export default async function Page({
   params,
@@ -78,6 +70,38 @@ export default async function Page({
       stockQuantity: true,
     },
   });
+
+  const ordersOverview = await prisma.order.findMany({
+    include: {
+      orderItem: {
+        select: {
+          price: true,
+          quantity: true,
+        },
+      },
+    },
+  });
+
+  const groupedData = ordersOverview.reduce(
+    (result: Record<string, OrderData>, order) => {
+      const date = format(order.createdAt, "PP", { locale: th }); // Format the date to "yyyy-MM-dd"
+      const totalPrice = order.orderItem.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
+      );
+
+      if (result[date]) {
+        result[date].total += totalPrice;
+      } else {
+        result[date] = { name: date, total: totalPrice };
+      }
+
+      return result;
+    },
+    {}
+  );
+
+  const orderData = Object.values(groupedData);
 
   return (
     <MainLayout title="ภาพรวม" description="ภาพรวมร้านค้าของคุณ">
@@ -144,7 +168,7 @@ export default async function Page({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Overview />
+          <Overview data={orderData} />
         </CardContent>
       </Card>
     </MainLayout>
