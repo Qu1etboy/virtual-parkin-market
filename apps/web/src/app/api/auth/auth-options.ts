@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { AuthOptions } from "next-auth";
+import { NextResponse } from "next/server";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -38,11 +39,21 @@ export const authOptions: AuthOptions = {
         if (!user) {
           // If you return null then an error will be displayed advising the user to check their details.
           return null;
+          // throw new Error("ไม่พบอีเมลในระบบ");
+          // return new NextResponse(
+          //   JSON.stringify({ errors: { email: "ไม่พบอีเมลในระบบ" } }),
+          //   { status: 400 }
+          // );
         }
 
         if (!bcrypt.compareSync(password, user.password ?? "")) {
           // If you return null then an error will be displayed advising the user to check their details.
           return null;
+          // throw new Error("รหัสผ่านไม่ถูกต้อง");
+          // return new NextResponse(
+          //   JSON.stringify({ errors: { password: "รหัสผ่านไม่ถูกต้อง" } }),
+          //   { status: 400 }
+          // );
         }
 
         console.log(user);

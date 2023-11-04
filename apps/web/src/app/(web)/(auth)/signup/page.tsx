@@ -31,10 +31,14 @@ import {
 import { CheckCircle2 } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 
 const signUpSchema = z.object({
   email: z.string().email("กรุณากรอกอีเมลให้ถูกต้อง"),
-  password: z.string().min(1, "กรุณากรอกรหัสผ่าน"),
+  password: z
+    .string()
+    .nonempty("กรุณากรอกรหัสผ่าน")
+    .min(8, "รหัสผ่านมีความยาวอย่างน้อย 8 ตัวอักษร"),
   name: z.object({
     firstName: z.string().min(1, "กรุณากรอกชื่อ"),
     lastName: z.string().min(1, "กรุณากรอกนามสกุล"),
@@ -61,8 +65,22 @@ export default function SignUpPage() {
 
   async function onSubmit(data: SignUpFormValues) {
     setLoading(true);
-    await axios.post("http://localhost:3000/api/auth/signup", data);
-    router.push("/login");
+    try {
+      await axios.post("http://localhost:3000/api/auth/signup", data);
+      console.log("register success");
+      router.push("/login");
+    } catch (error: any) {
+      if (error.response.status === 400) {
+        for (const [key, value] of Object.entries(error.response.data.errors)) {
+          form.setError(key as any, {
+            message: value as string,
+          });
+        }
+      } else {
+        toast.error("เกิดข้อผิดพลาดกรุณาลองใหม่อีกครั้ง");
+      }
+      setLoading(false);
+    }
   }
 
   return (

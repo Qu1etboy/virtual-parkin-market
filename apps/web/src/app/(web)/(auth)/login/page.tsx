@@ -12,7 +12,7 @@ import {
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import toast from "react-hot-toast";
 
 const signInSchema = z.object({
   email: z.string().email("กรุณากรอกอีเมลให้ถูกต้อง"),
@@ -42,8 +43,17 @@ export default function SignInPage() {
       email: "",
       password: "",
     },
+    mode: "onChange",
     resolver: zodResolver(signInSchema),
   });
+
+  useEffect(() => {
+    if (searchParams.get("error") === "CredentialsSignin") {
+      form.setError("email", { message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" });
+      form.setError("password", { message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function onSubmit(data: any) {
     setLoading(true);

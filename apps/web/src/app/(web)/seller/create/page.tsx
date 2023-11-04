@@ -134,9 +134,9 @@ export default function CreateStorePage() {
           });
         }
       } else {
-        setLoading(false);
         toast.error("เกิดข้อผิดพลาดกรุณาลองใหม่อีกครั้ง");
       }
+      setLoading(false);
     }
   }
 

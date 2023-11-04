@@ -16,8 +16,8 @@ export async function POST(req: Request) {
   });
 
   if (user) {
-    return NextResponse.json(
-      { message: "User already exists", success: false },
+    return new NextResponse(
+      JSON.stringify({ errors: { email: "อีเมลนี้ถูกใช้ไปแล้ว" } }),
       { status: 400 }
     );
   }
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     },
   });
 
-  await sendEmail({
+  sendEmail({
     to: email,
     subject: "ยินดีต้อนรับสู่ตลาดนัดพาร์คอินออนไลน์",
     html: render(WelcomeEmail({ userFirstname: name.firstName })),
