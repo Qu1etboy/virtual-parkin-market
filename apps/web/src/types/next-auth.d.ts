@@ -9,6 +9,9 @@ declare module "next-auth" {
     user: User & {
       customerProfile: CustomerProfile | null;
       addresses: Address[] | null;
+      accounts: {
+        provider: string;
+      }[];
     };
   }
 }

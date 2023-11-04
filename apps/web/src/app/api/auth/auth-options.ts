@@ -86,6 +86,11 @@ export const authOptions: AuthOptions = {
           include: {
             customerProfile: true,
             addresses: true,
+            accounts: {
+              select: {
+                provider: true,
+              },
+            },
           },
         });
 
