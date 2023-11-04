@@ -38,7 +38,16 @@ export const columns: ColumnDef<Product>[] = [
             height={100}
             className="rounded-lg"
           />
-          <span>{name}</span>
+          {product.sell ? (
+            <a
+              href={`/products/${product.slug}`}
+              className="hover:text-orange-600"
+            >
+              {name}
+            </a>
+          ) : (
+            <span>{name}</span>
+          )}
         </div>
       );
     },

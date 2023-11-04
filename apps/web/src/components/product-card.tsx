@@ -1,7 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import Currency from "./currency";
 import { Rating } from "@mui/material";
 import { Product, ProductImage, Review } from "@prisma/client";
 import { FILE_URL } from "@/services/upload";
@@ -15,7 +13,7 @@ export default function ProductCard({
   href: string;
 }) {
   return (
-    <Link href={href} className="flex flex-col gap-3 group">
+    <a href={href} className="flex flex-col gap-3 group">
       <Image
         src={`${FILE_URL}/${product.images[0].image}`}
         alt={product.name}
@@ -35,6 +33,6 @@ export default function ProductCard({
         />
         <PriceLabel product={product} />
       </div>
-    </Link>
+    </a>
   );
 }
