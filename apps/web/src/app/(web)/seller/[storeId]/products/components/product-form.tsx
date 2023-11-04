@@ -380,7 +380,17 @@ export default function ProductForm({ product }: ProductFormProps) {
                       <Calendar
                         mode="range"
                         selected={field.value as any}
-                        onSelect={field.onChange}
+                        onSelect={(date) => {
+                          if (!date) {
+                            form.setValue("date", null);
+                            return;
+                          }
+
+                          form.setValue("date", {
+                            from: date.from,
+                            to: date.to,
+                          });
+                        }}
                         numberOfMonths={2}
                         initialFocus
                       />

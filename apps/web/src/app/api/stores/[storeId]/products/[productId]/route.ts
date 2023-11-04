@@ -73,7 +73,7 @@ export async function PUT(
       name: validData.name,
       description: validData.description,
       price: validData.price,
-      specialPrice: validData.specialPrice,
+      specialPrice: validData.specialPrice ? validData.specialPrice : null,
       specialFrom: validData.date?.from,
       specialTo: validData.date?.to,
       stockQuantity: validData.stockQuantity,

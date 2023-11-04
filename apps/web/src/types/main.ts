@@ -97,13 +97,23 @@ export const productSchema = z
         required_error: "กรุณากรอกราคาต้น",
       })
       .min(1, "ราคาต้นต้องมีมูลค่ามากกว่า 0")
-      .nullable(),
+      .nullable()
+      .optional()
+      .or(z.literal("")),
     date: z
       .object({
-        from: z.coerce.date().nullable(),
-        to: z.coerce.date().nullable(),
+        from: z.coerce.date().nullable().optional(),
+        to: z.coerce.date().nullable().optional(),
       })
-      .nullable(),
+      .nullable()
+      .optional()
+      .refine(
+        (data) => (data?.from && data?.to) || (!data?.from && !data?.to),
+        {
+          message: "กรุณาเลือกวันที่เริ่มและสิ้นสุดการลดราคา",
+          path: ["date"],
+        }
+      ),
     stockQuantity: z.coerce
       .number({
         required_error: "กรุณากรอกจํานวนสินค้า",
