@@ -33,6 +33,9 @@ export default function CartItem({ product, initialQuantity }: CartItemProps) {
       productId: product.id,
       quantity: value,
     });
+
+    // Shouldn't do this but I'm lazy. (Better store in state)
+    window.location.reload();
   }
 
   async function removeItem() {
