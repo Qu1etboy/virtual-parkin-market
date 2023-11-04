@@ -34,12 +34,7 @@ export default async function SellerProductPage({
         columns={columns}
         data={products.map((product) => ({
           ...product,
-          product: {
-            name: product.name,
-            images: product.images,
-            slug: product.slug,
-            sell: product.sell,
-          },
+          product: product,
         }))}
       />
     </MainLayout>

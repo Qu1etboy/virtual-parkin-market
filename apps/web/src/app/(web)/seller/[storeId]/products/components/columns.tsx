@@ -8,6 +8,7 @@ import { DataTableRowActions } from "./data-table-row-actions";
 import ToggleSell from "./toggle-sell";
 import { Product } from "@prisma/client";
 import { FILE_URL } from "@/services/upload";
+import PriceLabel from "@/components/price-label";
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -60,7 +61,9 @@ export const columns: ColumnDef<Product>[] = [
       <DataTableColumnHeader column={column} title="ราคาขาย" />
     ),
     cell: ({ row }) => {
-      return <span>{row.getValue("price")}</span>;
+      const product: Product = row.getValue("product");
+      return <PriceLabel product={product} />;
+      // return <span>{row.getValue("price")}</span>;
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
@@ -72,7 +75,12 @@ export const columns: ColumnDef<Product>[] = [
       <DataTableColumnHeader column={column} title="จํานวนสินค้าในคลัง" />
     ),
     cell: ({ row }) => {
-      return <div className="w-[80px]">{row.getValue("stockQuantity")}</div>;
+      const stockQuantity: number = row.getValue("stockQuantity");
+      return (
+        <div className="w-[80px]">
+          {stockQuantity.toLocaleString("en-US")} ชิ้น
+        </div>
+      );
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
