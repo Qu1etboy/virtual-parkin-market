@@ -147,6 +147,14 @@ export default function ProductForm({ product }: ProductFormProps) {
     ]);
   };
 
+  useEffect(() => {
+    form.setValue(
+      "images",
+      productImages.map((image) => image.name) as [string, ...string[]]
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productImages]);
+
   const onRemove = (file: File) => {
     const newFiles = productImages.filter((f) => f.name !== file.name);
     setProductImages(newFiles);
@@ -439,19 +447,26 @@ export default function ProductForm({ product }: ProductFormProps) {
           />
         </div>
         <div className="space-y-8 p-4">
-          <div>
-            <FormLabel asterisk>รูปภาพสินค้า</FormLabel>
-            <FormDescription>
-              ลงรูปภาพที่มีคุณภาพจะช่วยให้ลูกค้าสนใจในสินค้ามากขึ้น
-            </FormDescription>
-            <Dropzone
-              options={{
-                onDrop,
-              }}
-              preview={<Previews files={productImages} />}
-              className="my-3"
-            />
-          </div>
+          <FormField
+            name="images"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel asterisk>รูปภาพสินค้า</FormLabel>
+                <FormDescription>
+                  ลงรูปภาพที่มีคุณภาพจะช่วยให้ลูกค้าสนใจในสินค้ามากขึ้น
+                </FormDescription>
+                <Dropzone
+                  options={{
+                    onDrop,
+                  }}
+                  preview={<Previews files={productImages} />}
+                  className="my-3"
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <div className="col-span-2 p-4">

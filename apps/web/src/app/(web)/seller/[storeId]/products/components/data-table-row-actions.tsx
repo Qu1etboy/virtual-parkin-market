@@ -36,12 +36,12 @@ export function DataTableRowActions<TData>({
         <DropdownMenuItem asChild>
           <Link href={`products/${row.getValue("id")}/edit`}>แก้ไข</Link>
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuSeparator /> */}
+        {/* <DropdownMenuSeparator />
         <DropdownMenuItem>
           ลบ
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

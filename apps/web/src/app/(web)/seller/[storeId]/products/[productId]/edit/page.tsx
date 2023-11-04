@@ -56,7 +56,10 @@ export default async function EditProductPage({
           stockQuantity: product.stockQuantity,
           category: productCategories.find((c) => c.value === product.category)!
             .id,
-          images: product.images.map((image) => image.image),
+          images: product.images.map((image) => image.image) as [
+            string,
+            ...string[],
+          ],
         }}
       />
     </MainLayout>

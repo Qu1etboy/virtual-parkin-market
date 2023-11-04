@@ -107,11 +107,13 @@ export const productSchema = z
     price: z.coerce
       .number({
         required_error: "กรุณากรอกราคาสินค้า",
+        invalid_type_error: "กรุณากรอกราคาสินค้าเป็นตัวเลข",
       })
       .min(1, "ราคาต้องมีมูลค่ามากกว่า 0"),
     specialPrice: z.coerce
       .number({
         required_error: "กรุณากรอกราคาต้น",
+        invalid_type_error: "กรุณากรอกราคาสินค้าเป็นตัวเลข",
       })
       .min(1, "ราคาต้นต้องมีมูลค่ามากกว่า 0")
       .nullable()
@@ -134,6 +136,7 @@ export const productSchema = z
     stockQuantity: z.coerce
       .number({
         required_error: "กรุณากรอกจํานวนสินค้า",
+        invalid_type_error: "กรุณากรอกจํานวนสินค้าเป็นตัวเลข",
       })
       .min(0, "จำนวนสินค้าต้องมีมูลค่ามากกว่าหรือเท่ากับ 0"),
     description: z
@@ -147,7 +150,7 @@ export const productSchema = z
     }),
     images: z
       .array(z.string({ required_error: "กรุณาอัพโหลดรูปภาพสินค้า" }))
-      .optional(),
+      .nonempty("กรุณาอัพโหลดรูปภาพสินค้า"),
   })
   .refine(
     (data) => !(data.specialPrice && (!data.date?.from || !data.date?.to)),
