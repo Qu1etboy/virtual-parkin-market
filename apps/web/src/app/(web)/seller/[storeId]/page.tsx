@@ -118,9 +118,9 @@ export default async function Page({
             <div className="text-2xl font-bold">
               <Currency value={totalAmount._sum.amount || 0} />{" "}
             </div>
-            <p className="text-xs text-muted-foreground">
+            {/* <p className="text-xs text-muted-foreground">
               +20.1% จากเดือนที่แล้ว
-            </p>
+            </p> */}
           </CardContent>
         </Card>
         <Card>
@@ -132,9 +132,9 @@ export default async function Page({
             <div className="text-2xl font-bold">
               {totalSales._sum.quantity || 0}
             </div>
-            <p className="text-xs text-muted-foreground">
+            {/* <p className="text-xs text-muted-foreground">
               +180.1% จากเดือนที่แล้ว
-            </p>
+            </p> */}
           </CardContent>
         </Card>
         <Card>
@@ -144,9 +144,9 @@ export default async function Page({
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{review}</div>
-            <p className="text-xs text-muted-foreground">
+            {/* <p className="text-xs text-muted-foreground">
               +19% จากเดือนที่แล้ว
-            </p>
+            </p> */}
           </CardContent>
         </Card>
         <Card>
@@ -158,9 +158,9 @@ export default async function Page({
             <div className="text-2xl font-bold">
               {product._sum.stockQuantity || 0}
             </div>
-            <p className="text-xs text-muted-foreground">
+            {/* <p className="text-xs text-muted-foreground">
               -201 เมื่อ 2 สัปดาห์ที่แล้ว
-            </p>
+            </p> */}
           </CardContent>
         </Card>
       </div>
