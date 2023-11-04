@@ -28,7 +28,7 @@ export default async function SellerNavbar({ storeId }: { storeId: string }) {
         <div className="flex justify-between pt-6">
           <div className="flex items-center">
             <Link href="/" className="text-lg font-bold">
-              Virtual ParkIn
+              Virtual Park In
             </Link>
             <svg
               fill="none"

@@ -36,7 +36,7 @@ export default function AdminNavbar({
       <div className="container space-y-6">
         <div className="flex justify-between pt-6">
           <Link href="/" className="text-lg font-bold">
-            Virtual ParkIn <span className="text-orange-600">Admin</span>
+            Virtual Park In <span className="text-orange-600">Admin</span>
           </Link>
 
           {session && <UserAvatar user={session?.user as any} />}

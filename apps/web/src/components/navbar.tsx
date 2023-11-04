@@ -26,7 +26,7 @@ export default async function Navbar() {
     <header className="px-3 py-6 border-b">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="text-lg font-bold">
-          Virtual ParkIn
+          Virtual Park In
         </Link>
 
         <form action="/products" className="relative">

@@ -43,7 +43,7 @@ export default async function SelectStorePage() {
             เลือกร้านค้าของคุณที่ต้องการจะจัดการ
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="h-[450px] overflow-y-scroll">
           {stores.length > 0 ? (
             <div>
               {stores.map((store) => (
