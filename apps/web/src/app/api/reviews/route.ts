@@ -30,7 +30,7 @@ export async function POST(req: Request) {
   });
 
   if (!product || product.store?.userId === session.user.id) {
-    return new Response(null, { status: 401 });
+    return new Response("Can't review your own product", { status: 403 });
   }
 
   // Check if user bought the product
@@ -46,7 +46,9 @@ export async function POST(req: Request) {
   });
 
   if (!order) {
-    return new Response(null, { status: 401 });
+    return new Response("Please buy this product first before review", {
+      status: 400,
+    });
   }
 
   // Check if user already reviewed the product
@@ -58,7 +60,7 @@ export async function POST(req: Request) {
   });
 
   if (review) {
-    return new Response(null, { status: 401 });
+    return new Response("You already review this product", { status: 400 });
   }
 
   // Create review
@@ -72,7 +74,7 @@ export async function POST(req: Request) {
   });
 
   // Send email to store owner about new review
-  await sendEmail({
+  sendEmail({
     to: product.store?.user?.email!,
     subject: "You have a new review",
     html: `You have a new review for ${product.name}`,

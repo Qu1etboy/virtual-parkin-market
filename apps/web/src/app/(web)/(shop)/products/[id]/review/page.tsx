@@ -1,19 +1,22 @@
 import React from "react";
 import ReviewForm from "./form";
 import { products } from "@/__mock__/products";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Currency from "@/components/currency";
 import { Gallery } from "@/components/gallery";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { prisma } from "@/lib/prisma";
 import { FILE_URL } from "@/services/upload";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/auth-options";
 
 export default async function WriteReviewPage({
   params,
 }: {
   params: { id: string };
 }) {
+  const session = await getServerSession(authOptions);
   // Get product from product id
   const product = await prisma.product.findUnique({
     where: {
@@ -41,7 +44,19 @@ export default async function WriteReviewPage({
   });
 
   if (order === 0) {
-    notFound();
+    redirect(`/products/${product.slug}`);
+  }
+
+  // Check if user already review this product
+  const review = await prisma.review.findFirst({
+    where: {
+      productId: product.id,
+      userId: session?.user?.id,
+    },
+  });
+
+  if (review) {
+    redirect(`/products/${product.slug}`);
   }
 
   return (
