@@ -63,9 +63,7 @@ export const storeSchema = z.object({
   ownerIdCard: z
     .string({ required_error: "กรุณากรอกหมายเลขบัตรประชาชน" })
     .length(13, "กรุณากรอกหมายเลขบัตรประชาชนที่ถูกต้อง"),
-  ownerIdCardPhoto: z.string({
-    required_error: "กรุณาอัพโหลดรูปบัตรประชาชน",
-  }),
+  ownerIdCardPhoto: z.string().nonempty("กรุณาอัพโหลดรูปบัตรประชาชน"),
   bankAccount: z
     .string({ required_error: "กรุณากรอกเลขบัญชีธนาคาร" })
     .min(8, "กรุณากรอกเลขบัญชีธนาคารที่ถูกต้อง")
@@ -76,7 +74,7 @@ export const storeSchema = z.object({
   bankProvider: z
     .string({ required_error: "กรุณาเลือกธนาคารของคุณ" })
     .min(1, "กรุณาเลือกธนาคารของคุณ"),
-  bookBankPhoto: z.string({ required_error: "กรุณาอัพโหลดรูปถ่ายสมุดเงินฝาก" }),
+  bookBankPhoto: z.string().nonempty("กรุณาอัพโหลดรูปถ่ายสมุดเงินฝาก"),
 });
 
 export const productSchema = z

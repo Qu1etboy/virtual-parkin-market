@@ -72,6 +72,9 @@ export default async function Page({
   });
 
   const ordersOverview = await prisma.order.findMany({
+    where: {
+      storeId: params.storeId,
+    },
     include: {
       orderItem: {
         select: {
