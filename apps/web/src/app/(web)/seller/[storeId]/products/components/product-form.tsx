@@ -48,6 +48,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Icons } from "@/components/ui/icons";
+import { th } from "date-fns/locale";
 
 type AddProduct = z.infer<typeof productSchema>;
 
@@ -399,6 +400,7 @@ export default function ProductForm({ product }: ProductFormProps) {
                             to: date.to,
                           });
                         }}
+                        locale={th}
                         numberOfMonths={2}
                         initialFocus
                       />

@@ -41,7 +41,7 @@ import axios from "@/lib/axios";
 import { Gender } from "@prisma/client";
 import toast from "react-hot-toast";
 import { useRef, useState } from "react";
-import { ca } from "date-fns/locale";
+import { ca, fi, th } from "date-fns/locale";
 import { FILE_URL, upload } from "@/services/upload";
 import Field from "../components/field";
 
@@ -241,7 +241,11 @@ export function ProfileForm() {
         <Field
           label="วันเกิด"
           editable
-          defaultValue={form.watch("birthday")}
+          defaultValue={
+            form.watch("birthday")
+              ? format(new Date(form.watch("birthday")!), "PPP", { locale: th })
+              : null
+          }
           form={
             <FormField
               control={form.control}
@@ -260,7 +264,7 @@ export function ProfileForm() {
                           )}
                         >
                           {field.value ? (
-                            format(new Date(field.value), "dd MMMM yyyy")
+                            format(new Date(field.value), "PPP", { locale: th })
                           ) : (
                             <span>เลือกวัน</span>
                           )}
@@ -276,6 +280,18 @@ export function ProfileForm() {
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
                         }
+                        defaultMonth={
+                          field.value ? new Date(field.value) : new Date()
+                        }
+                        formatters={{
+                          formatMonthCaption: (date, options) =>
+                            format(date, "LLLL", { locale: th }),
+                          formatYearCaption: (date, options) =>
+                            format(date, "yyyy", { locale: th }),
+                        }}
+                        captionLayout="dropdown-buttons"
+                        fromYear={1900}
+                        toYear={new Date().getFullYear()}
                         initialFocus
                       />
                     </PopoverContent>
@@ -290,7 +306,13 @@ export function ProfileForm() {
         <Field
           label="เพศ"
           editable
-          defaultValue={form.watch("gender")}
+          defaultValue={
+            form.watch("gender")
+              ? form.watch("gender") === "MALE"
+                ? "ชาย"
+                : "หญิง"
+              : null
+          }
           form={
             <FormField
               control={form.control}
