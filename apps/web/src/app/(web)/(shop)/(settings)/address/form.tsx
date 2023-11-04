@@ -40,21 +40,48 @@ import { cn } from "@/lib/utils";
 import { addressSchema } from "@/types/main";
 import axios from "@/lib/axios";
 import toast from "react-hot-toast";
+import { Address } from "@prisma/client";
 
 type AddressFormValues = z.infer<typeof addressSchema>;
 
-export function AddressForm() {
+export function AddressForm({
+  defaultValues,
+  addressId,
+  onAddAddress,
+  onUpdateAddress,
+}: {
+  defaultValues?: AddressFormValues;
+  addressId?: string;
+  onAddAddress: (address: Address) => void;
+  onUpdateAddress: (address: Address) => void;
+}) {
   const form = useForm<AddressFormValues>({
     resolver: zodResolver(addressSchema),
-    defaultValues: {
-      address: "",
-    },
+    defaultValues,
   });
 
+  function isObjectEmpty(obj: Object) {
+    return Object.keys(obj).length === 0;
+  }
+
   async function onSubmit(data: AddressFormValues) {
-    console.log(data);
-    await axios.post("/user/me/address", data);
-    toast.success("บันทึกที่อยู่สำเร็จ");
+    try {
+      console.log(data);
+      if (addressId) {
+        const { data: result } = await axios.put(
+          `/user/me/address/${addressId}`,
+          data
+        );
+        onUpdateAddress(result);
+      } else {
+        const { data: result } = await axios.post("/user/me/address", data);
+        onAddAddress(result);
+      }
+      toast.success("บันทึกที่อยู่สำเร็จ");
+    } catch (error) {
+      toast.error("เกิดข้อผิดพลาดในการบันทึกที่อยู่ กรุณาลองใหม่อีกครั้ง");
+      console.error(error);
+    }
   }
 
   return (
@@ -117,6 +144,8 @@ export function AddressForm() {
                               provinceId: province.PROVINCE_ID,
                               provinceName: province.PROVINCE_NAME,
                             });
+                            form.setValue("district", {});
+                            form.setValue("postalCode", {});
                           }}
                         >
                           <CheckIcon
@@ -153,11 +182,17 @@ export function AddressForm() {
                       className={cn(
                         "w-[200px] justify-between",
                         !field.value && "text-muted-foreground",
-                        !form.watch("province") && "cursor-not-allowed"
+                        !form.watch("province") ||
+                          isObjectEmpty(form.watch("province"))
+                          ? "cursor-not-allowed"
+                          : ""
                       )}
-                      disabled={!form.watch("province")}
+                      disabled={
+                        !form.watch("province") ||
+                        isObjectEmpty(form.watch("province"))
+                      }
                     >
-                      {field.value
+                      {field.value && !isObjectEmpty(field.value)
                         ? districts.find(
                             (district) =>
                               district.DISTRICT_ID === field.value?.districtId
@@ -187,6 +222,7 @@ export function AddressForm() {
                                 districtId: district.DISTRICT_ID,
                                 districtName: district.DISTRICT_NAME,
                               });
+                              form.setValue("postalCode", {});
                             }}
                           >
                             <CheckIcon
@@ -223,15 +259,21 @@ export function AddressForm() {
                       className={cn(
                         "w-[200px] justify-between",
                         !field.value && "text-muted-foreground",
-                        !form.watch("province") || !form.watch("district")
+                        !form.watch("province") ||
+                          !form.watch("district") ||
+                          isObjectEmpty(form.watch("district")) ||
+                          isObjectEmpty(form.watch("province"))
                           ? "cursor-not-allowed"
                           : "cursor-pointer"
                       )}
                       disabled={
-                        !form.watch("province") || !form.watch("district")
+                        !form.watch("province") ||
+                        !form.watch("district") ||
+                        isObjectEmpty(form.watch("district")) ||
+                        isObjectEmpty(form.watch("province"))
                       }
                     >
-                      {field.value
+                      {field.value && !isObjectEmpty(field.value)
                         ? zipcodes.find(
                             (zipcode) =>
                               zipcode.ZIPCODE_ID === field.value?.zipcodeId
@@ -246,36 +288,51 @@ export function AddressForm() {
                     <CommandInput placeholder="ค้นหารหัสไปรษณีย์" />
                     <CommandEmpty>ไม่พบรหัสไปรษณีย์</CommandEmpty>
                     <CommandGroup className="max-h-[200px] overflow-auto">
-                      {zipcodes
-                        .filter(
-                          (zipcode) =>
-                            zipcode.PROVINCE_ID ===
-                              form.watch("province")?.provinceId.toString() &&
-                            zipcode.DISTRICT_ID ===
-                              form.watch("district")?.districtId.toString()
+                      {Array.from(
+                        new Set(
+                          zipcodes
+                            .filter(
+                              (zipcode) =>
+                                zipcode.PROVINCE_ID ===
+                                  form
+                                    .watch("province")
+                                    ?.provinceId?.toString() &&
+                                zipcode.DISTRICT_ID ===
+                                  form.watch("district")?.districtId?.toString()
+                            )
+                            .map((zipcode) => zipcode.ZIPCODE)
                         )
-                        .map((zipcode) => (
+                      ).map((uniqueZipcode) => {
+                        const matchingZipcode = zipcodes.find(
+                          (zipcode) => zipcode.ZIPCODE === uniqueZipcode
+                        );
+
+                        if (!matchingZipcode) return null;
+
+                        return (
                           <CommandItem
-                            value={zipcode.ZIPCODE}
-                            key={zipcode.ZIPCODE_ID}
+                            value={matchingZipcode.ZIPCODE}
+                            key={matchingZipcode.ZIPCODE_ID}
                             onSelect={() => {
                               form.setValue("postalCode", {
-                                zipcodeId: zipcode.ZIPCODE_ID,
-                                zipcode: zipcode.ZIPCODE,
+                                zipcodeId: matchingZipcode.ZIPCODE_ID,
+                                zipcode: matchingZipcode.ZIPCODE,
                               });
                             }}
                           >
                             <CheckIcon
                               className={cn(
                                 "mr-2 h-4 w-4",
-                                zipcode.ZIPCODE_ID === field.value?.zipcodeId
+                                matchingZipcode.ZIPCODE_ID ===
+                                  field.value?.zipcodeId
                                   ? "opacity-100"
                                   : "opacity-0"
                               )}
                             />
-                            {zipcode.ZIPCODE}
+                            {matchingZipcode.ZIPCODE}
                           </CommandItem>
-                        ))}
+                        );
+                      })}
                     </CommandGroup>
                   </Command>
                 </PopoverContent>

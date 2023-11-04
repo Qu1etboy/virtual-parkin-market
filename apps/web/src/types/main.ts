@@ -30,26 +30,45 @@ export const customerProfileSchema = z.object({
 });
 
 export const addressSchema = z.object({
-  address: z.string().min(1),
-  district: z.object({
-    districtId: z.number(),
-    districtName: z.string(),
-  }),
+  address: z
+    .string({
+      required_error: "กรุณากรอกที่อยู่",
+    })
+    .nonempty("กรุณากรอกที่อยู่"),
+  district: z.object(
+    {
+      districtId: z.number().optional(),
+      districtName: z.string().optional(),
+    },
+    {
+      required_error: "กรุณาเลือกเขต/ตําบล",
+    }
+  ),
   subDistrict: z
     .object({
-      subDistrictId: z.number(),
-      subDistrictName: z.string(),
+      subDistrictId: z.number().optional(),
+      subDistrictName: z.string().optional(),
     })
     .optional()
     .nullable(),
-  province: z.object({
-    provinceId: z.number(),
-    provinceName: z.string(),
-  }),
-  postalCode: z.object({
-    zipcodeId: z.number(),
-    zipcode: z.string(),
-  }),
+  province: z.object(
+    {
+      provinceId: z.number().optional(),
+      provinceName: z.string().optional(),
+    },
+    {
+      required_error: "กรุณาเลือกจังหวัด",
+    }
+  ),
+  postalCode: z.object(
+    {
+      zipcodeId: z.number().optional(),
+      zipcode: z.string().optional(),
+    },
+    {
+      required_error: "กรุณาเลือกรหัสไปรษณีย์",
+    }
+  ),
 });
 
 export const storeSchema = z.object({

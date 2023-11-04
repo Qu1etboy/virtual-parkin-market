@@ -10,8 +10,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import AddressBooks from "./address-books";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/auth-options";
+import AddressAction from "./action";
 
-export default function AddressPage() {
+export default async function AddressPage() {
+  const session = await getServerSession(authOptions);
+  const user = session?.user;
+
   return (
     <div className="space-y-6">
       <div>
@@ -21,24 +27,7 @@ export default function AddressPage() {
         </p>
       </div>
       <Separator />
-
-      <div className="flex justify-end">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>เพิ่มที่อยู่จัดส่ง</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>เพิ่มที่อยู่จัดส่ง</DialogTitle>
-              <DialogDescription>
-                กรุณากรอกข้อมูลที่อยู่สําหรับจัดส่งสินค้าให้ครบถ้วน
-              </DialogDescription>
-            </DialogHeader>
-            <AddressForm />
-          </DialogContent>
-        </Dialog>
-      </div>
-      <AddressBooks />
+      <AddressAction defaultValues={user?.addresses} />
     </div>
   );
 }

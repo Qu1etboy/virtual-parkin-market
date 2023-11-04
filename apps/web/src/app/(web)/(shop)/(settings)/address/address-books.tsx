@@ -24,17 +24,38 @@ import {
 import React from "react";
 import { AddressForm } from "./form";
 import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
+import axios from "@/lib/axios";
+import { Address } from "@prisma/client";
 
-export default function AddressBooks() {
-  const { data: session } = useSession();
-  const user = session?.user;
+export default function AddressBooks({
+  addresses,
+  onDeleteAddress,
+  onUpdateAddress,
+  onAddAddress,
+}: {
+  addresses: Address[] | null | undefined;
+  onDeleteAddress: (addressId: string) => void;
+  onUpdateAddress: (address: Address) => void;
+  onAddAddress: (address: Address) => void;
+}) {
+  async function handleDeleteAddress(addressId: string) {
+    try {
+      await axios.delete(`/user/me/address/${addressId}`);
+      onDeleteAddress(addressId);
+      toast.success("ลบที่อยู่สำเร็จ");
+    } catch (error) {
+      toast.error("เกิดข้อผิดพลาดในการลบที่อยู่ กรุณาลองใหม่อีกครั้ง");
+      console.error(error);
+    }
+  }
 
   return (
     <div className="space-y-3">
       <h2>รายการที่อยู่</h2>
-      {user?.addresses && user?.addresses.length > 0 ? (
+      {addresses && addresses.length > 0 ? (
         <>
-          {user.addresses.map((address) => (
+          {addresses.map((address) => (
             <Card key={address.id}>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardDescription>
@@ -53,7 +74,30 @@ export default function AddressBooks() {
                           กรุณากรอกข้อมูลที่อยู่สําหรับจัดส่งสินค้าให้ครบถ้วน
                         </DialogDescription>
                       </DialogHeader>
-                      <AddressForm />
+                      <AddressForm
+                        onAddAddress={onAddAddress}
+                        onUpdateAddress={onUpdateAddress}
+                        addressId={address.id}
+                        defaultValues={{
+                          address: address.address,
+                          district: {
+                            districtId: address.districtId,
+                            districtName: address.district,
+                          },
+                          subDistrict: {
+                            subDistrictId: address.subDistrictId || 0,
+                            subDistrictName: address.subDistrict || "",
+                          },
+                          province: {
+                            provinceId: address.provinceId,
+                            provinceName: address.province,
+                          },
+                          postalCode: {
+                            zipcode: address.postalCode,
+                            zipcodeId: address.postalCodeId,
+                          },
+                        }}
+                      />
                     </DialogContent>
                   </Dialog>
                   <AlertDialog>
@@ -72,7 +116,11 @@ export default function AddressBooks() {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                        <AlertDialogAction>ตกลง</AlertDialogAction>
+                        <AlertDialogAction
+                          onClick={() => handleDeleteAddress(address.id)}
+                        >
+                          ตกลง
+                        </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
