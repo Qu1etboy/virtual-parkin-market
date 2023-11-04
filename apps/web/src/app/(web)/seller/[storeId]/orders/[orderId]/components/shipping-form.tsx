@@ -21,9 +21,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
+import { Icons } from "@/components/ui/icons";
 
 const shippingSchema = z.object({
   trackingNumber: z.string().length(13, "กรุณากรอกหมายเลขพัสดุ 13 หลัก"),
+  // images: z.string().array().min(1, "กรุณาอัพโหลดไฟล์"),
+  images: z
+    .array(z.string({ required_error: "กรุณาอัพโหลดหลักฐานการส่ง" }))
+    .min(1, "กรุณาอัพโหลดหลักฐานการส่ง")
+    .max(10, "อัพโหลดได้ไม่เกิน 10 รูป"),
 });
 
 type TShippingForm = z.infer<typeof shippingSchema>;
@@ -31,20 +37,23 @@ type TShippingForm = z.infer<typeof shippingSchema>;
 export default function ShippingForm() {
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const params = useParams();
 
   const form = useForm({
     defaultValues: {
       trackingNumber: "",
+      images: [],
     },
     resolver: zodResolver(shippingSchema),
   });
 
   const onSubmit = async (data: TShippingForm) => {
     console.log(files);
-
+    setLoading(true);
     if (files.length === 0) {
       setError("กรุณาอัพโหลดไฟล์");
+      setLoading(false);
       return;
     }
     try {
@@ -62,6 +71,7 @@ export default function ShippingForm() {
       window.location.href = `/seller/${params.storeId}/orders`;
     } catch (error) {
       toast.error("เกิดข้อผิดพลาด");
+      setLoading(false);
       console.error(error);
     }
   };
@@ -113,7 +123,13 @@ export default function ShippingForm() {
     return () => {
       files.forEach((file: any) => URL.revokeObjectURL(file.preview));
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    form.setValue("images", files.map((file) => file.name) as any);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [files]);
 
   return (
     <section>
@@ -131,32 +147,44 @@ export default function ShippingForm() {
                   ขณะนี้รองรับเฉพาะไปรษณีย์ไทยเท่านั้น
                 </FormDescription>
                 <FormControl>
-                  <Input placeholder="เช่น EF582568151TH" {...field} />
+                  <Input
+                    placeholder="เช่น EF582568151TH"
+                    {...field}
+                    disabled={loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div>
-            <FormLabel>
-              หลักฐานการส่งสินค้า<span className="text-red-500">*</span>
-            </FormLabel>
-            <p className="text-sm text-muted-foreground">
-              อัพโหลดได้ไม่เกิน 10 รูป
-            </p>
-            <Dropzone
-              options={{
-                onDrop,
-                maxFiles: 10,
-              }}
-              preview={<Previews files={files} />}
-              className="my-3"
-            />
-            <>{error && <p className="text-sm text-red-500">{error}</p>}</>
-            <Button type="submit" className="mt-4">
-              ยืนยันการส่งสินค้า
-            </Button>
-          </div>
+          <FormField
+            name="images"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  หลักฐานการส่งสินค้า<span className="text-red-500">*</span>
+                </FormLabel>
+                <p className="text-sm text-muted-foreground">
+                  อัพโหลดได้ไม่เกิน 10 รูป
+                </p>
+                <Dropzone
+                  options={{
+                    onDrop,
+                    maxFiles: 10,
+                  }}
+                  preview={<Previews files={files} />}
+                  className="my-3"
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <>{error && <p className="text-sm text-red-500">{error}</p>}</>
+          <Button type="submit" className="mt-4" disabled={loading}>
+            {loading && <Icons.spinner className="animate-spin mr-2" />}
+            ยืนยันการส่งสินค้า
+          </Button>
         </form>
       </Form>
     </section>
