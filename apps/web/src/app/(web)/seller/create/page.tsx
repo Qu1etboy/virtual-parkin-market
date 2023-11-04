@@ -62,7 +62,7 @@ const slots = alphabets.split("").map((alphabet) => {
   return rows;
 });
 
-const locations = [].concat(...slots);
+const locations = [].concat(...(slots as any));
 
 export default function CreateStorePage() {
   const [loading, setLoading] = useState(false);
