@@ -84,18 +84,22 @@ export default async function ShippingPage({
         <Card>
           <CardHeader>
             <CardTitle>
-              {order.status === OrderStatus.SHIPPED
+              {order.status === OrderStatus.SHIPPED ||
+              order.status === OrderStatus.DELIVERED
                 ? "หลักฐานการส่งสินค้า"
                 : "ยืนยันการส่งสินค้า"}
             </CardTitle>
             <CardDescription>
-              {order.status === OrderStatus.SHIPPED
+              {order.status === OrderStatus.SHIPPED ||
+              order.status === OrderStatus.DELIVERED
                 ? "รายละเอียดการส่งสินค้า"
                 : "กรอกหมายเลขพัสดุแลพแนบรูปใบเสร็จเพื่อยืนยันการส่ง"}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {order.status === OrderStatus.SHIPPED && order.delivery ? (
+            {(order.status === OrderStatus.SHIPPED ||
+              order.status === OrderStatus.DELIVERED) &&
+            order.delivery ? (
               <>
                 <div>
                   สินค้าถูกส่งแล้ว เมื่อ{" "}

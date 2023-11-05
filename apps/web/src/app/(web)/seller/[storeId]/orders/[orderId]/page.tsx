@@ -119,10 +119,12 @@ export default async function OrderItemPage({
             </CardContent>
             <CardFooter>
               {order.status === OrderStatus.PACKED ||
-              order.status === OrderStatus.SHIPPED ? (
+              order.status === OrderStatus.SHIPPED ||
+              order.status === OrderStatus.DELIVERED ? (
                 <Button asChild>
                   <Link href={`${order.id}/shipping`}>
-                    {order.status === OrderStatus.SHIPPED
+                    {order.status === OrderStatus.SHIPPED ||
+                    order.status === OrderStatus.DELIVERED
                       ? "ดูรายละเอียดการจัดส่ง"
                       : "จัดส่งสินค้า"}
                   </Link>
