@@ -1,4 +1,4 @@
-import Prisma from "@prisma/client";
+import Prisma, { Role } from "@prisma/client";
 import React from "react";
 import {
   DropdownMenu,
@@ -15,6 +15,7 @@ import logout from "next-auth/next";
 import LogOutButton from "./logout-button";
 import Link from "next/link";
 import { FILE_URL } from "@/services/upload";
+import { ShoppingBag, Store, User2, Lock } from "lucide-react";
 
 export default function UserAvatar({ user }: { user: Prisma.User }) {
   return (
@@ -36,15 +37,33 @@ export default function UserAvatar({ user }: { user: Prisma.User }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href="/profile">ข้อมูลของฉัน</Link>
+            <Link href="/profile" className="flex items-center">
+              <User2 className="w-4 h-4 mr-2" /> ข้อมูลของฉัน
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="/orders">ออเดอร์ของฉัน</Link>
+            <Link href="/orders" className="flex items-center">
+              <ShoppingBag className="w-4 h-4 mr-2" /> ออเดอร์ของฉัน
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="/seller">ร้านของฉัน</Link>
+            <Link href="/seller" className="flex items-center">
+              <Store className="w-4 h-4 mr-2" />
+              ร้านของฉัน
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
+        {user.role === Role.ADMIN && (
+          <>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem>
+              <Link href="/admin" className="flex items-center">
+                <Lock className="w-4 h-4 mr-2" /> ไปหน้าแอดมิน
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <LogOutButton />
