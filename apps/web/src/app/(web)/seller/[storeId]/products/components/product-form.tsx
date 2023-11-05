@@ -213,8 +213,9 @@ export default function ProductForm({ product }: ProductFormProps) {
           </>
         ) : product && product.images.length > 0 ? (
           <>
-            {product.images.map((image) => (
+            {product.images.map((image, idx) => (
               <Image
+                key={idx}
                 src={`${FILE_URL}/${image}`}
                 alt={image}
                 width={100}
