@@ -20,7 +20,10 @@ import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 
 const reviewSchema = z.object({
-  rating: z.coerce.number().min(1).max(5),
+  rating: z.coerce
+    .number()
+    .min(1, "กรุณาใส่คะแนน")
+    .max(5, "ใส่คะแนนได้ไม่เกิน 5 ดาว"),
   content: z.string().nullable(),
 });
 
