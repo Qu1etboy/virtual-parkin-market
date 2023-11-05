@@ -121,7 +121,11 @@ export default async function OrderItemPage({
               {order.status === OrderStatus.PACKED ||
               order.status === OrderStatus.SHIPPED ? (
                 <Button asChild>
-                  <Link href={`${order.id}/shipping`}>จัดส่งสินค้า</Link>
+                  <Link href={`${order.id}/shipping`}>
+                    {order.status === OrderStatus.SHIPPED
+                      ? "ดูรายละเอียดการจัดส่ง"
+                      : "จัดส่งสินค้า"}
+                  </Link>
                 </Button>
               ) : (
                 <ShippingOrderButton />

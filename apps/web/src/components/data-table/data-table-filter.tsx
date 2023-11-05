@@ -55,6 +55,19 @@ function DataTableFilter<TData>({ table }: DataTableFilterProps<TData>) {
       >
         ส่งแล้ว
       </Button>
+
+      <Button
+        variant={
+          table.getColumn("status")?.getFilterValue() === "DELIVERED"
+            ? "default"
+            : "outline"
+        }
+        onClick={(event) =>
+          table.getColumn("status")?.setFilterValue("DELIVERED")
+        }
+      >
+        ได้รับแล้ว
+      </Button>
     </div>
   );
 }

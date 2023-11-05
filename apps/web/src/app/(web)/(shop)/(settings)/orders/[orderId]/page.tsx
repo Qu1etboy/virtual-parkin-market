@@ -157,7 +157,7 @@ export default async function OrderDetailPage({
                   {order.delivery.trackingNumber}
                 </span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {order.delivery?.deliveryImages.map((image) => (
                   <img
                     key={image.id}
