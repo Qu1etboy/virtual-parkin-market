@@ -106,7 +106,7 @@ export async function POST(
   });
 
   // Notify customer
-  await sendEmail({
+  sendEmail({
     to: order.bill.receipt?.contactEmail
       ? order.bill.receipt.contactEmail
       : order.user.email!,

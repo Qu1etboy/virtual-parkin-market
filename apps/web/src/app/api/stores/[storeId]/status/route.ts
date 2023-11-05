@@ -54,7 +54,7 @@ export async function PUT(
   });
 
   // Send email to store owner
-  await sendEmail({
+  sendEmail({
     to: store.user?.email!,
     subject: "Your application to sell on ParkIn Online Market",
     html: "Your application has been " + data.status + ".",

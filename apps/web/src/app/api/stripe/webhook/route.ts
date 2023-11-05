@@ -82,7 +82,7 @@ export async function POST(req: Request) {
     });
 
     // Send emali to user
-    await sendEmail({
+    sendEmail({
       to: receipt.contactEmail || "",
       subject: "Virtual Park In Receipt",
       html: "Thank you for your purchase!",
