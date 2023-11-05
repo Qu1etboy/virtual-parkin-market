@@ -10,22 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model Account {
-//   id                 String    @id @default(cuid())
-//   userId             String    @map("user_id")
-//   providerType       String    @map("provider_type")
-//   providerId         String    @map("provider_id")
-//   providerAccountId  String    @map("provider_account_id")
-//   refreshToken       String?   @map("refresh_token")
-//   accessToken        String?   @map("access_token")
-//   accessTokenExpires DateTime? @map("access_token_expires")
-//   createdAt          DateTime  @default(now())
-//   updatedAt          DateTime  @updatedAt
-//   user               User      @relation(fields: [userId], references: [id])
-
-//   @@unique([providerId, providerAccountId])
-// }
-
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
@@ -44,17 +28,6 @@ model Account {
 
   @@unique([provider, providerAccountId])
 }
-
-// model Session {
-//   id           String   @id @default(cuid())
-//   userId       String   @map("user_id")
-//   expires      DateTime
-//   sessionToken String   @unique @map("session_token")
-//   accessToken  String   @unique @map("access_token")
-//   createdAt    DateTime @default(now()) @map("created_at")
-//   updatedAt    DateTime @updatedAt @map("updated_at")
-//   user         User     @relation(fields: [userId], references: [id])
-// }
 
 model Session {
   id           String   @id @default(cuid())
@@ -98,16 +71,6 @@ model User {
   WishList        WishList[]
 }
 
-// model VerificationRequest {
-//   id         String   @id @default(cuid())
-//   identifier String
-//   token      String   @unique
-//   expires    DateTime
-//   createdAt  DateTime @default(now()) @map("created_at")
-//   updatedAt  DateTime @updatedAt @map("updated_at")
-
-//   @@unique([identifier, token])
-// }
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -186,7 +149,7 @@ model Store {
   profileImage     String?     @map("profile_image")
   bannerImage      String?     @map("banner_image")
   // Store has one owner
-  user             User?       @relation(fields: [userId], references: [id])
+  user             User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId           String?
   // Store has many orders
   order            Order[]
@@ -222,7 +185,7 @@ model WishList {
   user      User     @relation(fields: [userId], references: [id])
   // WishList has many products
   productId String   @map("product_id")
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   // Timestamp
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -246,7 +209,7 @@ model Product {
   sell          Boolean         @default(false)
   images        ProductImage[]
   orderItem     OrderItem[]
-  store         Store?          @relation(fields: [storeId], references: [id])
+  store         Store?          @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId       String?
   review        Review[]
   // Timestamp
@@ -259,7 +222,7 @@ model Product {
 model ProductImage {
   id        String   @id @default(cuid())
   productId String
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   image     String
   // Timestamp
   createdAt DateTime @default(now()) @map("created_at")
@@ -287,7 +250,7 @@ model Bill {
   // Bill belongs to order
   order     Order[]
   //
-  receipt   Receipt?   @relation(fields: [receiptId], references: [id])
+  receipt   Receipt?   @relation(fields: [receiptId], references: [id], onDelete: SetNull)
   receiptId String?    @unique @map("receipt_id")
   // 
   status    BillStatus @default(PENDING)
@@ -306,7 +269,7 @@ model Receipt {
   contactNumber   String   @map("contact_number")
   contactEmail    String?  @map("contact_email")
   // Receipt belongs to user
-  user            User?    @relation(fields: [userId], references: [id])
+  user            User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId          String?
   // Timestamp
   createdAt       DateTime @default(now()) @map("created_at")
@@ -317,7 +280,7 @@ model Delivery {
   id             String          @id @default(cuid())
   // Delivery belongs to order
   orderId        String          @unique @map("order_id")
-  order          Order           @relation(fields: [orderId], references: [id])
+  order          Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
   //
   deliveryImages DeliveryImage[]
   trackingNumber String          @map("tracking_number")
@@ -329,30 +292,24 @@ model Delivery {
 model DeliveryImage {
   id         String   @id @default(cuid())
   deliveryId String   @map("delivery_id")
-  delivery   Delivery @relation(fields: [deliveryId], references: [id])
+  delivery   Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
   image      String
   // Timestamp
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 }
 
-// enum ReservedStockStatus {
-//   PENDING
-//   RESERVED
-
-// }
-
 model ReservedStock {
   id        String   @id @default(cuid())
   // ReservedStock belongs to user
   userId    String   @map("user_id")
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   // ReservedStock belongs to product
   productId String   @map("product_id")
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   // ReservedStock belongs to order
   orderId   String   @map("order_id")
-  order     Order    @relation(fields: [orderId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   // 
   quantity  Int
   // Timestamp
@@ -363,11 +320,11 @@ model ReservedStock {
 model Order {
   id            String          @id @default(cuid())
   // Order belongs to user
-  userId        String          @map("user_id")
-  user          User            @relation(fields: [userId], references: [id])
+  userId        String?         @map("user_id")
+  user          User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
   // Order belongs to store
   storeId       String          @map("store_id")
-  store         Store           @relation(fields: [storeId], references: [id])
+  store         Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
   // 
   shippingPrice Float           @map("shipping_price")
   status        OrderStatus     @default(PENDING)
@@ -390,7 +347,7 @@ model OrderItem {
   id        String   @id @default(cuid())
   // OrderItem belongs to order
   orderId   String   @map("order_id")
-  order     Order    @relation(fields: [orderId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   // OrderItem belongs to product
   productId String   @map("product_id")
   product   Product  @relation(fields: [productId], references: [id])
@@ -409,7 +366,7 @@ model Review {
   user      User     @relation(fields: [userId], references: [id])
   // Review belongs to product
   productId String   @map("product_id")
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   // 
   rating    Float
   content   String?

@@ -77,14 +77,14 @@ export default async function OrderItemPage({
               <div className="flex items-center gap-3">
                 <Avatar>
                   <AvatarImage
-                    src={`${FILE_URL}/${order.user.image}`}
-                    alt={order.user.name ?? ""}
+                    src={`${FILE_URL}/${order.user?.image}`}
+                    alt={order.user?.name ?? ""}
                   />
                   <AvatarFallback>
-                    {order.user.name ? order.user.name[0] : ""}
+                    {order.user?.name ? order.user.name[0] : ""}
                   </AvatarFallback>
                 </Avatar>
-                <span>{order.user.name}</span>
+                <span>{order.user?.name}</span>
               </div>
               <div>
                 <h2>ช่องทางติดต่อ</h2>

@@ -53,7 +53,7 @@ export default async function ShippingPage({
           <CardContent className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground">ชื่อ</p>
-              <div>{order.user.name}</div>
+              <div>{order.user?.name}</div>
             </div>
 
             <div>

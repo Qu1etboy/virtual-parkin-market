@@ -109,7 +109,7 @@ export async function POST(
   sendEmail({
     to: order.bill.receipt?.contactEmail
       ? order.bill.receipt.contactEmail
-      : order.user.email!,
+      : order.user?.email!,
     subject: `Order ${order.id} has been shipped`,
     html: `Your order has been shipped!`,
   });
