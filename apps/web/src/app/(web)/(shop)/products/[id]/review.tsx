@@ -183,7 +183,7 @@ export default async function ProductReview({ product }: ProductReviewProps) {
             ) : null}
           </>
           <>
-            {reviews.length ? (
+            {myReview || reviews.length ? (
               reviews.map((review) => (
                 <ReviewCard key={review.id} review={review} />
               ))
