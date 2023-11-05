@@ -21,6 +21,7 @@ export async function PUT(
   }
 
   const data = await req.json();
+  console.log("[PUT product] data = ", data);
 
   const validData = productSchema.parse(data);
 
@@ -59,11 +60,11 @@ export async function PUT(
     ProductCategory[Object.keys(ProductCategory)[+validData.category - 1]]
   );
 
-  // await prisma.productImage.deleteMany({
-  //   where: {
-  //     productId: productId,
-  //   },
-  // });
+  await prisma.productImage.deleteMany({
+    where: {
+      productId: productId,
+    },
+  });
 
   const product = await prisma.product.update({
     where: {
@@ -81,11 +82,11 @@ export async function PUT(
       category:
         // @ts-ignore
         ProductCategory[Object.keys(ProductCategory)[+validData.category - 1]],
-      // images: {
-      //   create: validData.images?.map((image) => ({
-      //     image: image,
-      //   })),
-      // },
+      images: {
+        create: validData.images?.map((image) => ({
+          image: image,
+        })),
+      },
     },
   });
 

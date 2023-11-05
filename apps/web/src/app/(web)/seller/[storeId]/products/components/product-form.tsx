@@ -89,8 +89,16 @@ export default function ProductForm({ product }: ProductFormProps) {
     // console.log(data);
     setLoading(true);
     try {
-      const result = await upload("images[]", productImages);
-      const images = result.map((image: any) => image.filename);
+      if (productImages.length > 0) {
+        const result = await upload("images[]", productImages);
+        // const images = result.map((image: any) => image.filename);
+        form.setValue(
+          "images",
+          result.map((image: any) => image.filename)
+        );
+      }
+
+      const images = form.getValues("images") as string[];
 
       // console.log(images);
       if (params.productId) {
@@ -149,12 +157,25 @@ export default function ProductForm({ product }: ProductFormProps) {
   };
 
   useEffect(() => {
+    if (productImages.length === 0 && product && product.images.length > 0) {
+      return;
+    }
+
     form.setValue(
       "images",
       productImages.map((image) => image.name) as [string, ...string[]]
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productImages]);
+
+  useEffect(() => {
+    console.log(form.getValues());
+    const subscribe = form.watch((value) => {
+      console.log(value);
+    });
+
+    return () => subscribe.unsubscribe();
+  }, [form.watch]);
 
   const onRemove = (file: File) => {
     const newFiles = productImages.filter((f) => f.name !== file.name);
@@ -190,38 +211,24 @@ export default function ProductForm({ product }: ProductFormProps) {
               </div>
             ))}
           </>
+        ) : product && product.images.length > 0 ? (
+          <>
+            {product.images.map((image) => (
+              <Image
+                src={`${FILE_URL}/${image}`}
+                alt={image}
+                width={100}
+                height={100}
+                className="rounded-lg"
+              />
+            ))}
+          </>
         ) : (
           <span className="text-xs text-gray-600">ไม่มีไฟล์</span>
         )}
       </div>
     </div>
   );
-
-  useEffect(() => {
-    const result: any = [];
-
-    const handle = async () => {
-      for (const image of product?.images || []) {
-        const file: any = await getFileFromUrl(`${FILE_URL}/${image}`, image);
-        result.push(
-          Object.assign(file, {
-            path: image,
-            preview: `${FILE_URL}/${image}`,
-          })
-        );
-      }
-
-      setProductImages(result);
-    };
-
-    handle();
-
-    // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
-    return () => {
-      productImages.forEach((file: any) => URL.revokeObjectURL(file.preview));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     console.log("productImages = ", productImages);
@@ -458,6 +465,11 @@ export default function ProductForm({ product }: ProductFormProps) {
                 <FormDescription>
                   ลงรูปภาพที่มีคุณภาพจะช่วยให้ลูกค้าสนใจในสินค้ามากขึ้น
                 </FormDescription>
+                {params.productId && (
+                  <p className="text-sm">
+                    เปลี่ยนรูปภาพโดยการอัพโหลดรูปใหม่ รูปภาพเดิมจะถูกลบออก
+                  </p>
+                )}
                 <Dropzone
                   options={{
                     onDrop,
@@ -471,7 +483,10 @@ export default function ProductForm({ product }: ProductFormProps) {
           />
         </div>
 
-        <div className="col-span-2 p-4">
+        <div className="flex items-center col-span-2 p-4">
+          <Button type="button" variant="outline" className="mr-3" asChild>
+            <a href={`/seller/${params.storeId}/products`}>ยกเลิก</a>
+          </Button>
           <Button type="submit" disabled={loading}>
             {loading && <Icons.spinner className="animate-spin mr-2" />}
             {params.productId ? "บันทึก" : "เพิ่มสินค้า"}

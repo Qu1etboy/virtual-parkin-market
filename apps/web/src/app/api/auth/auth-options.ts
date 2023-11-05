@@ -71,8 +71,8 @@ export const authOptions: AuthOptions = {
 
   callbacks: {
     jwt: async ({ user, token }) => {
-      console.log("[jwt] user = ", user);
-      console.log("[jwt] token = ", token);
+      // console.log("[jwt] user = ", user);
+      // console.log("[jwt] token = ", token);
 
       return token;
     },
@@ -99,8 +99,8 @@ export const authOptions: AuthOptions = {
         }
       }
 
-      console.log("[session] session = ", session);
-      console.log("[session] token = ", token);
+      // console.log("[session] session = ", session);
+      // console.log("[session] token = ", token);
 
       return session;
     },

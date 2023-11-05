@@ -41,6 +41,8 @@ export default async function EditProductPage({
     return notFound();
   }
 
+  console.log(product.images);
+
   return (
     <MainLayout title="แก้ไขสินค้า" description="แก้ไขรายละเอียดสินค้า">
       <ProductForm
