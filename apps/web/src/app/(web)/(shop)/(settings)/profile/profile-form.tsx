@@ -150,6 +150,7 @@ export function ProfileForm() {
           </div>
         </div> */}
         <Field
+          reset={form.reset}
           label={
             <Avatar className="w-20 h-20">
               <AvatarImage src={`${FILE_URL}/${form.watch("image")}`} />
@@ -176,6 +177,7 @@ export function ProfileForm() {
           }
         />
         <Field
+          reset={form.reset}
           label="ชื่อจริง"
           editable
           defaultValue={form.watch("name.firstName")}
@@ -198,6 +200,7 @@ export function ProfileForm() {
         <Field
           label="นามสกุล"
           editable
+          reset={form.reset}
           defaultValue={form.watch("name.lastName")}
           form={
             <FormField
@@ -218,6 +221,7 @@ export function ProfileForm() {
         <Field
           label="เบอร์โทรศัพท์"
           editable
+          reset={form.reset}
           defaultValue={form.watch("phoneNumber")}
           form={
             <FormField
@@ -241,6 +245,7 @@ export function ProfileForm() {
         <Field
           label="วันเกิด"
           editable
+          reset={form.reset}
           defaultValue={
             form.watch("birthday")
               ? format(new Date(form.watch("birthday")!), "PPP", { locale: th })
@@ -304,6 +309,7 @@ export function ProfileForm() {
           }
         />
         <Field
+          reset={form.reset}
           label="เพศ"
           editable
           defaultValue={

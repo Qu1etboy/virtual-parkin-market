@@ -9,6 +9,7 @@ type FieldProps = {
   editable?: boolean;
   isLoading?: boolean;
   onSubmit?: () => Promise<void>;
+  reset: () => void;
 };
 
 const Field = ({
@@ -17,6 +18,7 @@ const Field = ({
   defaultValue,
   form,
   isLoading,
+  reset,
   onSubmit,
 }: FieldProps) => {
   const [edit, setEdit] = React.useState(false);
@@ -51,7 +53,10 @@ const Field = ({
                 type="submit"
                 variant="secondary"
                 disabled={isLoading}
-                onClick={() => setEdit(false)}
+                onClick={() => {
+                  reset();
+                  setEdit(false);
+                }}
                 // className="w-full px-3 py-4 rounded-sm text-white my-6"
               >
                 {/* {isLoading && (
