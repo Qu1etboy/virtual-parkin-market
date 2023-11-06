@@ -62,6 +62,7 @@ export function AccountForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <Field
+          reset={form.reset}
           label="อีเมล"
           defaultValue={
             <div>
