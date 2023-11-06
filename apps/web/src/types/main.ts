@@ -6,24 +6,25 @@ export const customerProfileSchema = z.object({
     firstName: z
       .string()
       .min(2, {
-        message: "first name must be at least 2 characters.",
+        message: "ชื่อจริงอย่างน้อย 2 ตัวอักษร",
       })
       .max(30, {
-        message: "first name must not be longer than 30 characters.",
+        message: "ชื่อจริงไม่เกิน 30 ตัวอักษร",
       }),
     lastName: z
       .string()
       .min(2, {
-        message: "last name must be at least 2 characters.",
+        message: "นามสกุลอย่างน้อย 2 ตัวอักษร",
       })
       .max(30, {
-        message: "last name must not be longer than 30 characters.",
+        message: "นามสกุลไม่เกิน 30 ตัวอักษร.",
       }),
   }),
   phoneNumber: z
     .string()
-    .length(10, { message: "phone number must be only 10 characters." })
-    .optional(),
+    .length(10, { message: "เบอร์โทรศัพท์ต้องมีความยาว 10 ตัวอักษร" })
+    .optional()
+    .or(z.literal("")),
   birthday: z.coerce.date().optional().nullable(),
   gender: z.nativeEnum(Gender).optional().nullable(),
   image: z.string().optional().nullable(),
