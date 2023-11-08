@@ -110,13 +110,15 @@ export const productSchema = z
         required_error: "กรุณากรอกราคาสินค้า",
         invalid_type_error: "กรุณากรอกราคาสินค้าเป็นตัวเลข",
       })
-      .min(1, "ราคาต้องมีมูลค่ามากกว่า 0"),
+      .min(1, "ราคาต้องมีมูลค่ามากกว่า 0 บาท")
+      .max(1000000, "ราคาต้องไม่เกิน 1,000,000 บาท"),
     specialPrice: z.coerce
       .number({
         required_error: "กรุณากรอกราคาต้น",
         invalid_type_error: "กรุณากรอกราคาสินค้าเป็นตัวเลข",
       })
       .min(1, "ราคาต้นต้องมีมูลค่ามากกว่า 0")
+      .max(1000000, "ราคาต้องไม่เกิน 1,000,000 บาท")
       .nullable()
       .optional()
       .or(z.literal("")),
@@ -162,5 +164,9 @@ export const productSchema = z
   )
   .refine((data) => !(!data.specialPrice && data.date?.from && data.date?.to), {
     message: "กรุณากรอกราคาสินค้าที่ลดราคา",
+    path: ["specialPrice"],
+  })
+  .refine((data) => !(data.specialPrice && data.specialPrice > data.price), {
+    message: "ราคาพิเศษต้องน้อยกว่าราคาสินค้า",
     path: ["specialPrice"],
   });

@@ -328,7 +328,7 @@ export default function ProductForm({ product }: ProductFormProps) {
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel asterisk>ราคาปกติ</FormLabel>
+                <FormLabel asterisk>ราคาปกติ (บาท)</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -341,13 +341,13 @@ export default function ProductForm({ product }: ProductFormProps) {
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-2 content-start gap-3">
+          <div className="grid grid-cols-2 content-start place-content-start gap-3">
             <FormField
               control={form.control}
               name="specialPrice"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>ราคาพิเศษ</FormLabel>
+                  <FormLabel>ราคาพิเศษ (บาท)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -464,7 +464,8 @@ export default function ProductForm({ product }: ProductFormProps) {
               <FormItem>
                 <FormLabel asterisk>รูปภาพสินค้า</FormLabel>
                 <FormDescription>
-                  ลงรูปภาพที่มีคุณภาพจะช่วยให้ลูกค้าสนใจในสินค้ามากขึ้น
+                  ลงรูปภาพที่มีคุณภาพจะช่วยให้ลูกค้าสนใจในสินค้ามากขึ้น สูงสุด
+                  10 รูป
                 </FormDescription>
                 {params.productId && (
                   <p className="text-sm">
@@ -474,6 +475,7 @@ export default function ProductForm({ product }: ProductFormProps) {
                 <Dropzone
                   options={{
                     onDrop,
+                    maxFiles: 10,
                   }}
                   preview={<Previews files={productImages} />}
                   className="my-3"
